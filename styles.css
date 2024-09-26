@@ -3,20 +3,6 @@
     box-sizing: border-box;
 }
 
-/* Slogi za naprave z manjšimi zasloni (mobilni) */
-@media (max-width: 600px) {
-    body {
-        font-size: 14px;
-        padding: 10px;
-    }
-
-    .container {
-        width: 100%;
-    }
-}
-
-
-
 /*CONTAINER KI VSEBUJE COLUMNE - BODY*/
 .row {
     display: flex;
