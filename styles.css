@@ -1,0 +1,325 @@
+﻿/*MARGIN IN PADDING sta vključena v skupno velikost boxa*/
+* {
+    box-sizing: border-box;
+}
+
+/*CONTAINER KI VSEBUJE COLUMNE - BODY*/
+.row {
+    display: flex;
+    align-items: stretch;   
+}
+.row::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+/*OSNOVNE LASTNOSTI BODYJA*/
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    font-size: 22px;
+}
+
+
+/*OSNOVNE LASTNOSTI TABEL (TRENUTNA LESTVICA)*/
+table, th, td {
+    border: 0.5px solid black;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 15px;
+    padding: 4px;
+}
+/*TABELE UVRSTITEV - ZNOTRAJ STRANI POSAMEZNE EKIPE*/
+table.tabeleuvrstitev {
+    padding: 0;
+}
+
+form.donatebtn input {
+    height: 100px;
+    width: 200px;
+    margin-right: 50px;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline-start: 30px;
+}
+
+/*MENI V HEADERJU IN FOOTERJU*/
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 15px 25px;
+    transition: background-color 0.2s;
+    }
+nav ul li {
+    list-style-type: none;
+    display: inline-block;
+    padding: 10px 20px;
+    border-right: 1px solid white;
+}       
+nav ul li:first-child {
+    border-left: 1px solid white;
+}
+nav ul li a {
+    color: white;
+    font-weight: bold;
+}
+nav ul li a:hover {
+    color: red;
+    transition: .3s;
+}
+
+/*STYLE ZA SLIKE V SUBPAGIH PREDICTIONS - MATCHUPS*/
+/*SLIKA ODDANIH PREDICTIONOV*/
+img.predictions {
+    object-fit: cover;
+    width: 100%;
+    margin-bottom: 25px;
+    width: 100%;
+    display: inline-block;
+    margin-left: 30px;
+}
+/*SLIKA ZBRANIH TOČK V POSAMEZNEM KROGU*/
+img.tockekrog {
+    float: right;
+    margin-top: -315px;
+    margin-right: -3%;
+    height: 43%;
+    width: 22%;
+}
+
+
+/*LASTNOSTI STRANSKEGA MENIJA V STRANEH IN PODSTRANEH*/
+ul.menizgodovina, ul.meniekipe, ul.meniseason2425, ul.menipredictions {
+    display: block;
+    justify-content: space-between;
+    padding: 0;
+    font-size: 18px;
+    margin-left: 2%;
+    margin-right: 2%;
+    list-style-type: none;
+    text-decoration: none;
+    text-align: center;
+}
+ul.meniseason2425 li, ul.menipredictions li, ul.meniekipe li, ul.menizgodovina li {
+    list-style-type: none;
+    text-decoration: none;
+    padding: 10px 10px;
+    border: 0.5px solid white;
+}
+ul.menizgodovina li a, ul.meniekipe li a, ul.meniseason2425 li a, ul.menipredictions li a {
+   color: white;
+   text-decoration: none;
+   transition: background-color 0.2s;
+}
+ul.menizgodovina li a:hover, ul.meniekipe li a:hover, ul.meniseason2425 li a:hover, ul.menipredictions li a:hover {
+    color: red;
+    transition: .1s;
+}
+
+.meniekipe, .menizgodovina, .menipredictions {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+}
+
+/*NASLOVI IN BESEDILO*/
+h1 {
+    font-size: 30px;
+    text-align: center;
+}
+h2 {
+    font-size: 25px;
+    margin-left: 5%;
+    color: forestgreen;
+}
+/*NASLOV NAD TRENUTNO LESTVICO*/
+h2.lestvica {
+    margin-left: 0;
+    text-align: center;
+    padding-top: 0px;
+}
+/*NASLOV NAD TRENUTNO LESTVICO PREDICTIONS*/
+h2.lestvicapredictions {
+    text-align: center;
+    padding-top: 0px;
+}
+h3 {
+    margin-block-start: 10px;
+    margin-block-end: 5px;
+    margin-inline-end: -225px;
+}
+p {
+    font-size: 18px;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+
+
+/*LASTNOSTI LEVEGA MENIJA V BODYJU*/
+div.col-2.sidenav {
+    background-color: #333;
+    border-top: 2px solid white;
+    border-bottom: 2px solid white;
+    padding: 0;
+    height: auto;
+}
+div.col-2.sidenav h1 {
+    margin-left: 0;
+    text-align: center;
+    font-size: 30px;
+    color: red;
+    padding: 10px 0px 10px 0px;
+    border: 3px solid red;
+    
+}
+
+/*LASTNOSTI SREDINSKEGA DELA BODYJA - GLAVNE VSEBINE*/
+div.col-7.main {
+    padding-left: 25px;
+    padding-right: 0;
+    height: auto;
+}
+
+div.iframelestvica {
+    text-align: center;
+}
+div.iframelestvicapredictions {
+    text-align: center;
+}
+
+/*TRENUTNA LESTVICA*/
+/*TRENUTNA LESTVICA - IFRAME - ENAK NA VSEH PODSTRANEH*/
+iframe.trenutnalestvica {
+    border: none;
+    margin: 0;
+    height: 70vh;
+}
+iframe.trenutnalestvicapredictions {
+    border: none;
+    margin: 0;
+    height: 70vh;
+    margin-left: 25px;
+}
+
+/*LESTVICA TOP3 V TABU ZGODOVINA - PRETEKLI ZMAGOVALCI*/
+table.podium tr th {
+    padding: 5px 5px;
+    border-collapse: collapse;
+}
+
+
+/*SKALIRANJE COLUMNOV*/
+main {
+    flex: 1;
+}
+
+/*ESPN LINK V HEADERJU BREZ SPODNJE MARGINE (ZARADI PREDICTIONS SLIK)*/
+img.espn {
+    margin-bottom: 0;
+}
+
+/*COUNTDOWN DO DRAFTA*/
+p#demo {
+    color: red;
+    text-align: center;
+    font-size: 100px;
+    border: 1px solid red;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+/*BARVE ZA HEADER IN FOOTER*/
+header, footer {
+    background-color: #333;
+    color: white;
+    padding: 0px 0px;
+}
+
+/*DONATE BUTTON*/
+.donate {
+    border: none;
+    background: red;
+    padding: 20px 35px;
+    border-radius: 30px;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+
+/*STOLPCI, MOŽNE ŠIRINE*/
+[class*="col-"] {
+    float: left;
+    padding: 10px;
+    height: 100%;
+}
+.col-1 {width: 8.33%;}
+.col-2 {width: 16.66%;}
+.col-3 {width: 25%;}
+.col-4 {width: 33.33%}
+.col-5 {width: 41.66%;}
+.col-6 {width: 50%;}
+.col-7 {width: 58.33%;}
+.col-8 {width: 66.66%;}
+.col-9 {width: 75%;}
+.col-10 {width: 83.33%;}
+.col-11 {width: 91.66%;}
+.col-12 {width: 100%;}
+
+span.vprasanje {
+    font-weight: bold;
+    color: black;
+}
+
+
+/*DROPDOWN MENI*/
+/* Dropdown container - relative positioning */
+.dropdown .dropbtn {
+    background-color: #333;
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    display: block;
+}
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #333;
+    min-width: 120px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+ul li.dropdown {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-inline-start: -7px;
+}
+.dropdown-content a {
+    padding: 20px;
+    font-weight: normal;
+}
+/* Links inside the dropdown */
+.dropdown-content li {
+    display: block;
+}
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+    background-color: #575757;
+}
+

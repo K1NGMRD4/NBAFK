@@ -1,0 +1,201 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>NBA Fantasy Koroška</title>
+    <link rel="icon" type="image/x-icon" href="logos/logoliga.png">
+</head>
+<body>
+    <header>
+        <nav class="header">
+            <h3><a href="https://fantasy.espn.com/basketball/league?leagueId=32010985" target="_blank"><img src="logos/espn.png" alt="logo" style="height:90px; width:180px;" /></a>  </h3>
+            <ul>
+                <li><a href="index.html">Domov</a></li>
+                <li class="dropdown">
+                    <a href="ekipe.html" class="dropbtn">Ekipe <span style="font-size: 15px">&#9660;</span></a>
+                    <!--DROPDOWN-->     <ul class="dropdown-content">
+                        <li><a href="ekipe/alpacas.html">Caracas Alpacas</a> </li>
+                        <li><a href="ekipe/angus.html">Koprivna Black Angus</a></li>
+                        <li><a href="ekipe/carpio.html">Brdinje Cyprinus Carpio</a></li>
+                        <li><a href="ekipe/clowns.html">Vuzenica Clowns</a></li>
+                        <li><a href="ekipe/cobras.html">Bundoran Cobras</a></li>
+                        <li><a href="ekipe/cows.html">New Delhi Holy Cows</a></li>
+                        <li><a href="ekipe/ducks.html">Belgrade Ducks</a></li>
+                        <li><a href="ekipe/hedgehogs.html">Lagos Hedgehogs</a></li>
+                        <li><a href="ekipe/kakapos.html">Waipo Kakapos</a></li>
+                        <li><a href="ekipe/koalas.html">Kuala Lumpur Koalas</a></li>
+                        <li><a href="ekipe/koze.html">Gorske Koze</a></li>
+                        <li><a href="ekipe/lions.html">Green Hill Lions</a></li>
+                        <li><a href="ekipe/sloths.html">Trbonje Sloths</a></li>
+                        <li><a href="ekipe/tarantulas.html">Tokyo Tarantulas</a></li>
+                        <li><a href="ekipe/tigers.html">Taipei Tigers</a></li>
+                        <li><a href="ekipe/vesoljcki.html">Veseli Vesoljčki</a></li>
+                    </ul>
+                </li>
+                <li><a href="sezona2425.html">Sezona 2024/25</a></li>
+                <li><a href="zgodovina.html">Zgodovina</a></li>
+                <li><a href="predictions.html">Predictions</a></li>
+            </ul>
+            
+            <form class="donatebtn" action="https://www.paypal.com/donate" method="post" target="_blank">
+                <!-- Identify your business so that you can collect the payments. -->
+                <input type="hidden" name="business" value="jost.mrdavsic@gmail.com">
+                <!-- Specify details about the contribution -->
+                <input type="hidden" name="no_recurring" value="5">
+                <input type="hidden" name="item_name" value="NBA Fantasy Koroska">
+                <input type="hidden" name="item_number" value="LM, Content creation & WebPage design">
+                <input type="hidden" name="currency_code" value="EUR">
+                <!-- Display the payment button. -->
+                <input type="image" name="submit" src="donate.png" alt="Donate" >
+            </form>
+        </nav>
+
+    </header>
+
+    <main>
+        <div class="row">
+            <div class="col-2 sidenav">
+
+                <h1>HOME</h1>
+                <ul class="menizgodovina">
+                    <li><a href="#nastaneklige">Nastanek lige</a></li>
+                    <li><a href="#uvodnesezone">Uvodne sezone</a></li>
+                    <li><a href="#h2hsistem">H2H sistem</a></li>
+                    <li><a href="#tekocasezona">Tekoča sezona</a></li>
+                    <li><a href="#sestavalige">Sestava lige</a></li>
+                </ul>
+                <img src="logos/logoliga.png" style="height: 300px; width: 100%" />
+            </div>
+
+            <div class="col-7 main">
+                <h1 style="text-align: center;"><span style="color:red; font-size: 20px;">since 2017</span> - NBA Fantasy Koroška - <span style="color:red; font-size: 20px;">season 8</span> </h1>
+                <h2 style="text-align: center;">DRAFT COUNTDOWN:</h2>
+                <p id="demo"></p>
+                <script>
+                        // Set the date we're counting down to
+                        var countDownDate = new Date("Oct 20, 2024 21:30:00").getTime();
+
+                        // Update the count down every 1 second
+                        var x = setInterval(function () {
+
+                            // Get today's date and time
+                            var now = new Date().getTime();
+
+                            // Find the distance between now and the count down date
+                            var distance = countDownDate - now;
+
+                            // Time calculations for days, hours, minutes and seconds
+                            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                            // Output the result in an element with id="demo"
+                            document.getElementById("demo").innerHTML = days + "d " + hours + "h "
+                                + minutes + "m " + seconds + "s ";
+
+                            // If the count down is over, write some text
+                            if (distance < 0) {
+                                clearInterval(x);
+                                document.getElementById("demo").innerHTML = "SEASON TIME";
+                            }
+                        }, 1000);
+                </script>
+                <h2 id="#nastaneklige">1) Nastanek lige</h2>
+                <p>
+                    Začetki segajo v leto 2017, ko se je zdaj že starešina med League Managerji - Jošt Mrdavšič - odločil postati seoski Adam Silver in ustanoviti prijateljsko ligo za NBA Fantasy. <br />
+                    Že v krstni sezoni se je v ligi zbralo 14 managerjev. Nekateri bolj, nekateri manj zagreti, vsi pa popolnoma novi v svetu NBA Fantasyja so se spopadli za prestižno lovoriko. <br />
+                </p>
+                <h2 id="#uvodnesezone">2) Uvodne sezone - Season total points (sezone 1 - 3)</h2>
+
+                <p>
+                    S par dobrimi trejdi se je na sam vrh povzpel kar <span style="font-weight: bold; font-size: 22px; color: forestgreen">LM Jošt</span> sam in vpisal prvo zvezdico. Seveda je bilo zaradi pomankljivega sistema tekmovanja in točkovanja kar nekaj pritožb, toda zgodovina se je vendarle začela pisati.  <br />
+                    Hudo razočaranje vseh štirih managerjev (Sudar, Strel, Ferk in Buda), ki niso zmogli uvrstitve med prvo deseterico je botrovalo k brzinskemu izstopu iz lige, a kmalu sta jih nadomestila nova managerja - Geps in Plimon. <br />
+                    V drugi sezoni je titulo domov odnesel <span style="font-weight: bold; font-size: 22px; color: forestgreen">Jan Kupljen</span>, ki je v napetem dvoboju na koncu vendarle ugnal veterana Špalirja in Lužnica. Tudi po tej sezoni ni šlo brez sprememb v sestavi - izstopil je prišlek Plimon, ki je zasedel zadnje mesto. <br />
+                    Tudi v tretji sezoni smo pozdravili dva nova člana - <span style="font-size: 18px; color: blue">Gašper Herkovič</span> in Žan Božič sta se odločila preizkusiti svoje znanje. Slednji ga je izgleda imel bolj malo, saj je prenehal z igranjem že kar na sredini sezone, se je pa zato Gašper bolj izkazal,
+                    saj je že v prvi sezoni zaključil na visokem 5. mestu. Zmago je tokrat slavil osmoljenec prejšnje sezone - <span style="font-weight: bold; font-size: 22px; color: forestgreen">Dušan Špalir</span>, ki je za las ugnal <span style="font-size: 18px; color: blue">Matica Maherja</span>. Sezono je bolj kot karkoli drugega
+                    zaznamovala epidemija Covid-19, ki je poskrbela celo za prekinitev liga (in sveta lol), ter s tem prinesla predčasen konec tudi fantasy sezoni. <br />
+                </p>
+
+                <h2 id="#h2hsistem">3) Uvedba H2H sistema (sezona 4 - <span style="font-size:35px; vertical-align: middle; ">&infin;</span>)</h2>
+                <p>
+                    Prelomnica v ligaški zgodovini se je gotovo zgodila pred 4. sezono, ko se je vodstvo odločilo za nov režim - H2H sistem, ki je vsekakor obetal precej bolj zanimive in dinamične obračune vse do konca playoffa. Pričakovanja so bila uresničena in liga je zaživela! <br />
+                    V novem sistemu se je izvrstno znašel <span style="font-weight: bold; font-size: 22px; color: forestgreen">Aleks Jurhar</span>, ki je v uvodni sezoni kljub slabšemu rednemu delu prišel do prvega naslova. V finalu je premagal <span style="font-size: 18px; color: blue">Gašperja Lužnica.</span> <br />
+                    Ponovitev finala in identičen razplet smo videli tudi v 5. sezoni, ko je <span style="font-weight: bold; font-size: 22px; color: forestgreen">Aleks</span> ponovno slavil in s tem postal prvi z back-to-back naslovom! Tudi tokrat se je moral Gašper Lužnic zadovoljiti z drugim mestom. Pred to sezoni
+                    smo v ligi pozdravili dva novinca - Nejc Podlesnik in Tine Kavtičnik sta ligo razširila iz 12 na 14 članov in s tem še dodatno zaostrila konkurenco.<br />
+                    Po tem ko je v 5. sezoni prišel premierno do stopničk s tretji mestom, se je <span style="font-weight: bold; font-size: 22px; color: forestgreen">Gašper Herkovič</span> odločil za ogromne spremembe franšize (Mravljinčarje je zamenjal za Alpake, Adis Abebo pa za Caracas) in glej ga zlomka,
+                    že par mesecev kasneje je prišel do laskavega naslova prvaka sezone 6! Družbo na podiumu sta mu delala še <span style="font-size: 18px; color: blue">Jan Kupljen (2.) in Matevž Kavtičnik (3.)</span>. <br />
+                    Že smo v sezoni 7. Tokrat se je vse poklopilo <span style="font-weight: bold; font-size: 22px; color: forestgreen">Nejcu Podlesniku</span>, ki je svoje Bundoranske Kobre popeljal do naslova v svoji tretji sezoni. V finalu je ugnal najboljšega iz rednega dela, <span style="font-size: 18px; color: blue">Jošt Mrdavšiča.</span>
+                    Zmagovalni oder je s tretjim mestom zaokrožil Jan Kupljen. Tako Jan kot Jošt sta s tem zbrala že cel komplet uvrstitev na zmagovalni oder. <br />
+                </p>
+
+                <h2 id="tekocasezona">4) Tekoča sezona in nove spremembe</h2>
+                <p>
+                    Pred vrati je že 8. sezona lige in pred tem je liga ponovno doživela spremembe v zasedbi. Gašperja Lužnica, ki je bil medtem že sprejet tudi v Hišo slavnih lige so nadomestili kar trije novi člani in s tem ligo razširili že na zelo kompetitivnih 16 članov! <br />
+                    Pridružili so se nam <span style="font-size: 18px; color: blue">Vito Torej, Damjan Ilievski in Vid Ranc</span>, ki bodo že v krstni sezoni videli koliko truda in želje je potrebne za konkurenčnost v tej neizprosni ligi. Sezona 2024/25 se z draftom začne
+                    v nedeljo, 20.10.2024 zvečer in prav zanimivo bo videti ali lahko kdo izmed tisti, ki v tem sestavku še niso bili obarvani z gozdno-zeleno barvo poseže po najvišjih mestih! <br />
+                </p>
+
+                <h2 id="sestavalige">5) Trenutna sestava lige</h2>
+                <p>
+                    Vsekakor nas veseli dejstvo, da je v trenutni zasedbi 16 managerjev v ligi kar 9 takšnih, ki nastopajo že od uvodne sezone vse od daljnega leta 2017. To so: <br />
+                    &nbsp;&nbsp;- Jan Kupljen, <br />
+                    &nbsp;&nbsp;- Matic Maher, <br />
+                    &nbsp;&nbsp;- Aleks Jurhar, <br />
+                    &nbsp;&nbsp;- Jošt Mrdavšič (LM), <br />
+                    &nbsp;&nbsp;- Dušan Špalir, <br />
+                    &nbsp;&nbsp;- Rok Verčko, <br />
+                    &nbsp;&nbsp;- Matevž Kavtičnik, <br />
+                    &nbsp;&nbsp;- Vid Urnaut in <br />
+                    &nbsp;&nbsp;- Rok Lačen. <br /> <br />
+                    Pomemben del hierarhije sestavljajo tudi že standardni člani, ki pa vendarle niso tu že od začetka: <br />
+                    &nbsp;&nbsp; - Gašper Herkovič, <br />
+                    &nbsp;&nbsp; - Nejc Podlesnik, <br />
+                    &nbsp;&nbsp; - Tine Kavtičnik in <br />
+                    &nbsp;&nbsp; - Gašper Potočnik <br /><br />
+                    V pričakovanju, kaj lahko pokažejo in kako visoko lahko posežejo pa smo tudi zaradi letošnjih rookijev: <br />
+                    &nbsp;&nbsp; - Damjan Ilievski, <br />
+                    &nbsp;&nbsp; - Vito Torej in <br />
+                    &nbsp;&nbsp; - Vid Ranc. <br /><br />
+
+                    Z nestpnostjo pričakujemo začetek že 8. sezone in vsekakor upamo, da bo veselje in tekmovanje trajalo še kar se da dolgo!
+                </p>
+            </div>
+
+            <div class="col-3 lestvica">
+                <h2 class="lestvica">Trenutna lestvica</h2>
+                <!--TABELA-->
+                <div class="iframelestvica">
+                    <iframe scrolling="no" src="trenutnalestvica.html" class="trenutnalestvica"></iframe>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <nav class="header">
+            <h3><a href="https://fantasy.espn.com/basketball/league?leagueId=32010985" target="_blank"><img src="logos/espn.png" alt="logo" style="height:90px; width:180px;" /></a>  </h3>
+            <ul>
+                <li><a href="index.html">Domov</a></li>
+                <li><a href="ekipe.html">Ekipe</a>
+                <li><a href="sezona2425.html">Sezona 2024/25</a></li>
+                <li><a href="zgodovina.html">Zgodovina</a></li>
+                <li><a href="predictions.html">Predictions</a></li>
+            </ul>
+            <form class="donatebtn" action="https://www.paypal.com/donate" method="post" target="_blank">
+                <!-- Identify your business so that you can collect the payments. -->
+                <input type="hidden" name="business" value="jost.mrdavsic@gmail.com">
+                <!-- Specify details about the contribution -->
+                <input type="hidden" name="no_recurring" value="5">
+                <input type="hidden" name="item_name" value="NBA Fantasy Koroska">
+                <input type="hidden" name="item_number" value="LM, Content creation & WebPage design">
+                <input type="hidden" name="currency_code" value="EUR">
+                <!-- Display the payment button. -->
+                <input type="image" name="submit" src="donate.png" alt="Donate">
+            </form>
+        </nav>
+        <p style="text-align:center; margin-top: 10px;"> <span style="font-weight: bold">&copy; NBA Fantasy Koroška &copy;</span><br /><br /> SEASON 8 <br /> <span style="font-size: 12px">since 2017</span></p>
+    </footer>
+</body>
+</html>
