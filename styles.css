@@ -3,6 +3,11 @@
     box-sizing: border-box;
 }
 
+/*SKALIRANJE ZA MOBILNE NAPRAVE*/
+@media (max-width: 768px) {
+   /* prilagoditve za mobilne naprave */
+}
+
 /*CONTAINER KI VSEBUJE COLUMNE - BODY*/
 .row {
     display: flex;
