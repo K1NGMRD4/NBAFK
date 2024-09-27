@@ -5,8 +5,6 @@
 
 /*SKALIRANJE ZA MOBILNE NAPRAVE*/
 @media (max-width: 768px) {
-    header, footer {
-        flex-direction: column;
    /* prilagoditve za mobilne naprave */
 }
 
