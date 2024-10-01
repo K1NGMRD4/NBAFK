@@ -31,8 +31,8 @@ table, th, td {
     border: 0.5px solid black;
     border-collapse: collapse;
     text-align: center;
-    font-size: 0.75em;
-    padding: 0.2em;
+    font-size: 1.25em;
+    padding: 0.25em;
 }
 /*TABELE UVRSTITEV - ZNOTRAJ STRANI POSAMEZNE EKIPE*/
 table.tabeleuvrstitev {
