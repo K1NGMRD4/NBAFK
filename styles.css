@@ -203,12 +203,14 @@ iframe.trenutnalestvica {
     border: none;
     margin: 0;
     height: 83.5vh;
+    font-size: 0.5em;
 }
 iframe.trenutnalestvicapredictions {
     border: none;
     margin: 0;
     height: 83.5vh;
     margin-left: 1.25em;
+    font-size: 0.5em;
 }
 
 /*LESTVICA TOP3 V TABU ZGODOVINA - PRETEKLI ZMAGOVALCI*/
