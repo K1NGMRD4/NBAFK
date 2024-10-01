@@ -25,6 +25,9 @@ body {
     font-size: 20px;
 }
 
+ul {
+    padding-inline-start: 0em;
+}
 
 /*OSNOVNE LASTNOSTI TABEL (TRENUTNA LESTVICA)*/
 table, th, td {
