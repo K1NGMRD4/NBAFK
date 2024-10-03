@@ -138,7 +138,7 @@ img.tockekrog {
 
 /*LASTNOSTI STRANSKEGA MENIJA V STRANEH IN PODSTRANEH*/
 ul.menizgodovina, ul.meniekipe, ul.meniseason2425, ul.menipredictions {
-    display: block;
+    display: flex;
     justify-content: space-between;
     padding: 0;
     font-size: 0.9em;
