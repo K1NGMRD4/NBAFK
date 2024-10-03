@@ -345,3 +345,7 @@ ul li.dropdown {
         height: auto; /* Prilagodljiva višina iframe */
     }
 }
+
+header, nav, main, iframe, footer {
+    border: 1px solid red; /* Dodaj rdeč okvir, da boš videl, kako se postavijo elementi */
+}
