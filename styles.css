@@ -3,7 +3,9 @@
     box-sizing: border-box;
 }
 
-
+div {
+    display: flex;
+}
 
 /*CONTAINER KI VSEBUJE COLUMNE - BODY*/
 .row {
