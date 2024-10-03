@@ -349,6 +349,7 @@ ul li.dropdown {
     display: flex;
     flex-direction: column;
     padding: 0;
+    width: 100%;
     }
     
     header, nav, main, iframe, footer {
