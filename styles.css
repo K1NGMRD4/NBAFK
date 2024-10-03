@@ -25,10 +25,6 @@ body {
     font-size: 20px;
 }
 
-ul {
-    padding-inline-start: 0em;
-}
-
 /*OSNOVNE LASTNOSTI TABEL (TRENUTNA LESTVICA)*/
 table, th, td {
     border: 0.5px solid black;
@@ -53,6 +49,12 @@ nav {
     align-items: center;
     justify-content: space-between;
     padding-inline-start: 1.5em;
+}
+
+nav ul {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
 }
 
 /*MENI V HEADERJU IN FOOTERJU*/
@@ -205,13 +207,15 @@ div.iframelestvicapredictions {
 iframe.trenutnalestvica {
     border: none;
     margin: 0;
-    height: 83.5vh;
+    height: auto; 
+    width: 100%;
     font-size: 0.5em;
 }
 iframe.trenutnalestvicapredictions {
     border: none;
     margin: 0;
-    height: 83.5vh;
+    height: auto;
+    width: 100%
     margin-left: 1.25em;
     font-size: 0.5em;
 }
