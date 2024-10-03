@@ -46,9 +46,9 @@ form.donatebtn input {
 
 nav {
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding-inline-start: 1.5em;
 }
 
 
