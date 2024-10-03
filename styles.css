@@ -3,13 +3,19 @@
     box-sizing: border-box;
 }
 
+
+
 /*CONTAINER KI VSEBUJE COLUMNE - BODY*/
 .row {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between; 
 }
-
+.row::after {
+    content: "";
+    clear: both;
+    display: table;
+}
 /*OSNOVNE LASTNOSTI BODYJA*/
 body {
     font-family: Arial, sans-serif;
@@ -28,8 +34,17 @@ table, th, td {
     font-size: 0.85em;
     padding: 0.25em;
 }
+/*TABELE UVRSTITEV - ZNOTRAJ STRANI POSAMEZNE EKIPE*/
+table.tabeleuvrstitev {
+    padding: 0;
+}
 
-/*MENU V HEADERJU IN FOOTERJU*/
+form.donatebtn input {
+    height: 5em;
+    width: 10em;
+    margin-right: 2.5em;
+}
+
 nav {
     display: flex;
     flex-direction: row;
@@ -37,37 +52,120 @@ nav {
     justify-content: space-between;
 }
 
+
+
+/*MENI V HEADERJU IN FOOTERJU*/
 nav a {
     color: white;
     text-decoration: none;
     padding: 0.75em 1.25em;
     transition: background-color 0.2s;
-}
-
-nav ul {
-    list-style-type: none;
-    padding: 0;
-}
-
+    }
 nav ul li {
+    list-style-type: none;
     display: inline-block;
     padding: 0.5em 1em;
     border-right: 1px solid white;
-}
-
+}       
 nav ul li:first-child {
     border-left: 1px solid white;
 }
-
 nav ul li a {
     color: white;
     font-weight: bold;
 }
-
 nav ul li a:hover {
     color: red;
     transition: .3s;
 }
+
+/*STYLE ZA SLIKE V SUBPAGIH PREDICTIONS - MATCHUPS*/
+/*SLIKA ODDANIH PREDICTIONOV*/
+img.predictions {
+    object-fit: cover;
+    width: 100%;
+    margin-bottom: 1.25em;
+    width: 100%;
+    display: inline-block;
+    margin-left: 1.5em;
+}
+/*SLIKA ZBRANIH TOČK V POSAMEZNEM KROGU*/
+img.tockekrog {
+    float: right;
+    margin-top: -15.75em;
+    margin-right: -3%;
+    height: 43%;
+    width: 22%;
+}
+
+
+/*LASTNOSTI STRANSKEGA MENIJA V STRANEH IN PODSTRANEH*/
+ul.menizgodovina, ul.meniekipe, ul.meniseason2425, ul.menipredictions {
+    display: block;
+    justify-content: space-between;
+    padding: 0;
+    font-size: 0.9em;
+    margin-left: 2%;
+    margin-right: 2%;
+    list-style-type: none;
+    text-decoration: none;
+    text-align: center;
+}
+ul.meniseason2425 li, ul.menipredictions li, ul.meniekipe li, ul.menizgodovina li {
+    list-style-type: none;
+    text-decoration: none;
+    padding: 0.5em 0.5em;
+    border: 0.5px solid white;
+}
+ul.menizgodovina li a, ul.meniekipe li a, ul.meniseason2425 li a, ul.menipredictions li a {
+   color: white;
+   text-decoration: none;
+   transition: background-color 0.2s;
+}
+ul.menizgodovina li a:hover, ul.meniekipe li a:hover, ul.meniseason2425 li a:hover, ul.menipredictions li a:hover {
+    color: red;
+    transition: .1s;
+}
+
+.meniekipe, .menizgodovina, .menipredictions {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+}
+
+/*NASLOVI IN BESEDILO*/
+h1 {
+    font-size: 1.5em;
+    text-align: center;
+}
+h2 {
+    font-size: 1.25em;
+    margin-left: 5%;
+    color: forestgreen;
+}
+/*NASLOV NAD TRENUTNO LESTVICO*/
+h2.lestvica {
+    margin-left: 0;
+    text-align: center;
+    padding-top: 0px;
+}
+/*NASLOV NAD TRENUTNO LESTVICO PREDICTIONS*/
+h2.lestvicapredictions {
+    text-align: center;
+    padding-top: 0px;
+}
+h3 {
+    margin-block-start: 0.5me;
+    margin-block-end: 0.25em;
+    margin-inline-end: -11.25em;
+}
+p {
+    font-size: 0.9em;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+
 
 /*LASTNOSTI LEVEGA MENIJA V BODYJU*/
 .col-2.sidenav {
@@ -77,7 +175,6 @@ nav ul li a:hover {
     padding: 0;
     height: auto;
 }
-
 .col-2.sidenav h1 {
     margin-left: 0;
     text-align: center;
@@ -85,6 +182,7 @@ nav ul li a:hover {
     color: red;
     padding: 0.5em 0em 0.5em 0em;
     border: 3px solid red;
+    
 }
 
 /*LASTNOSTI SREDINSKEGA DELA BODYJA - GLAVNE VSEBINE*/
@@ -94,22 +192,59 @@ nav ul li a:hover {
     height: auto;
 }
 
-.col-3.lestvica {
-    padding-left: 1.25em;
-    padding-right: 0;
+.iframelestvica {
+    text-align: center;
+}
+.iframelestvicapredictions {
+    text-align: center;
 }
 
-/*IFRAME - ENAK NA VSEH PODSTRANEH*/
-iframe {
+/*TRENUTNA LESTVICA*/
+/*TRENUTNA LESTVICA - IFRAME - ENAK NA VSEH PODSTRANEH*/
+
+
+
+iframe.trenutnalestvica {
     border: none;
     margin: 0;
     height: auto; 
-    width: 100%; /* Zajema celotno širino */
+    width: 100%;
+    font-size: 0.5em;
 }
+iframe.trenutnalestvicapredictions {
+    border: none;
+    margin: 0;
+    height: auto;
+    width: 100%
+    margin-left: 1.25em;
+    font-size: 0.5em;
+}
+
+/*LESTVICA TOP3 V TABU ZGODOVINA - PRETEKLI ZMAGOVALCI*/
+table.podium tr th {
+    padding: 0.25em 0.25em;
+    border-collapse: collapse;
+}
+
 
 /*SKALIRANJE COLUMNOV*/
 main {
     flex: 1;
+}
+
+/*ESPN LINK V HEADERJU BREZ SPODNJE MARGINE (ZARADI PREDICTIONS SLIK)*/
+img.espn {
+    margin-bottom: 0;
+}
+
+/*COUNTDOWN DO DRAFTA*/
+p#demo {
+    color: red;
+    text-align: center;
+    font-size: 2em;
+    border: 1px solid red;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
 /*BARVE ZA HEADER IN FOOTER*/
@@ -119,28 +254,110 @@ header, footer {
     padding: 0px 0px;
 }
 
+/*DONATE BUTTON*/
+.donate {
+    border: none;
+    background: red;
+    padding: 1em 1.75em;
+    border-radius: 1.5em;
+    color: white;
+    font-weight: bold;
+    font-size: 1em;
+}
+
+
+/*STOLPCI, MOŽNE ŠIRINE*/
+[class*="col-"] {
+    float: left;
+    padding: 0.5em;
+    height: 100%;
+}
+.col-1 {width: 8.33%;}
+.col-2 {width: 16.66%;}
+.col-3 {width: 25%;}
+.col-4 {width: 33.33%}
+.col-5 {width: 41.66%;}
+.col-6 {width: 50%;}
+.col-7 {width: 58.33%;}
+.col-8 {width: 66.66%;}
+.col-9 {width: 75%;}
+.col-10 {width: 83.33%;}
+.col-11 {width: 91.66%;}
+.col-12 {width: 100%;}
+
+span.vprasanje {
+    font-weight: bold;
+    color: black;
+}
+
+
+/*DROPDOWN MENI*/
+/* Dropdown container - relative positioning */
+.dropdown .dropbtn {
+    background-color: #333;
+    color: white;
+    padding: 0.4em 0.8em;
+    text-decoration: none;
+    display: block;
+}
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #333;
+    min-width: 6em;
+    box-shadow: 0em 0.4em 0.8em 0em rgba(0,0,0,0.2);
+    z-index: 1;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+ul li.dropdown {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-inline-start: -0.35em;
+}
+.dropdown-content a {
+    padding: 1em;
+    font-weight: normal;
+}
+/* Links inside the dropdown */
+.dropdown-content li {
+    display: block;
+}
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+    background-color: #575757;
+}
+
 /* Postavitev za manjše zaslone (npr. telefoni) */
 @media screen and (max-width: 768px) {
     .row {
-        flex-direction: column; /* Spremeni smer na mobilnih napravah */
+        flex-direction: column;
     }
 
-    .col-2.sidenav,
-    .col-7.main,
-    .col-3.lestvica {
-        width: 100%; /* Raztegnite čez celotno širino */
-        margin-bottom: 10px; /* Razmik med elementi */
+    .col-2.sidenav {
+        width: 100%;
+        margin-bottom: 10px;
     }
 
-    nav ul {
-        display: flex;
-        flex-direction: column; /* Vertikalno poravnanje */
-        padding: 0;
+    .main-content {
         width: 100%;
     }
     
+    nav ul {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    width: 100%;
+    }
+    
     header, nav, main, iframe, footer {
-        width: 100%; /* Vsi elementi zavzamejo celotno širino */
+        width: 100%;
         margin-bottom: 10px;
     }
 
@@ -150,5 +367,5 @@ header, footer {
 }
 
 header, nav, main, iframe, footer {
-    border: 1px solid red; /* Rdeč okvir za pomoč pri postavitvi */
+    border: 1px solid red; /* Dodaj rdeč okvir, da boš videl, kako se postavijo elementi */
 }
