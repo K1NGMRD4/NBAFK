@@ -281,6 +281,10 @@ p#demo {
 
 /*BARVE ZA HEADER IN FOOTER*/
 header, footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     background-color: #333;
     color: white;
     padding: 0px 0px;
