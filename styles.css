@@ -60,6 +60,7 @@ nav a {
 }
 
 nav ul {
+    display: flex;
     padding: 0; /* Dodajmo padding, da odstranimo privzete robove seznama */
 }
 
