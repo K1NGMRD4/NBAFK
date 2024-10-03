@@ -330,3 +330,18 @@ ul li.dropdown {
     background-color: #575757;
 }
 
+/* Postavitev za manjše zaslone (npr. telefoni) */
+@media screen and (max-width: 768px) {
+    .row {
+        flex-direction: column;
+    }
+
+    header, nav, main, iframe, footer {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    iframe {
+        height: auto; /* Prilagodljiva višina iframe */
+    }
+}
