@@ -61,9 +61,6 @@ nav a {
 
 nav ul {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
     padding: 0; /* Dodajmo padding, da odstranimo privzete robove seznama */
 }
 
@@ -130,6 +127,7 @@ img.predictions {
     width: 100%;
     margin-bottom: 1.25em;
     width: 100%;
+    margin-left: 1.5em;
 }
 /*SLIKA ZBRANIH TOČK V POSAMEZNEM KROGU*/
 img.tockekrog {
@@ -148,6 +146,8 @@ ul.menizgodovina, ul.meniekipe, ul.meniseason2425, ul.menipredictions {
     justify-content: space-between;
     padding: 0;
     font-size: 0.9em;
+    margin-left: 2%;
+    margin-right: 2%;
     list-style-type: none;
     text-decoration: none;
     text-align: center;
@@ -195,10 +195,14 @@ h2.lestvicapredictions {
     text-align: center;
     padding-top: 0px;
 }
-
+h3 {
+    margin-block-start: 0.5me;
+    margin-block-end: 0.25em;
+}
 p {
     font-size: 0.9em;
-
+    margin-left: 5%;
+    margin-right: 5%;
 }
 
 
@@ -218,7 +222,7 @@ p {
     color: red;
     padding: 0.5em 0em 0.5em 0em;
     border: 3px solid red;
-    
+
 }
 
 /*LASTNOSTI SREDINSKEGA DELA BODYJA - GLAVNE VSEBINE*/
@@ -252,6 +256,7 @@ iframe.trenutnalestvicapredictions {
     margin: 0;
     height: auto;
     width: 100%
+    margin-left: 1.25em;
     font-size: 0.5em;
 }
 
@@ -284,11 +289,6 @@ p#demo {
 
 /*BARVE ZA HEADER IN FOOTER*/
 header, footer {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
     background-color: #333;
     color: white;
     padding: 0px 0px;
@@ -356,6 +356,7 @@ span.vprasanje {
 ul li.dropdown {
     padding-top: 0px;
     padding-bottom: 0px;
+    margin-inline-start: -0.35em;
 }
 .dropdown-content a {
     padding: 1em;
@@ -384,19 +385,20 @@ ul li.dropdown {
 
     .col-2.sidenav {
         width: 100%;
+        margin-bottom: 10px;
     }
 
     .main-content {
         width: 100%;
     }
-    
+
     nav ul {
     display: flex;
     flex-direction: row;
     padding: 0;
     width: 100%;
     }
-    
+
     header, nav, main, iframe, footer {
         width: 100%;
         margin-bottom: 10px;
