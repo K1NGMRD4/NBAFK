@@ -345,11 +345,7 @@ ul li.dropdown {
         width: 100%;
     }
     
-    nav ul {
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-}
+    
     
     header, nav, main, iframe, footer {
         width: 100%;
