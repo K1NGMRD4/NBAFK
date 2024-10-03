@@ -69,7 +69,8 @@ nav ul {
     color: white;
     padding: 0.4em 0.8em;
     text-decoration: none;
-    display: block;
+    display: flex;
+    flex-direction: column;
 }
 
 .dropdown-content {
@@ -86,7 +87,8 @@ nav ul {
 
 /* Prikaz dropdown menija ob hoverju */
 .dropdown:hover .dropdown-content {
-    display: block;
+    display: flex;
+    flex-direction: column;
 }
 
 .dropdown-content a {
@@ -97,7 +99,8 @@ nav ul {
 /* Seznamni elementi v navigaciji */
 nav ul li {
     list-style-type: none; /* Odstrani točke */
-    display: inline-block;
+    display: flex;
+    flex-direction: row;
     padding: 0.5em 1em;
     border-right: 1px solid white;
 }
@@ -123,7 +126,6 @@ img.predictions {
     width: 100%;
     margin-bottom: 1.25em;
     width: 100%;
-    display: inline-block;
     margin-left: 1.5em;
 }
 /*SLIKA ZBRANIH TOČK V POSAMEZNEM KROGU*/
@@ -336,7 +338,8 @@ span.vprasanje {
     color: white;
     padding: 0.4em 0.8em;
     text-decoration: none;
-    display: block;
+    display: flex;
+    flex-direction: column;
 }
 /* Dropdown content (hidden by default) */
 .dropdown-content {
@@ -361,11 +364,13 @@ ul li.dropdown {
 }
 /* Links inside the dropdown */
 .dropdown-content li {
-    display: block;
+    display: flex;
+    flex-direction: column;
 }
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {
-    display: block;
+    display: flex;
+    flex-direction: column;
 }
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {
