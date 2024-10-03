@@ -167,14 +167,14 @@ p {
 
 
 /*LASTNOSTI LEVEGA MENIJA V BODYJU*/
-div.col-2.sidenav {
+.col-2.sidenav {
     background-color: #333;
     border-top: 2px solid white;
     border-bottom: 2px solid white;
     padding: 0;
     height: auto;
 }
-div.col-2.sidenav h1 {
+.col-2.sidenav h1 {
     margin-left: 0;
     text-align: center;
     font-size: 1.5em;
@@ -185,16 +185,16 @@ div.col-2.sidenav h1 {
 }
 
 /*LASTNOSTI SREDINSKEGA DELA BODYJA - GLAVNE VSEBINE*/
-div.col-7.main {
+.col-7.main {
     padding-left: 1.25em;
     padding-right: 0;
     height: auto;
 }
 
-div.iframelestvica {
+.iframelestvica {
     text-align: center;
 }
-div.iframelestvicapredictions {
+.iframelestvicapredictions {
     text-align: center;
 }
 
@@ -336,7 +336,7 @@ ul li.dropdown {
         flex-direction: column;
     }
 
-    div.col-2 sidenav {
+    .col-2 sidenav {
         width: 100%;
         margin-bottom: 10px;
     }
