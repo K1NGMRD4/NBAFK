@@ -285,6 +285,7 @@ p#demo {
 /*BARVE ZA HEADER IN FOOTER*/
 header, footer {
     display: flex;
+    flex-wrap: wrap;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
