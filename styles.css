@@ -51,11 +51,7 @@ nav {
     padding-inline-start: 1.5em;
 }
 
-nav ul {
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-}
+
 
 /*MENI V HEADERJU IN FOOTERJU*/
 nav a {
@@ -348,6 +344,12 @@ ul li.dropdown {
     .main-content {
         width: 100%;
     }
+    
+    nav ul {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
     
     header, nav, main, iframe, footer {
         width: 100%;
