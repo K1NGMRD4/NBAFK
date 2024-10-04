@@ -327,7 +327,7 @@ ul li.dropdown {
     margin-inline-start: -0.35em;
 }
 .dropdown-content a {
-    padding: 1em;
+    padding: 3em;
     font-weight: normal;
 }
 /* Links inside the dropdown */
