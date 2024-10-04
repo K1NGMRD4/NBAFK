@@ -3,6 +3,11 @@
     box-sizing: border-box;
 }
 
+.header h3 a img {
+    width: 120px; 
+    height: 90px;
+}
+
 header {
     display: flex;              /* Flexbox layout */
     justify-content: space-between; /* Razporedi elemente enakomerno med seboj */
@@ -387,8 +392,8 @@ span.vprasanje {
 
     /*LOGO*/
     .header h3 a img {
-        height: 20px;
-        width: 40px;
+        height: 45px;
+        width: 60px;
     }
 
     footer {
