@@ -64,7 +64,9 @@ nav ul {
     padding: 0; /* Dodajmo padding, da odstranimo privzete robove seznama */
 }
 
-
+nav.header ul {
+    margin-block-start: 0;
+    margin-block-end: 0;
 
 /* Seznamni elementi v navigaciji */
 nav ul li {
