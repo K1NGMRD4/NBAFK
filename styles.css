@@ -73,7 +73,7 @@ nav ul li {
     list-style-type: none; /* Odstrani točke */
     display: flex;
     flex-direction: row;
-    padding: 0.5em 1em;
+    padding: 0.2em;
     border-right: 1px solid white;
 }
 
@@ -321,10 +321,6 @@ span.vprasanje {
     list-style-type: none;
     padding: 0;
     margin: 0;
-}
-ul li.dropdown {
-    padding-top: 0em;
-    padding-bottom: 0em;
 }
 .dropdown-content a {
     font-weight: normal;
