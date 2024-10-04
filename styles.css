@@ -67,7 +67,7 @@ nav ul {
 nav.header ul {
     margin-block-start: 0;
     margin-block-end: 0;
-
+}
 /* Seznamni elementi v navigaciji */
 nav ul li {
     list-style-type: none; /* Odstrani točke */
