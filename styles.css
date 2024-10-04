@@ -469,18 +469,14 @@ span.vprasanje {
         margin: 0 auto;
     }
 
-    .div.col-2.sidenav img {
-        align-items: center;
-        width: 50%;
-    }
-    
+     
     .col-3.lestvica {
-        heigh: 51vh;
+        heigh: 75vh;
         width: 100%;
     }
     
     iframe.trenutnalestvica, iframe.trenutnalestvicapredictions {
-        height: 51vh;
+        height: 75vh;
         width: 100%;
     }
 }
