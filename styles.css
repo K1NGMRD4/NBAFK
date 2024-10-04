@@ -386,7 +386,7 @@ span.vprasanje {
     }
 
     /*LOGO*/
-    h3 a img {
+    .header h3 a img {
         height: 20px;
         width: 40px;
     }
