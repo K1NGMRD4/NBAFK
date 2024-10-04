@@ -150,6 +150,10 @@ ul.menizgodovina li a:hover, ul.meniekipe li a:hover, ul.meniseason2425 li a:hov
     transition: .1s;
 }
 
+nav ul li:first-child {
+    border-left: 1px solid white; /* Rob na levi strani prvega elementa */
+}
+
 .meniekipe, .menizgodovina, .menipredictions {
     position: -webkit-sticky;
     position: sticky;
