@@ -33,6 +33,14 @@ body {
     font-size: 20px;
 }
 
+/*HAMBURGER IKONA JE SKRITA PRI VEČJIH ZASLONIH*/
+.hamburger {
+    display: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: white;
+}
+
 /*OSNOVNE LASTNOSTI TABEL (TRENUTNA LESTVICA)*/
 table, th, td {
     border: 0.5px solid black;
@@ -397,20 +405,36 @@ span.vprasanje {
     }
 
     nav ul {
-    flex-direction: column;
-    padding: 0;
-    width: 100%;
+        display: none; 
+        flex-direction: column;
+        top: 100%;
+        left: 0;
+        background-color: #333;
+        padding: 0;
+        width: 100%;
+        z-index: 100;
     }
 
+    nav ul.show {
+        display: flex;   /*prikaži meni ob kliku na hamburger*/
+    }
+
+    .hamburger {
+        display: block;
+    }
+    
     nav ul li {
         width: 100%;
+        margin: 0;
+        border-bottom: 1px solid white;
         text-align: left;
         padding: 0.5em 0;
         border: none
     }
 
     nav ul li a {
-        padding: 0.5em 0;
+        text-align: center; 
+        padding: 1em;
         width: 100%;
     }
 
