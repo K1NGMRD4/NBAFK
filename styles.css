@@ -459,6 +459,10 @@ span.vprasanje {
         width: 100%;
     }
 
+    form.donatebtn {
+        margin-left: 0;
+    }
+    
     form.donatebtn input {
         width: 100%;
         height: 3em;
