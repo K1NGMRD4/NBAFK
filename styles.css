@@ -133,6 +133,9 @@ img.tockekrog {
     width: 22%;
 }
 
+div.col-2.sidenav img {
+    width: 100%;
+}
 
 /*LASTNOSTI STRANSKEGA MENIJA V STRANEH IN PODSTRANEH*/
 ul.menizgodovina, ul.meniekipe, ul.meniseason2425, ul.menipredictions {
@@ -471,7 +474,7 @@ span.vprasanje {
 
     div.col-2.sidenav img {
         width: 50%;
-    }
+        }
      
     .col-3.lestvica {
         heigh: 75vh;
