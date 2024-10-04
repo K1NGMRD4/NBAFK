@@ -469,7 +469,7 @@ span.vprasanje {
     }
     
     iframe.trenutnalestvica, iframe.trenutnalestvicapredictions {
-        height: 100%;
+        height: 51vh;
         width: 100%;
     }
 }
