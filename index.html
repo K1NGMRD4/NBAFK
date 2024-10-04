@@ -202,5 +202,18 @@
         </nav>
         <p style="text-align:center; margin-top: 10px;"> <span style="font-weight: bold">&copy; NBA Fantasy Koroška &copy;</span><br /><br /> SEASON 8 <br /> <span style="font-size: 12px">since 2017</span></p>
     </footer>
+
+    <script>
+    // Preklopi med prikazovanjem in skrivanjem menija
+    document.getElementById("hamburger-menu").onclick = function() {
+        var menu = document.getElementById("nav-menu");
+        if (menu.classList.contains('show')) {
+            menu.classList.remove('show');
+        } else {
+            menu.classList.add('show');
+        }
+    };
+</script>
+
 </body>
 </html>
