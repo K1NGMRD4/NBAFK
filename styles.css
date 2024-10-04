@@ -10,7 +10,7 @@
 
 header {
     display: flex;              /* Flexbox layout */
-    justify-content: center; /* Razporedi elemente enakomerno med seboj */
+    justify-content: space-between; /* Razporedi elemente enakomerno med seboj */
     align-items: center;        /* Poravnaj navpično v sredino */
     padding: 0.5em 1em;         /* Dodaj padding za boljši izgled */
     background-color: #333;
