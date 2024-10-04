@@ -469,7 +469,7 @@ span.vprasanje {
         margin: 0 auto;
     }
 
-    col-2.sidenav img {
+    .div.col-2.sidenav img {
         align-items: center;
         width: 50%;
     }
