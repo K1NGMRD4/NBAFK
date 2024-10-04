@@ -465,6 +465,7 @@ span.vprasanje {
     }
 
     .col-3.lestvica {
+        heigh: 51vh;
         width: 100%;
     }
     
