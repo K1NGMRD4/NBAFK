@@ -322,9 +322,8 @@ span.vprasanje {
     margin: 0;
 }
 ul li.dropdown {
-    padding-top: 3em;
+    padding-top: 0em;
     padding-bottom: 0em;
-    margin-inline-start: -0.35em;
 }
 .dropdown-content a {
     padding: 0.2em;
@@ -337,6 +336,7 @@ ul li.dropdown {
 }
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {
+    padding-top: 3em;
     display: flex;
     flex-direction: column;
 }
