@@ -4,7 +4,6 @@
 }
 
 header {
-     background: linear-gradient(135deg, #333, #555); /* Modern gradient background */
     display: flex;              /* Flexbox layout */
     justify-content: space-between; /* Razporedi elemente enakomerno med seboj */
     align-items: center;        /* Poravnaj navpično v sredino */
