@@ -331,6 +331,7 @@ span.vprasanje {
     left: 0;
 }
 .dropdown-content a {
+    padding: 0;
     font-weight: normal;
     white-space: nowrap;
     }
