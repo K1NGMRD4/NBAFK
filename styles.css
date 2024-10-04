@@ -460,8 +460,9 @@ span.vprasanje {
     }
 
     form.donatebtn input {
-        width: 100%;
+        width: 50%;
         height: 3em;
+        margin: 0 auto;
     }
 
     .col-3.lestvica {
