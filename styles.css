@@ -4,7 +4,7 @@
 }
 
 .header h3 a img {
-    width: 120px; 
+    width: 180px; 
     height: 90px;
 }
 
@@ -392,7 +392,7 @@ span.vprasanje {
 
     /*LOGO*/
     .header h3 a img {
-        height: 45px;
+        height: 30px;
         width: 60px;
     }
 
