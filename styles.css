@@ -410,6 +410,7 @@ span.vprasanje {
     }
 
     .col-7.main {
+        width: 100%;
         text-align: center;
         margin: 0;
         padding: 0;
