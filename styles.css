@@ -248,16 +248,15 @@ p {
 iframe.trenutnalestvica {
     border: none;
     margin: 0;
-    height: auto; 
+    height: 50vh; 
     width: 100%;
     font-size: 0.5em;
 }
 iframe.trenutnalestvicapredictions {
     border: none;
     margin: 0;
-    height: auto;
+    height: 50vh;
     width: 100%
-    margin-left: 1.25em;
     font-size: 0.5em;
 }
 
