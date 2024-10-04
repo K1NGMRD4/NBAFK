@@ -384,7 +384,7 @@ span.vprasanje {
 }
 
 /* Postavitev za manjše zaslone (npr. telefoni) */
-@media screen and (max-width: 1050px) {
+@media screen and (max-width: 768px) {
     header {
         flex-direction: column;
         align-items: flex-start;
