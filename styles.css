@@ -326,7 +326,6 @@ ul li.dropdown {
     padding-bottom: 0em;
 }
 .dropdown-content a {
-    padding: 0.2em;
     font-weight: normal;
 }
 /* Links inside the dropdown */
@@ -336,7 +335,6 @@ ul li.dropdown {
 }
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {
-    padding-top: 3em;
     display: flex;
     flex-direction: column;
 }
