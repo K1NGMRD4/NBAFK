@@ -469,6 +469,9 @@ span.vprasanje {
         margin: 0 auto;
     }
 
+    div.col-2.sidenav img {
+        width: 50%;
+    }
      
     .col-3.lestvica {
         heigh: 75vh;
