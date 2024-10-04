@@ -464,8 +464,9 @@ span.vprasanje {
         height: 3em;
     }
     
-    iframe {
-        height: auto; /* Prilagodljiva višina iframe */
+    iframe.trenutnalestvica, iframe.trenutnalestvicapredictions {
+        height: 100%;
+        width: 100%;
     }
 }
 
