@@ -463,6 +463,10 @@ span.vprasanje {
         width: 100%;
         height: 3em;
     }
+
+    .col-3.lestvica {
+        width: 100%;
+    }
     
     iframe.trenutnalestvica, iframe.trenutnalestvicapredictions {
         height: 100%;
