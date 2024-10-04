@@ -3,8 +3,6 @@
     box-sizing: border-box;
 }
 
-
-
 /*CONTAINER KI VSEBUJE COLUMNE - BODY*/
 .row {
     display: flex;
@@ -66,38 +64,7 @@ nav ul {
     padding: 0; /* Dodajmo padding, da odstranimo privzete robove seznama */
 }
 
-/* Drodown meni */
-.dropdown .dropbtn {
-    background-color: #333;
-    color: white;
-    padding: 0.4em 0.8em;
-    text-decoration: none;
-    display: flex;
-    flex-direction: column;
-}
 
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #333;
-    min-width: 6em;
-    box-shadow: 0em 0.4em 0.8em 0em rgba(0, 0, 0, 0.2);
-    z-index: 1;
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
-/* Prikaz dropdown menija ob hoverju */
-.dropdown:hover .dropdown-content {
-    display: flex;
-    flex-direction: column;
-}
-
-.dropdown-content a {
-    padding: 1em;
-    font-weight: normal;
-}
 
 /* Seznamni elementi v navigaciji */
 nav ul li {
@@ -356,8 +323,8 @@ span.vprasanje {
     margin: 0;
 }
 ul li.dropdown {
-    padding-top: 0px;
-    padding-bottom: 0px;
+    padding-top: 1em;
+    padding-bottom: 0em;
     margin-inline-start: -0.35em;
 }
 .dropdown-content a {
