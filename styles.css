@@ -233,6 +233,7 @@ p {
 }
 
 .iframelestvica {
+    overflow: auto;
     text-align: center;
 }
 .iframelestvicapredictions {
