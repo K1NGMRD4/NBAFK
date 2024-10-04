@@ -339,6 +339,11 @@ span.vprasanje {
     display: flex;
     flex-direction: column;
 }
+
+.dropdown-content ul li {
+    padding: 0;
+}
+
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {
     display: flex;
