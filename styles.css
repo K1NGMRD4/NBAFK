@@ -469,6 +469,11 @@ span.vprasanje {
         margin: 0 auto;
     }
 
+    col-2.sidenav img {
+        align-items: center;
+        width: 50%;
+    }
+    
     .col-3.lestvica {
         heigh: 51vh;
         width: 100%;
