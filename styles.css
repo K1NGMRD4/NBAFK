@@ -305,11 +305,16 @@ span.vprasanje {
 
 /*DROPDOWN MENI*/
 /* Dropdown container - relative positioning */
+.dropdown {
+    position: relative;
+}
+
 .dropdown .dropbtn {
     background-color: #333;
     color: white;
     text-decoration: none;
     display: flex;
+    padding: 0.75em 1.25em;
 }
 /* Dropdown content (hidden by default) */
 .dropdown-content {
@@ -322,6 +327,8 @@ span.vprasanje {
     list-style-type: none;
     padding: 0;
     margin: 0;
+    top: 100%;
+    left: 0;
 }
 .dropdown-content a {
     font-weight: normal;
