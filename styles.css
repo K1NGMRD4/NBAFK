@@ -441,7 +441,6 @@ span.vprasanje {
 
     header, nav, main, iframe, footer {
         width: 100%;
-        margin-bottom: 10px;
     }
 
     form.donatebtn input {
