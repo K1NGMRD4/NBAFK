@@ -371,6 +371,17 @@ span.vprasanje {
 
 /* Postavitev za manjše zaslone (npr. telefoni) */
 @media screen and (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    /*LOGO*/
+    header h3 a img {
+        height: 60px;
+        width: 120px;
+    }
+    
     .row {
         flex-direction: column;
     }
@@ -385,10 +396,21 @@ span.vprasanje {
     }
 
     nav ul {
-    display: flex;
-    flex-direction: row;
+    flex-direction: column;
     padding: 0;
     width: 100%;
+    }
+
+    nav ul li {
+        width: 100%;
+        text-align: left;
+        padding: 0.5em 0;
+        border: none
+    }
+
+    nav ul li a {
+        padding: 0.5em 0;
+        width: 100%;
     }
 
     header, nav, main, iframe, footer {
@@ -396,6 +418,11 @@ span.vprasanje {
         margin-bottom: 10px;
     }
 
+    form.donatebtn input {
+        width: 100%;
+        height: 3em;
+    }
+    
     iframe {
         height: auto; /* Prilagodljiva višina iframe */
     }
@@ -404,3 +431,4 @@ span.vprasanje {
 header, nav, main, iframe, footer {
     border: 1px solid red; /* Dodaj rdeč okvir, da boš videl, kako se postavijo elementi */
 }
+
