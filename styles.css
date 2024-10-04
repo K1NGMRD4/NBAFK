@@ -91,9 +91,6 @@ nav ul li {
     border-right: 1px solid white;
 }
 
-nav ul li:first-child {
-    border-left: 1px solid white; /* Rob na levi strani prvega elementa */
-}
 
 nav ul li a {
     font-weight: bold;
