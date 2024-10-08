@@ -430,7 +430,6 @@ table.h2hstatsbyseason {
     z-index: 100; /* Z-index, da je vedno na vrhu */
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Senčenje menija */
     transition: max-height 0.3s ease-out; /* Prehod za gladko odpiranje/zapiranje */
-       top: calc(100%+200px);
 }
 
     nav ul.show {
