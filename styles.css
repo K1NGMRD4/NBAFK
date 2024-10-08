@@ -119,10 +119,7 @@ nav ul li a:hover {
 /*SLIKA ODDANIH PREDICTIONOV*/
 img.predictions {
     object-fit: cover;
-    width: 100%;
-    margin-bottom: 1.25em;
-    width: 100%;
-    margin-left: 1.5em;
+    width: 100%;    
 }
 /*SLIKA ZBRANIH TOČK V POSAMEZNEM KROGU*/
 img.tockekrog {
