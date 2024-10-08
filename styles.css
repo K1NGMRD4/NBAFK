@@ -400,6 +400,10 @@ table.h2hstatsbyseason {
         display: none;
     }
 
+    .header h3 a {
+        display: none;
+    }
+
     footer {
         display: none;
     }
