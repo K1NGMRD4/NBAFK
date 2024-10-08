@@ -398,8 +398,7 @@ table.h2hstatsbyseason {
 
     /*LOGO*/
     .header h3 a img {
-        height: 30px;
-        width: 60px;
+        display: none;
     }
 
     footer {
@@ -470,7 +469,7 @@ table.h2hstatsbyseason {
     }
     
     form.donatebtn input {
-        width: 100%;
+        width: 35%;
         height: 3em;
         margin: 0 auto;
     }
