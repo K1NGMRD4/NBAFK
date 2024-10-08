@@ -424,8 +424,6 @@ table.h2hstatsbyseason {
     }
 
    nav ul {
-    top: 100%;
-    left: 0;
     display: none; 
     flex-direction: column; /* Urejanje v stolpec */
     background-color: #333; /* Barva ozadja menija */
