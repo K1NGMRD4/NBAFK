@@ -126,11 +126,7 @@ img.predictions {
 }
 /*SLIKA ZBRANIH TOČK V POSAMEZNEM KROGU*/
 img.tockekrog {
-    float: right;
-    margin-top: -15.75em;
-    margin-right: -3%;
-    height: 43%;
-    width: 22%;
+   
 }
 
 div.col-2.sidenav img {
