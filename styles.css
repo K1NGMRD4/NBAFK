@@ -17,6 +17,10 @@ header {
     color: white;
 }
 
+ul#nav-menu {
+    padding-inline-start: 0;
+}
+
 /*CONTAINER KI VSEBUJE COLUMNE - BODY*/
 .row {
     display: flex;
