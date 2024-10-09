@@ -454,7 +454,6 @@ table.h2hstatsbyseason {
     }
     
     nav ul li {
-        border-bottom: 1px solid white;
         border-right: none;
         padding: 1em;
     }
