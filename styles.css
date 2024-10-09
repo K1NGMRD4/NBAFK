@@ -487,7 +487,7 @@ table.h2hstatsbyseason {
     }
 
     form.donatebtn {
-        margin-left: 0 auto;
+        margin-left: auto;
     }
     
     form.donatebtn input {
