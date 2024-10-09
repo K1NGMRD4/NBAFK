@@ -394,7 +394,14 @@ table.h2hstatsbyseason {
     }
 
     /*LOGO*/
+    .header h3 a img {
+       display: none;
+    }
+    .header h3 a {
+        display: none;
+    }
 
+    
     div.col-7.main img {
         width: 100%;
         margin: 0;
