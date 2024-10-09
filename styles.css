@@ -492,11 +492,7 @@ table.h2hstatsbyseason {
         width: 50%;
         /*UGOTOVI UKAZ ZA PORAVNAVO V SREDINO*/ 
         }
-     
-    .col-3.lestvica {
-        heigh: 75vh;
-        width: 100%;
-    }
+
     
     iframe.trenutnalestvica, iframe.trenutnalestvicapredictions {
         height: 75vh;
