@@ -510,6 +510,12 @@ table.h2hstatsbyseason {
     }
 }
 
+div.tableh2h {
+    display: flex;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
 @media screen and (min-width: 768px) {
     nav.header {
         display: flex;
