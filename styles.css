@@ -96,8 +96,7 @@ nav ul {
 }
 
 nav.header ul {
-    margin-block-start: 0;
-    margin-block-end: 0;
+    margin: auto;
 }
 /* Seznamni elementi v navigaciji */
 nav ul li {
