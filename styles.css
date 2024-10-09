@@ -59,6 +59,10 @@ table.tabeleuvrstitev {
     padding: 0;
 }
 
+table.tockovanjepredictions {
+    margin-left: 25px;
+}
+
 form.donatebtn input {
     height: 5em;
     width: 10em;
