@@ -5,6 +5,9 @@
 
 div.tableh2h {
     display: flex;
+    overflow-y: auto;
+    overflow-x: auto;
+    border: 1px solid red;
 }
 
 .header h3 a img {
