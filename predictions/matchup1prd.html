@@ -12,9 +12,13 @@
 
 <body>
     <header>
-        <nav>
+        <nav class="header">
             <h3><a href="https://fantasy.espn.com/basketball/league?leagueId=32010985" target="_blank"><img class="espn" src="../logos/espn.png" alt="logo" style="height:90px; width:180px; object-fit: fill;" /></a>  </h3>
-            <ul>
+             <div class="hamburger" id="hamburger-menu">
+            <!-- Hamburger ikona -->
+            &#9776;
+        </div>
+            <ul id="nav-menu">  
                 <li><a href="../index.html">Domov</a></li>
                 <li class="dropdown">
                     <a href="../ekipe.html" class="dropbtn">Ekipe <span style="font-size: 15px">&#9660;</span></a>
@@ -139,5 +143,19 @@
         </nav>
         <p style="text-align:center; margin-top: 10px;"> <span style="font-weight: bold">&copy; NBA Fantasy Koroška &copy;</span><br /><br /> SEASON 8 <br /> <span style="font-size: 12px">since 2017</span></p>
     </footer>
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+    var hamburgerMenu = document.getElementById("hamburger-menu");
+    var navMenu = document.getElementById("nav-menu");
+
+    if (hamburgerMenu && navMenu) {
+        hamburgerMenu.addEventListener("click", function() {
+            navMenu.classList.toggle("show");
+        });
+    } else {
+        console.error("Elementi hamburger menija ali navigacijskega menija niso najdeni.");
+    }
+});
+</script>
 </body>
 </html>
