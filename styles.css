@@ -474,8 +474,6 @@ table.h2hstatsbyseason {
         transition: background-color 0.2s;
     }
 
-    nav ul li a:hover {
-        background-color: rgba(255,0,0,0.3);
     }
     header, nav, main, iframe, footer {
         width: 100%;
