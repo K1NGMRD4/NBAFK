@@ -458,10 +458,15 @@ table.h2hstatsbyseason {
         padding: 1em;
     }
 
+    nav ul li:first-child {
+        border-left: none;
+    }
+    
     nav ul li:last-child {
         border-bottom: none;    
     }
 
+    
     nav ul li a {
         color: white; 
         text-decoration: none;
