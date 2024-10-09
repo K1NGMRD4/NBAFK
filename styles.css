@@ -3,6 +3,10 @@
     box-sizing: border-box;
 }
 
+table.h2hstats {
+    display: flex;
+}
+
 .header h3 a img {
     width: 180px; 
     height: 90px;
