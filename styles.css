@@ -509,8 +509,8 @@ table.h2hstatsbyseason {
     }
 
     div.slikePRD {
-    margin-left: 0;
-    width: 100%;
+        margin-left: 0;
+        width: 100%;
     }
     
     iframe.trenutnalestvica, iframe.trenutnalestvicapredictions {
