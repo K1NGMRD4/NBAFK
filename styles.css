@@ -508,6 +508,11 @@ table.h2hstatsbyseason {
         width: 100%;
     }
 
+    div.slikePRD {
+    margin-left: 0;
+    width: 100%;
+    }
+    
     iframe.trenutnalestvica, iframe.trenutnalestvicapredictions {
         height: 75vh;
         width: 100%;
