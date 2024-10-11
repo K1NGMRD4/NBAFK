@@ -34,6 +34,8 @@ header {
 
 p.podlestvico {
     text-align: center;
+    margin-block-start: 0;
+    margin-block-end: 0;
 }
 
 /*CONTAINER KI VSEBUJE COLUMNE - BODY*/
