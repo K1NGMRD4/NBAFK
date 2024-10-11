@@ -495,7 +495,7 @@ table.h2hstatsbyseason {
     }
     
     form.donatebtn input {
-        width: 75%;
+        width: 40%;
         height: 5em;
         margin: 0 auto;
     }
