@@ -146,6 +146,7 @@ img.predictions {
 }
 /*SLIKA ZBRANIH TOČK V POSAMEZNEM KROGU*/
 img.tockekrog {
+    display: none;
     float: right;
 }
 
