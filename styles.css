@@ -504,7 +504,12 @@ table.h2hstatsbyseason {
         }
 
     div.col-3.lestvica {
-        border-top: 2px solid red;
+        border: none;
+        border-bottom: 4px solid transparent;
+        background-image: linear-gradient(to right, #ff7e5f, #feb47b);
+        background-position: bottom;
+        background-size: 100% 4px;
+        background-repeat: no-repeat;
         width: 100%;
     }
 
