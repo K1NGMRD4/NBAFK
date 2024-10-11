@@ -504,6 +504,7 @@ table.h2hstatsbyseason {
         }
 
     div.col-3.lestvica {
+        border-top: 2px solid red;
         width: 100%;
     }
 
