@@ -236,7 +236,7 @@ p {
     margin: 0;
     text-align: center; /* Osredotočite besedilo */
     font-size: 2.5em; /* Povečajte velikost pisave */
-    color: #333; /* Temno siva barva za bolj nežen izgled */
+    color: red; /* Temno siva barva za bolj nežen izgled */
     padding: 0.5em 0; /* Zmanjšajte robove za bolj čist videz */
     border-bottom: 2px solid #007BFF; /* Spodnja črta z modro barvo */
     text-transform: uppercase; /* Vse velike črke za bolj dramatičen učinek */
