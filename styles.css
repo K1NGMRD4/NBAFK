@@ -272,14 +272,14 @@ p {
 iframe.trenutnalestvica {
     border: none;
     margin: 0;
-    height: 250vh; 
+    height: 150vh; 
     width: 100%;
     font-size: 0.5em;
 }
 iframe.trenutnalestvicapredictions {
     border: none;
     margin: 0;
-    height: 250vh;
+    height: 150vh;
     width: 100%;
     font-size: 0.5em;
 }
