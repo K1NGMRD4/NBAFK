@@ -29,6 +29,7 @@ header {
     padding: 0.5em 1em;         /* Dodaj padding za boljši izgled */
     background-color: #333;
     color: white;
+    flex-wrap: wrap; 
 }
 
 /*CONTAINER KI VSEBUJE COLUMNE - BODY*/
@@ -529,11 +530,19 @@ div.tableh2h {
             padding: 0.5em;
         }
 
+        nav ul {
+            flex-wrap: wrap;
+        }
+        
         nav ul li {
             padding: 0.25em 0.5em;
             margin-right: 10px;
         }
 
+        nav ul li a {
+            font-size: 0.75em;
+        }
+        
         form.donatebtn input {
             width: auto;
             height: 2.5em;
