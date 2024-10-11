@@ -233,12 +233,13 @@ p {
     height: auto;
 }
 .col-2.sidenav h1 {
+    width: 100%;
     margin: 0;
     text-align: center; /* Osredotočite besedilo */
     font-size: 2.5em; /* Povečajte velikost pisave */
     color: red; /* Temno siva barva za bolj nežen izgled */
     padding: 0.5em 0; /* Zmanjšajte robove za bolj čist videz */
-    border-bottom: 2px solid #007BFF; /* Spodnja črta z modro barvo */
+    border-bottom: 2px solid red; /* Spodnja črta z rdečo barvo */
     text-transform: uppercase; /* Vse velike črke za bolj dramatičen učinek */
     letter-spacing: 2px; /* Razmik med črkami za bolj moderen izgled */
     font-family: 'Arial', sans-serif; /* Uporabite sodobno pisavo */
@@ -246,10 +247,6 @@ p {
     transition: all 0.3s ease; /* Dodajte prehod za animacijo */
 }
 
-h1:hover {
-    color: #007BFF; /* Spremeni barvo ob premiku miške */
-    transform: scale(1.05); /* Rahlo povečanje ob premiku miške */
-}
 
 /*LASTNOSTI SREDINSKEGA DELA BODYJA - GLAVNE VSEBINE*/
 .col-7.main {
