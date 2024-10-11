@@ -298,7 +298,7 @@ p#demo {
             border: none;
             margin: 0;
             padding: 20px;
-            background: linear-gradient(90deg, #ff5f6d, #ffc371);
+            background: linear-gradient(148deg, #1b7b23, #8dc941);
             border-radius: 10px;
             box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease;
