@@ -496,7 +496,6 @@ table.h2hstatsbyseason {
     }
     
     form.donatebtn input {
-        width: 40%;
         height: 5em;
         float: right;
     }
@@ -545,7 +544,6 @@ div.tableh2h {
         
         form.donatebtn input {
             width: auto;
-            height: 2.5em;
             margin: 0 auto;
         }
     }      
