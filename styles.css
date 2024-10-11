@@ -32,6 +32,10 @@ header {
     flex-wrap: wrap; 
 }
 
+p.podlestvico {
+    text-align: center;
+}
+
 /*CONTAINER KI VSEBUJE COLUMNE - BODY*/
 .row {
     display: flex;
