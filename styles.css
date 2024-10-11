@@ -292,13 +292,21 @@ img.espn {
 
 /*COUNTDOWN DO DRAFTA*/
 p#demo {
-    color: red;
-    text-align: center;
-    font-size: 2em;
-    border: 1px solid red;
-    margin-top: 0px;
-    margin-bottom: 0px;
-}
+            color: white;
+            text-align: center;
+            font-size: 3em;
+            border: none;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(90deg, #ff5f6d, #ffc371);
+            border-radius: 10px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        p#demo:hover {
+            transform: scale(1.05);
+        }
 
 /*BARVE ZA HEADER IN FOOTER*/
 header, footer {
