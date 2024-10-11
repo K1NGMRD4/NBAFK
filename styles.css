@@ -235,7 +235,7 @@ p {
     height: auto;
 }
 .col-2.sidenav h1 {
-    width: 100%;
+    display: flex;
     margin: 0;
     text-align: center; /* Osredotočite besedilo */
     font-size: 2em; /* Povečajte velikost pisave */
