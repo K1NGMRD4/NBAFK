@@ -236,12 +236,12 @@ p {
     width: 100%;
     margin: 0;
     text-align: center; /* Osredotočite besedilo */
-    font-size: 2.5em; /* Povečajte velikost pisave */
+    font-size: 2em; /* Povečajte velikost pisave */
     color: red; /* Temno siva barva za bolj nežen izgled */
     padding: 0.5em 0; /* Zmanjšajte robove za bolj čist videz */
     border-bottom: 2px solid red; /* Spodnja črta z rdečo barvo */
-    text-transform: uppercase; /* Vse velike črke za bolj dramatičen učinek */
-    letter-spacing: 2px; /* Razmik med črkami za bolj moderen izgled */
+    text-transform: lowercase; /* Vse velike črke za bolj dramatičen učinek */
+    letter-spacing: 0px; /* Razmik med črkami za bolj moderen izgled */
     font-family: 'Arial', sans-serif; /* Uporabite sodobno pisavo */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Blaga senca za globino */
     transition: all 0.3s ease; /* Dodajte prehod za animacijo */
