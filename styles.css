@@ -235,7 +235,6 @@ p {
     height: auto;
 }
 .col-2.sidenav h1 {
-    display: flex;
     margin: 0;
     text-align: center; /* Osredotočite besedilo */
     font-size: 2em; /* Povečajte velikost pisave */
@@ -553,6 +552,10 @@ div.tableh2h {
             padding: 0.5em;
         }
 
+        .col-2.sidenav h1 {
+        font-size: 1.25em; /* Manjša velikost pisave na manjših zaslonih */
+        }
+        
         nav ul {
             flex-wrap: wrap;
         }
