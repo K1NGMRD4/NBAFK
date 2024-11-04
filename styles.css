@@ -537,7 +537,7 @@ table.h2hstatsbyseason {
     }
     
     iframe.trenutnalestvica, iframe.trenutnalestvicapredictions {
-        height: 150vh;
+        height: 200vh;
         width: 100%;
     }
 }
