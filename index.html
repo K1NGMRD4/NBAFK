@@ -9,12 +9,16 @@
     
      <script>
         document.addEventListener("DOMContentLoaded", function() {
-            fetch("/nav.html")
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById("nav-placeholder").innerHTML = data;
-                });
-        });
+    let depth = window.location.pathname.split("/").length - 2;
+    let path = depth > 0 ? "../".repeat(depth) + "nav.html" : "nav.html";
+
+    fetch(path)
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("nav-placeholder").innerHTML = data;
+        })
+        .catch(error => console.error("Napaka pri nalaganju navigacije:", error));
+});
     </script>
 </head>
 <body>
