@@ -8,32 +8,32 @@
         <div class="hamburger" id="hamburger-menu">
             &#9776;
         </div>
-        <ul id="nav-menu"> 
-            <li><a href="index.html">Domov</a></li>
+        <ul id="nav-menu">
+            <li><a href="#" id="home-link">Domov</a></li>
             <li class="dropdown">
-                <a href="ekipe.html" class="dropbtn">Ekipe <span style="font-size: 15px">&#9660;</span></a>
-                <ul class="dropdown-content">
-                    <li><a href="ekipe/alpacas.html">Caracas Alpacas</a></li>
-                    <li><a href="ekipe/angus.html">Koprivna Black Angus</a></li>
-                    <li><a href="ekipe/carpio.html">Brdinje Cyprinus Carpio</a></li>
-                    <li><a href="ekipe/clowns.html">Vuzenica Clowns</a></li>
-                    <li><a href="ekipe/cobras.html">Bundoran Cobras</a></li>
-                    <li><a href="ekipe/cows.html">New Delhi Holy Cows</a></li>
-                    <li><a href="ekipe/ducks.html">Belgrade Ducks</a></li>
-                    <li><a href="ekipe/hedgehogs.html">Lagos Hedgehogs</a></li>
-                    <li><a href="ekipe/kakapos.html">Waipo Kakapos</a></li>
-                    <li><a href="ekipe/koalas.html">Kuala Lumpur Koalas</a></li>
-                    <li><a href="ekipe/koze.html">Gorske Koze</a></li>
-                    <li><a href="ekipe/lions.html">Green Hill Lions</a></li>
-                    <li><a href="ekipe/sloths.html">Trbonje Sloths</a></li>
-                    <li><a href="ekipe/tarantulas.html">Tokyo Tarantulas</a></li>
-                    <li><a href="ekipe/tigers.html">Taipei Tigers</a></li>
-                    <li><a href="ekipe/vesoljcki.html">Veseli Vesoljčki</a></li>
+                <a href="#" class="dropbtn" id="ekipe-link">Ekipe <span style="font-size: 15px">&#9660;</span></a>
+                <ul class="dropdown-content" id="ekipe-dropdown">
+                    <li><a href="#" id="alpacas-link">Caracas Alpacas</a></li>
+                    <li><a href="#" id="angus-link">Koprivna Black Angus</a></li>
+                    <li><a href="#" id="carpio-link">Brdinje Cyprinus Carpio</a></li>
+                    <li><a href="#" id="clowns-link">Vuzenica Clowns</a></li>
+                    <li><a href="#" id="cobras-link">Bundoran Cobras</a></li>
+                    <li><a href="#" id="cows-link">New Delhi Holy Cows</a></li>
+                    <li><a href="#" id="ducks-link">Belgrade Ducks</a></li>
+                    <li><a href="#" id="hedgehogs-link">Lagos Hedgehogs</a></li>
+                    <li><a href="#" id="kakapos-link">Waipo Kakapos</a></li>
+                    <li><a href="#" id="koalas-link">Kuala Lumpur Koalas</a></li>
+                    <li><a href="#" id="koze-link">Gorske Koze</a></li>
+                    <li><a href="#" id="lions-link">Green Hill Lions</a></li>
+                    <li><a href="#" id="sloths-link">Trbonje Sloths</a></li>
+                    <li><a href="#" id="tarantulas-link">Tokyo Tarantulas</a></li>
+                    <li><a href="#" id="tigers-link">Taipei Tigers</a></li>
+                    <li><a href="#" id="vesoljcki-link">Veseli Vesoljčki</a></li>
                 </ul>
             </li>
-            <li><a href="sezona2425.html">Sezona 2024/25</a></li>
-            <li><a href="zgodovina.html">Zgodovina</a></li>
-            <li><a href="predictions.html">Predictions</a></li>
+            <li><a href="#" id="sezona-link">Sezona 2024/25</a></li>
+            <li><a href="#" id="zgodovina-link">Zgodovina</a></li>
+            <li><a href="#" id="predictions-link">Predictions</a></li>
         </ul>
         <form class="donatebtn" action="https://www.paypal.com/donate" method="post" target="_blank">
             <input type="hidden" name="business" value="jost.mrdavsic@gmail.com">
@@ -48,31 +48,35 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Izračunamo osnovno pot glede na trenutni URL
-        let currentPath = window.location.pathname;
-        let basePath = "";
+        // Check if the page is in the root or in a subfolder
+        const isInSubfolder = window.location.pathname.includes('/');
+        
+        // Define the base path to prepend to the links
+        const basePath = isInSubfolder ? '../' : '';
 
-        // Preverimo, če smo v podmapi
-        if (currentPath.includes("/")) {
-            // Ugotovimo, koliko nivojev nazaj moramo iti
-            let pathParts = currentPath.split('/');
-            basePath = "../".repeat(pathParts.length - 2); // -2, ker je zadnji del datoteka (.html)
-        }
+        // Apply base path to all links
+        document.getElementById('home-link').href = basePath + 'index.html';
+        document.getElementById('ekipe-link').href = basePath + 'ekipe.html';
+        document.getElementById('sezona-link').href = basePath + 'sezona2425.html';
+        document.getElementById('zgodovina-link').href = basePath + 'zgodovina.html';
+        document.getElementById('predictions-link').href = basePath + 'predictions.html';
 
-        // Popravimo vse povezave v navigaciji glede na to, kje smo
-        document.querySelectorAll("nav a").forEach(link => {
-            let href = link.getAttribute("href");
-            // Če povezava ni zunanja (ne vsebuje "http"), jo prilagodimo
-            if (!href.startsWith("http")) {
-                // Dodamo basePath za prilagoditev poti
-                link.href = basePath + href;
-            }
-        });
-
-        // Popravimo pot do logotipa, če je potrebno
-        let logo = document.querySelector("nav img");
-        if (logo) {
-            logo.src = basePath + logo.getAttribute("src");
-        }
+        // Update team links
+        document.getElementById('alpacas-link').href = basePath + 'ekipe/alpacas.html';
+        document.getElementById('angus-link').href = basePath + 'ekipe/angus.html';
+        document.getElementById('carpio-link').href = basePath + 'ekipe/carpio.html';
+        document.getElementById('clowns-link').href = basePath + 'ekipe/clowns.html';
+        document.getElementById('cobras-link').href = basePath + 'ekipe/cobras.html';
+        document.getElementById('cows-link').href = basePath + 'ekipe/cows.html';
+        document.getElementById('ducks-link').href = basePath + 'ekipe/ducks.html';
+        document.getElementById('hedgehogs-link').href = basePath + 'ekipe/hedgehogs.html';
+        document.getElementById('kakapos-link').href = basePath + 'ekipe/kakapos.html';
+        document.getElementById('koalas-link').href = basePath + 'ekipe/koalas.html';
+        document.getElementById('koze-link').href = basePath + 'ekipe/koze.html';
+        document.getElementById('lions-link').href = basePath + 'ekipe/lions.html';
+        document.getElementById('sloths-link').href = basePath + 'ekipe/sloths.html';
+        document.getElementById('tarantulas-link').href = basePath + 'ekipe/tarantulas.html';
+        document.getElementById('tigers-link').href = basePath + 'ekipe/tigers.html';
+        document.getElementById('vesoljcki-link').href = basePath + 'ekipe/vesoljcki.html';
     });
 </script>
