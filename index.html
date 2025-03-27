@@ -9,10 +9,7 @@
     
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        let depth = window.location.pathname.split("/").length - 2; 
-        let path = depth > 0 ? "../".repeat(depth) + "nav.html" : "nav.html";
-
-        fetch(path)
+        fetch("/nav.html") // Absolutna pot do nav.html
             .then(response => response.text())
             .then(data => {
                 document.getElementById("nav-placeholder").innerHTML = data;
