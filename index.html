@@ -9,7 +9,8 @@
     
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        fetch("/nav.html") // Absolutna pot do nav.html
+        let basePath = window.location.origin + window.location.pathname.split("/").slice(0, 2).join("/") + "/";
+        fetch(basePath + "nav.html")
             .then(response => response.text())
             .then(data => {
                 document.getElementById("nav-placeholder").innerHTML = data;
