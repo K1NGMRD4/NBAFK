@@ -56,15 +56,14 @@
         if (currentPath.includes("/")) {
             // Ugotovimo, koliko nivojev nazaj moramo iti
             let pathParts = currentPath.split('/');
-            // Na primer: /ekipe/alpacas.html -> najdemo, da smo v "ekipe" mapi
             basePath = "../".repeat(pathParts.length - 2); // -2, ker je zadnji del datoteka (.html)
         }
 
         // Popravimo vse povezave v navigaciji glede na to, kje smo
         document.querySelectorAll("nav a").forEach(link => {
+            let href = link.getAttribute("href");
             // Če povezava ni zunanja (ne vsebuje "http"), jo prilagodimo
-            if (!link.href.startsWith("http")) {
-                let href = link.getAttribute("href");
+            if (!href.startsWith("http")) {
                 // Dodamo basePath za prilagoditev poti
                 link.href = basePath + href;
             }
