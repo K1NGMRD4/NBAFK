@@ -48,19 +48,29 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Določimo osnovno pot glede na trenutni URL
+        // Izračunamo osnovno pot glede na trenutni URL
         let currentPath = window.location.pathname;
-        let basePath = currentPath.includes("/") ? "../".repeat(currentPath.split("/").length - 2) : "";
+        let basePath = "";
 
-        // Popravimo vse povezave v navigaciji glede na to, kje se stran nahaja
+        // Preverimo, če smo v podmapi
+        if (currentPath.includes("/")) {
+            // Ugotovimo, koliko nivojev nazaj moramo iti
+            let pathParts = currentPath.split('/');
+            // Na primer: /ekipe/alpacas.html -> najdemo, da smo v "ekipe" mapi
+            basePath = "../".repeat(pathParts.length - 2); // -2, ker je zadnji del datoteka (.html)
+        }
+
+        // Popravimo vse povezave v navigaciji glede na to, kje smo
         document.querySelectorAll("nav a").forEach(link => {
             // Če povezava ni zunanja (ne vsebuje "http"), jo prilagodimo
             if (!link.href.startsWith("http")) {
-                link.href = basePath + link.getAttribute("href");
+                let href = link.getAttribute("href");
+                // Dodamo basePath za prilagoditev poti
+                link.href = basePath + href;
             }
         });
 
-        // Popravimo pot do logotipa (če je potreben)
+        // Popravimo pot do logotipa, če je potrebno
         let logo = document.querySelector("nav img");
         if (logo) {
             logo.src = basePath + logo.getAttribute("src");
