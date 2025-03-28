@@ -12,7 +12,7 @@
             padding: 0;
         }
     </style>
-    <script>
+     <script>
 document.addEventListener("DOMContentLoaded", function() {
     let basePath = window.location.origin + window.location.pathname.split("/").slice(0, 2).join("/") + "/";
     
@@ -35,6 +35,9 @@ document.addEventListener("DOMContentLoaded", function() {
         .catch(error => console.error("Napaka pri nalaganju navigacije:", error));
 });
     </script>
+</head>
+<body>
+    <div id="nav2-placeholder"></div>
     <main>
         <div class="row">
             <div class="col-2 sidenav">
