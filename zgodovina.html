@@ -14,57 +14,34 @@
 
 
     </style>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    let basePath = window.location.origin + window.location.pathname.split("/").slice(0, 2).join("/") + "/";
+    
+    // Naloži navigacijo iz nav.html
+    fetch(basePath + "nav.html")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("nav-placeholder").innerHTML = data;
+
+            // Po nalaganju navigacije doda funkcionalnost hamburger meniju
+            let hamburger = document.querySelector(".hamburger");
+            let navMenu = document.querySelector("nav ul");
+
+            if (hamburger && navMenu) {
+                hamburger.addEventListener("click", function() {
+                    navMenu.classList.toggle("show"); // Preklopi meni
+                });
+            }
+        })
+        .catch(error => console.error("Napaka pri nalaganju navigacije:", error));
+});
+
+</script>
 </head>
 <body>
-    <header>
-        <nav class="header">
-            <h3><a href="https://fantasy.espn.com/basketball/league?leagueId=32010985" target="_blank"><img src="logos/espn.png" alt="logo" style="height:90px; width:180px;" /></a>  </h3>
-            <div class="hamburger" id="hamburger-menu">
-            <!-- Hamburger ikona -->
-            &#9776;
-        </div>
-            <ul id="nav-menu"> 
-                <li><a href="index.html">Domov</a></li>
-                <li class="dropdown">
-                    <a href="ekipe.html" class="dropbtn">Ekipe <span style="font-size: 15px">&#9660;</span></a>
-                    <!--DROPDOWN-->     <ul class="dropdown-content">
-                        <li><a href="ekipe/alpacas.html">Caracas Alpacas</a> </li>
-                        <li><a href="ekipe/angus.html">Koprivna Black Angus</a></li>
-                        <li><a href="ekipe/carpio.html">Brdinje Cyprinus Carpio</a></li>
-                        <li><a href="ekipe/clowns.html">Vuzenica Clowns</a></li>
-                        <li><a href="ekipe/cobras.html">Bundoran Cobras</a></li>
-                        <li><a href="ekipe/cows.html">New Delhi Holy Cows</a></li>
-                        <li><a href="ekipe/ducks.html">Belgrade Ducks</a></li>
-                        <li><a href="ekipe/hedgehogs.html">Lagos Hedgehogs</a></li>
-                        <li><a href="ekipe/kakapos.html">Waipo Kakapos</a></li>
-                        <li><a href="ekipe/koalas.html">Kuala Lumpur Koalas</a></li>
-                        <li><a href="ekipe/koze.html">Gorske Koze</a></li>
-                        <li><a href="ekipe/lions.html">Green Hill Lions</a></li>
-                        <li><a href="ekipe/sloths.html">Trbonje Sloths</a></li>
-                        <li><a href="ekipe/tarantulas.html">Tokyo Tarantulas</a></li>
-                        <li><a href="ekipe/tigers.html">Taipei Tigers</a></li>
-                        <li><a href="ekipe/vesoljcki.html">Veseli Vesoljčki</a></li>
-                    </ul>
-                </li>
-                <li><a href="sezona2425.html">Sezona 2024/25</a></li>
-                <li><a href="zgodovina.html">Zgodovina</a></li>
-                <li><a href="predictions.html">Predictions</a></li>
-            </ul>
-            <form class="donatebtn" action="https://www.paypal.com/donate" method="post" target="_blank">
-                <!-- Identify your business so that you can collect the payments. -->
-                <input type="hidden" name="business" value="jost.mrdavsic@gmail.com">
-                <!-- Specify details about the contribution -->
-                <input type="hidden" name="no_recurring" value="5">
-                <input type="hidden" name="item_name" value="NBA Fantasy Koroska">
-                <input type="hidden" name="item_number" value="LM, Content creation & WebPage design">
-                <input type="hidden" name="currency_code" value="EUR">
-                <!-- Display the payment button. -->
-                <input type="image" name="submit" src="donate.png" alt="Donate">
-            </form>
-        </nav>
-
-    </header>
-
+    <div id="nav-placeholder"></div>
+   
     <main>
         <div class="row">
             <div class="col-2 sidenav">
