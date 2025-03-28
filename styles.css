@@ -481,7 +481,8 @@ table.h2hstatsbyseason {
   
     nav ul.show {
         display: flex;   /*prikaži meni ob kliku na hamburger*/
-        margin-top: 525px;
+        margin-top: 15em;
+        margin-left: 2em;
     }
 
     .hamburger {
