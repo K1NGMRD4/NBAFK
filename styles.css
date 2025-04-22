@@ -235,7 +235,7 @@ p {
   position: absolute;
   left: 100%;
   top: 0;
-  background-color: white;
+  background-color: #333;
   min-width: 200px;
   z-index: 1;
   list-style: none;
