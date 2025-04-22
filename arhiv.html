@@ -3,22 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ekipe</title>
+    <title>Sezona 2024/25</title>
     <link rel="icon" type="image/x-icon" href="logos/logoliga.png">
     <link rel="stylesheet" href="styles.css">
     <style>
-        figcaption {
-            text-align: center;
-            font-family: Arial;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        figure.spodnja {
-            display: flex;
-            justify-content: center;
-            width: 70%;
-        }
     </style>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
@@ -51,150 +39,84 @@ document.addEventListener("DOMContentLoaded", function() {
     <main>
         <div class="row">
             <div class="col-2 sidenav">
-                <h1>EKIPE</h1>
-                <ul class="meniekipe">
-                    <li><a href="ekipe/alpacas.html">Caracas Alpacas</a> </li>
-                    <li><a href="ekipe/angus.html">Koprivna Black Angus</a></li>
-                    <li><a href="ekipe/carpio.html">Brdinje Cyprinus Carpio</a></li>
-                    <li><a href="ekipe/clowns.html">Vuzenica Clowns</a></li>
-                    <li><a href="ekipe/cobras.html">Bundoran Cobras</a></li>
-                    <li><a href="ekipe/cows.html">New Delhi Holy Cows</a></li>
-                    <li><a href="ekipe/ducks.html">Belgrade Ducks</a></li>
-                    <li><a href="ekipe/hedgehogs.html">Lagos Hedgehogs</a></li>
-                    <li><a href="ekipe/kakapos.html">Waipo Kakapos</a></li>
-                    <li><a href="ekipe/koalas.html">Kuala Lumpur Koalas</a></li>
-                    <li><a href="ekipe/koze.html">Gorske Koze</a></li>
-                    <li><a href="ekipe/lions.html">Green Hill Lions</a></li>
-                    <li><a href="ekipe/sloths.html">Trbonje Sloths</a></li>
-                    <li><a href="ekipe/tarantulas.html">Tokyo Tarantulas</a></li>
-                    <li><a href="ekipe/tigers.html">Taipei Tigers</a></li>
-                    <li><a href="ekipe/vesoljcki.html">Veseli Vesoljčki</a></li>
-                    
+                <h1>SEZONA 24/25</h1>
+                <ul class="meniseason2425">
+                    <li><a href="krogi/basic.html">Pravila in sistem tekmovanja</a> </li>
+                    <li><a href="krogi/matchup1.html">Matchup1 (Oct 22 - Oct 27)</a> </li>
+                    <li><a href="krogi/matchup2.html">Matchup2 (Oct 28 - Nov 3)</a></li>
+                    <li><a href="krogi/matchup3.html">Matchup3 (Nov 4 - Nov 10)</a></li>
+                    <li><a href="krogi/matchup4.html">Matchup4 (Nov 11 - Nov 17)</a></li>
+                    <li><a href="krogi/matchup5.html">Matchup5 (Nov 18 - Nov 24)</a></li>
+                    <li><a href="krogi/matchup6.html">Matchup6 (Nov 25 - Dec 1)</a></li>
+                    <li><a href="krogi/matchup7.html">Matchup7 (Dec 2 - Dec 8)</a></li>
+                    <li><a href="krogi/matchup8.html">Matchup8 (Dec 9 - Dec 15)</a></li>
+                    <li><a href="krogi/matchup9.html">Matchup9 (Dec 16 - Dec 22)</a></li>
+                    <li><a href="krogi/matchup10.html">Matchup10 (Dec 23 - Jan 29)</a></li>
+                    <li><a href="krogi/matchup11.html">Matchup11 (Dec 30 - Jan 5)</a></li>
+                    <li><a href="krogi/matchup12.html">Matchup12 (Jan 6 - Jan 12)</a></li>
+                    <li><a href="krogi/matchup13.html">Matchup13 (Jan 13 - Jan 19)</a></li>
+                    <li><a href="krogi/matchup14.html">Matchup14 (Jan 20 - Feb 26)</a></li>
+                    <li><a href="krogi/matchup15.html">Matchup15 (Jan 27 - Feb 2)</a></li>
+                    <li><a href="krogi/playin.html">Play-in (Feb 3 - Feb 23) </a></li>
+                    <li><a href="krogi/playoff1.html">Playoff 1 (Feb 24 - Mar 9)</a></li>
+                    <li><a href="krogi/playoff2.html">Playoff 2 (Mar 10 - Mar 23)</a></li>
+                    <li><a href="krogi/playoff3.html">Playoff 3 (Mar 24 - Apr 6)</a></li>
                 </ul>
             </div>
 
             <div class="col-7 main">
+                <h1 style="text-align: center;"><span style="color:red; font-size: 20px;">2024/25</span> - Fantasy Koroška - <span style="color:red; font-size: 20px;">sezona 8</span> </h1>
+                <h2 style="text-align: center;">DRAFT COUNTDOWN:</h2>
+                <p id="demo"></p>
+                <script>
+                    // Set the date we're counting down to
+                    var countDownDate = new Date("Oct 19, 2025 21:30:00").getTime();
 
-                <h1 style="text-align:center">Seznam sodelujočih ekip - sezona 2024/25</h1>
-                <div class="ekipeespnlinks" style="text-align:center;">
-                    <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
-                        <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=7">
-                            <img src="logos/alpacas.png" alt="Caracas Alpacas" style="width:140px;height:140px;" />
-                        </a>
-                        <figcaption><span style="color:red;">Gašper Herkovič</span><br />Caracas Alpacas</figcaption>
-                    </figure>
+                    // Update the count down every 1 second
+                    var x = setInterval(function () {
 
-                    <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
-                        <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=11">
-                            <img src="logos/angus.jpg" alt="Koprivna Black Angus" style="width:140px;height:140px;" />
-                        </a>
-                        <figcaption style="font-size: 13px;"><span style="color:red;">Rok Lačen</span><br />Koprivna Black Angus</figcaption>
-                    </figure>
+                        // Get today's date and time
+                        var now = new Date().getTime();
 
-                    <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
-                        <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=10">
-                            <img src="logos/carpio.png" alt="Brdinje Cyprinus Carpio" style="width:140px;height:140px;" />
-                        </a>
-                        <figcaption style="font-size: 12px;"><span style="color:red;">Matevž Kavtičnik</span><br />Brdinje Cyprinus Carpio</figcaption>
-                    </figure>
+                        // Find the distance between now and the count down date
+                        var distance = countDownDate - now;
 
-                    <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
-                        <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=13">
-                            <img src="logos/clowns.png" alt="Vuzenica Clowns" style="width:140px;height:140px;" />
-                        </a>
-                        <figcaption><span style="color:red;">Matic Maher</span><br />Vuzenica Clowns</figcaption>
-                    </figure>
+                        // Time calculations for days, hours, minutes and seconds
+                        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                    <figure style="width: 140px; height: 140px; margin: 0; margin: 0; display: inline-block; ">
-                        <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=15">
-                            <img src="logos/cobras.png" alt="Bundoran Cobras" style="width:140px;height:140px;" />
-                        </a>
-                        <figcaption><span style="color:red;">Nejc Podlesnik</span><br />Bundoran Cobras</figcaption>
-                    </figure>
+                        // Output the result in an element with id="demo"
+                        document.getElementById("demo").innerHTML = days + "d " + hours + "h "
+                            + minutes + "m " + seconds + "s ";
 
-                    <figure style="width:140px; height:140px; margin: 0; display: inline-block;">
-                        <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=6">
-                            <img src="logos/cows.png" alt="New Delhi Holy Cows" style="width:140px;height:140px;" />
-                        </a>
-                        <figcaption style="font-size: 13px;"><span style="color:red;">Gašper Potočnik</span><br />New Delhi Holy Cows</figcaption>
-                    </figure>
+                        // If the count down is over, write some text
+                        if (distance < 0) {
+                            clearInterval(x);
+                            document.getElementById("demo").innerHTML = "SEASON TIME";
+                        }
+                    }, 1000);
+                </script>
 
-                    <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
-                        <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=14">
-                            <img src="logos/ducks.png" alt="Belgrade Ducks" style="width:140px;height:140px;" />
-                        </a>
-                        <figcaption><span style="color:red;">Tine Kavtičnik</span><br />Belgrade Ducks</figcaption>
-                    </figure>
+                <p>
+                    <br />
+                    Težko pričakovana sezona 2024/25 se bo začela s prvim in morda celo najpomembnejšim mejnikom - draftom - v nedeljo 20.10.2024, ob predvidoma 21.30 uri. <br /><br />
+                    V tej sezoni bo premierno ligo sestavljalo kar 16 ekip. Trije rookiji bodo poskušali mešati štrene 9 managerjem, ki so tu že od samega začetka, vmes pa so še nekateri prekaljeni mački,
+                    ki sicer tu niso od samega začetka a vendar gre za izkušene stratege, vključno z zadnjima dvema prvakoma - Nejcem Podlesnikom in Gašperjem Herkovičem. <br /> <br />
 
-                    <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
-                        <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=4">
-                            <img src="logos/hedgehogs.png" alt="Lagos Hedgehogs" style="width:140px;height:140px;" />
-                        </a>
-                        <figcaption><span style="color:red;">Aleks Jurhar</span><br />Lagos Hedgehogs</figcaption>
-                    </figure>
+                    Tekmovanje bo tudi tokrat sestavljeno iz 15 krogov rednega dela, le da bo zaradi ugodnega števila ekip tokrat vsak z vsakim obračunal le enkrat in ne bo ponovnih obračunov v zadnjih dveh matchupih. <br />
+                    Kot je razvidno tudi s tabele, ki krasi desno stran spletne strani, se bosta najboljša dva uvrstila neposredno v četrtfinale, zadnja dva bosta neposredno izpadla in s tem tudi prisiljena počastiti gajbo na pikniku,
+                    medtem ko se bodo vsi v sredini, torej na mestih med 3-14 udarili v t.i. play-inu po vzoru lige NBA. <br />
+                    Pari bodo seveda standardnih 3-14, 4-13 itd., zmagovalci parov pa se bodo zmagovalcema rednega dela priključili v polfinalu.
 
+                    Obračuni vključno s play-inom in naprej trajajo 2 tedna, medtem ko so obračuni rednega dela na sporedu znotraj enega tedna. <br />
 
-                    <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
-                        <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=18">
-                            <img src="logos/kakapos.jpg" alt="Waipo Kakapos" style="width:140px;height:140px;" />
-                        </a>
-                        <figcaption><span style="color:red;">Damjan Ilievski</span><br />Waipo Kakapos</figcaption>
-                    </figure>
+                    Za več informacij o sistemu tekmovanja si lahko ogledate celoten pravilnik tekmovanja, ki ga lahko najdete <a href="krogi/basic.html">TUKAJ.</a> <br />
+                    Prav tako lahko na spletni strani najdete razpored matchupov za vse kroge rednega dela. Pari prvega kroga so tako na voljo na <a href="krogi/matchup1.html">NA TEJ POVEZAVI.</a>
+                    Za vse ostale kroge uporabite stranski meni.
+                </p>
 
-                    <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
-                        <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=2">
-                            <img src="logos/koalas.png" alt="Kuala Lumpur Koalas" style="width:140px;height:140px;" />
-                        </a>
-                        <figcaption style="font-size: 13px;"><span style="color:red;">Rok Verčko</span><br />Kuala Lumpur Koalas</figcaption>
-                    </figure>
-
-                    <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
-                        <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=5">
-                            <img src="logos/koze.png" alt="Gorske Koze" style="width:140px;height:140px;" />
-                        </a>
-                        <figcaption><span style="color:red;">Vid Urnaut</span><br />Gorske Koze</figcaption>
-                    </figure>
-
-                    <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
-                        <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=17">
-                            <img src="logos/lions.jpg" alt="Green Hill Lions" style="width:140px;height:140px;" />
-                        </a>
-                        <figcaption><span style="color:red;">Vid Ranc</span><br />Green Hill Lions</figcaption>
-                    </figure>
-                        <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
-                            <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=8">
-                                <img src="logos/sloths.png" alt="Trbonje Sloths" style="width:140px;height:140px;" />
-                            </a>
-                            <figcaption><span style="color:red;">Jan Kupljen</span><br />Trbonje Sloths</figcaption>
-                        </figure>
-
-                        <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
-                            <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=16">
-                                <img src="logos/tarantulas.png" alt="Tokyo Tarantulas" style="width:140px;height:140px;" />
-                            </a>
-                            <figcaption><span style="color:red;">Vito Torej</span><br />Tokyo Tarantulas</figcaption>
-                        </figure>
-
-                        <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
-                            <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=1">
-                                <img src="logos/tigers.png" alt="Taipei Tigers" style="width:140px;height:140px;" />
-                            </a>
-                            <figcaption><span style="color:red;">Jošt Mrdavšič</span><br />Taipei Tigers</figcaption>
-                        </figure>
-
-                        <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
-                            <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=9">
-                                <img src="logos/vesolcki.png" alt="Veseli Vesoljčki" style="width:140px;height:140px;" />
-                            </a>
-                            <figcaption><span style="color:red;">Dušan Špalir</span><br />Veseli Vesoljčki</figcaption>
-                        </figure> <br>
-                     <p>
-                    Klik na logotip ekipe vas odpelje na pripadajočo ESPN stran ekipe. Za stran z intervjujem in osnovnimi podatki izberite stranski ali dropdown meni. <br>
-                    
-                </p>  
-                </div>
-    
-                         
             </div>
 
             <div class="col-3 lestvica">
@@ -203,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     <iframe scrolling="no" src="trenutnalestvica.html" class="trenutnalestvica"></iframe>
                 </div>
             </div>
-        </div>
+         </div>
     </main>
     <footer>
         <nav class="header">
