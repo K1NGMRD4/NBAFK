@@ -1,0 +1,260 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sezona 2024/25</title>
+    <link rel="icon" type="image/x-icon" href="../logos/logoliga.png">
+    <link rel="stylesheet" href="../styles.css">
+
+    <style>
+        table.tockovanje {
+            padding: 2px 2px;
+            margin-left: 70px;
+        }
+    </style>
+ <script>
+document.addEventListener("DOMContentLoaded", function() {
+    let basePath = window.location.origin + window.location.pathname.split("/").slice(0, 2).join("/") + "/";
+    
+    // Naloži navigacijo iz nav2.html
+    fetch(basePath + "nav2.html")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("nav2-placeholder").innerHTML = data;
+
+            // Po nalaganju navigacije doda funkcionalnost hamburger meniju
+            let hamburger = document.querySelector(".hamburger");
+            let navMenu = document.querySelector("nav ul");
+
+            if (hamburger && navMenu) {
+                hamburger.addEventListener("click", function() {
+                    navMenu.classList.toggle("show"); // Preklopi meni
+                });
+            }
+        })
+        .catch(error => console.error("Napaka pri nalaganju navigacije:", error));
+});
+    </script>
+</head>
+<body>
+    <div id="nav2-placeholder"></div>
+    <main>
+        <div class="row">
+            <div class="col-2 sidenav">
+                <h1>SEZONA 24/25</h1>
+                <ul class="meniseason2425">
+                    <li><a href="basic.html">Pravila in sistem tekmovanja</a> </li>
+                    <li><a href="matchup1.html">Matchup1 (Oct 22 - Oct 27)</a> </li>
+                    <li><a href="matchup2.html">Matchup2 (Oct 28 - Nov 3)</a></li>
+                    <li><a href="matchup3.html">Matchup3 (Nov 4 - Nov 10)</a></li>
+                    <li><a href="matchup4.html">Matchup4 (Nov 11 - Nov 17)</a></li>
+                    <li><a href="matchup5.html">Matchup5 (Nov 18 - Nov 24)</a></li>
+                    <li><a href="matchup6.html">Matchup6 (Nov 25 - Dec 1)</a></li>
+                    <li><a href="matchup7.html">Matchup7 (Dec 2 - Dec 8)</a></li>
+                    <li><a href="matchup8.html">Matchup8 (Dec 9 - Dec 15)</a></li>
+                    <li><a href="matchup9.html">Matchup9 (Dec 16 - Dec 22)</a></li>
+                    <li><a href="matchup10.html">Matchup10 (Dec 23 - Jan 29)</a></li>
+                    <li><a href="matchup11.html">Matchup11 (Dec 30 - Jan 5)</a></li>
+                    <li><a href="matchup12.html">Matchup12 (Jan 6 - Jan 12)</a></li>
+                    <li><a href="matchup13.html">Matchup13 (Jan 13 - Jan 19)</a></li>
+                    <li><a href="matchup14.html">Matchup14 (Jan 20 - Feb 26)</a></li>
+                    <li><a href="matchup15.html">Matchup15 (Jan 27 - Feb 2)</a></li>
+                    <li><a href="playin.html">Play-in (Feb 3 - Feb 23) </a></li>
+                    <li><a href="playoff1.html">Playoff 1 (Feb 24 - Mar 9)</a></li>
+                    <li><a href="playoff2.html">Playoff 2 (Mar 10 - Mar 23)</a></li>
+                    <li><a href="playoff3.html">Playoff 3 (Mar 24 - Apr 6)</a></li>
+                </ul>
+            </div>
+
+            <div class="col-7 main">
+                <h1 style="text-align: center;"><span style="color:red; font-size: 20px;">2024/25</span> - Fantasy Koroška - <span style="color:red; font-size: 20px;">sezona 8</span> </h1>
+                
+
+                <div>
+                    <h2>1) PRAVILA IGRE</h2>
+                    <p>
+                        - V sezoni 2024/25 bo v ligi premierno nastopalo kar 16 ekip. <br />
+                        - Prijavnina znaša 20€ na ekipo,kar prinaša nagradni sklad v višini 320€, <br />
+                        - Ekipa je sestavljena iz 15 igralcev (13 aktivnih + 2x IR), <br />
+                        - Aktivni igralci so omejeni na: <br />
+                        &nbsp;&nbsp;&nbsp; - 1x PG, <br />
+                        &nbsp;&nbsp;&nbsp; - 1x SG, <br />
+                        &nbsp;&nbsp;&nbsp; - 1x SF, <br />
+                        &nbsp;&nbsp;&nbsp; - 1x PF, <br />
+                        &nbsp;&nbsp;&nbsp; - 1x C, <br />
+                        &nbsp;&nbsp;&nbsp; - 1x G, <br />
+                        &nbsp;&nbsp;&nbsp; - 1x F, <br />
+                        &nbsp;&nbsp;&nbsp; - 3x UTILITY in <br />
+                        &nbsp;&nbsp;&nbsp; - 2x BENCH <br />
+                        - Točke lahko v enem dnevu prinese samo 10 igralcev.
+                    </p>
+                    <h2>2) FREE AGENTS</h2>
+                    <p>
+                        - Free agent sistem ostaja po režimu Free agency marketa z omejenim budgetom. <br />
+                        - Budget je omejen na 500$, <br />
+                        - Minimalna ponudba znaša 5$, <br />
+                        - Dovoljeni so 4 acquisitioni na teden (v playoffu x2), <br />
+                        - Deadline je vsak dan PON-NED ob 18.00 CET.
+                    </p>
+                    <h2>3) TRADES</h2>
+                    <p>
+                        - Število tradov je za vse člane neomejeno, <br />
+                        - Vsak sklenjen trade se obravnava v Facebook skupini, <br />
+                        - Za VETO je potrebnih <span style="font-weight: bold; color: red;">8 glasov proti</span>, <br />
+                        - Časa za glasovanje je 48 ur. <br />
+                        - Možno je dodajanje Free agent budgeta v trade (LM prestavi denar), <br />
+                        - Na koncu rednega dela sezone je <span style="font-weight: bold; color: red;">trade deadline -> </span> po tem datumu trejdi več niso mogoči.<br />
+                    </p>
+
+                    <h2>4) DRAFT</h2>
+                    <p>
+                        - Draft poteka po poznanem SNAKE režimu, <br />
+                        - Odvijal se bo v nedeljo, 20.10.2024, predvidoma ob 21.30 uri, <br />
+                        - Obsegal bo 14 rund (po 16 igralcev), <br />
+                        - Časa je 60 sekund za pick. <br />
+                    </p>
+                    <h2>5) TOČKOVANJE</h2>
+                    <table class="tockovanje">
+                        <tr style="background-color: dimgray;">
+                            <th>Kategorija</th>
+                            <th>Vrednost</th>
+                        </tr>
+                        <tr>
+                            <th>FGM</th>
+                            <th>2</th>
+                        </tr>
+                        <tr>
+                            <th>FGA</th>
+                            <th>-1</th>
+                        </tr>
+                        <tr>
+                            <th>3PM</th>
+                            <th>1</th>
+                        </tr>
+                        <tr>
+                            <th>REB</th>
+                            <th>1</th>
+                        </tr>
+                        <tr>
+                            <th>AST</th>
+                            <th>1</th>
+                        </tr>
+                        <tr>
+                            <th>STL</th>
+                            <th>3</th>
+                        </tr>
+                        <tr>
+                            <th>BLK</th>
+                            <th>3</th>
+                        </tr>
+                        <tr>
+                            <th>TO</th>
+                            <th>-1</th>
+                        </tr>
+                        <tr>
+                            <th>PTS</th>
+                            <th>1</th>
+                        </tr>
+                        <tr>
+                            <th>TeamWIN</th>
+                            <th>2</th>
+                        </tr>
+                    </table>
+                    <h2>6) REGULAR SEASON</h2>
+                    <p>
+                        - V rednem delu je 15 krogov matchupov (vsak z vsakim 1x), <br />
+                        - Matchup traja 1 teden, <br />
+                        - Zmagovalec je tisti, ki zbere več točk.
+                    </p>
+                    <h2>7) Razvrstitev</h2>
+                    <p>
+                        - Lestvica se generira avtomatsko po sistemu W - L - D. <br />
+                        - Končna razvrstitev vpliva na seeding za playoff.
+                    </p>
+                    <h2>8) PLAYOFF</h2>
+                    <p>
+                        - Dve najboljši ekipi po rednem delu <span style="font-weight: bold; color: red;">IMATA BYE </span>(ne igrata play-in kroga), <br />
+                        - Dve najslabši ekipi po rednem delu <span style="font-weight: bold; color: red;">IZPADETA </span> (kazen: gajba na pikniku), <br />
+                        - Ostale ekipe (od 3.-14. mesta) igrajo <span style="font-weight: bold; color: red;">PLAY IN </span> za četrtfinale po sistemu:<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp; - 3 vs 14, <br />
+                        &nbsp;&nbsp;&nbsp;&nbsp; - 4 vs 13 <br />
+                        &nbsp;&nbsp;&nbsp;&nbsp; - 5 vs 12 <br />
+                        &nbsp;&nbsp;&nbsp;&nbsp; - 6 vs 11 <br />
+                        &nbsp;&nbsp;&nbsp;&nbsp; - 7 vs 10 <br />
+                        &nbsp;&nbsp;&nbsp;&nbsp; - 8 vs 9.
+                    </p>
+                    <h2>9) OPOMBA</h2>
+                    <p>
+                        - Trade deadline je v Matchupu 15, v rednem delu. <br />
+                        - V play-in matchupu je all-star break, zato ta matchup traja 3 tedne bruto (2 tedna neto).
+                    </p>
+
+                    <h2>10) NAGRADNI SKLAD</h2>
+                    <p>
+                        - Prijavnina znaša 20€ na ekipo, <br />
+                        - Nagradni sklad znaša 320€, <br />
+                        - Delitev nagrad je sledeča: <br />
+                        &nbsp;&nbsp;&nbsp;&nbsp; 1. mesto: 150€ <br />
+                        &nbsp;&nbsp;&nbsp;&nbsp; 2. mesto: 75€ <br />
+                        &nbsp;&nbsp;&nbsp;&nbsp; 3. mesto: 20€ (prijavnina) <br />
+                        <br />
+                        &nbsp;&nbsp;&nbsp;&nbsp; Najboljši redni del: 20€ <br />
+                        &nbsp;&nbsp;&nbsp;&nbsp; Najboljši weekly score: 10€ <br />
+                        &nbsp;&nbsp;&nbsp;&nbsp; Najboljši draft pick v zadnjih 4 rundah: 10€ <br />
+                        <br />
+                        &nbsp;&nbsp;&nbsp;&nbsp; 1. mesto predictions: 25€, <br />
+                        &nbsp;&nbsp;&nbsp;&nbsp; 2. mesto predictions: 10€.
+                    </p>
+
+                </div>
+            </div>
+
+            <div class="col-3 lestvica">
+                <h2 class="lestvica">Trenutna lestvica</h2>
+                <div class="iframelestvica">
+                    <iframe scrolling="no" src="../trenutnalestvica.html" class="trenutnalestvica"></iframe>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <nav>
+            <h3><a href="https://fantasy.espn.com/basketball/league?leagueId=32010985" target="_blank"><img src="../logos/espn.png" alt="logo" style="height:90px; width:180px;" /></a>  </h3>
+            <ul>
+                <li><a href="../index.html">Domov</a></li>
+                <li><a href="../ekipe.html">Ekipe</a>
+                <li><a href="../sezona2425.html">Sezona 2024/25</a></li>
+                <li><a href="../zgodovina.html">Zgodovina</a></li>
+                <li><a href="../predictions.html">Predictions</a></li>
+            </ul>
+            <form class="donatebtn" action="https://www.paypal.com/donate" method="post" target="_blank">
+                <!-- Identify your business so that you can collect the payments. -->
+                <input type="hidden" name="business" value="jost.mrdavsic@gmail.com">
+                <!-- Specify details about the contribution -->
+                <input type="hidden" name="no_recurring" value="5">
+                <input type="hidden" name="item_name" value="NBA Fantasy Koroska">
+                <input type="hidden" name="item_number" value="LM, Content creation & WebPage design">
+                <input type="hidden" name="currency_code" value="EUR">
+                <!-- Display the payment button. -->
+                <input type="image" name="submit" src="../donate.png" alt="Donate">
+            </form>
+        </nav>
+        <p style="text-align:center; margin-top: 10px;"> <span style="font-weight: bold">&copy; NBA Fantasy Koroška &copy;</span><br /><br /> SEASON 8 <br /> <span style="font-size: 12px">since 2017</span></p>
+    </footer>
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+    var hamburgerMenu = document.getElementById("hamburger-menu");
+    var navMenu = document.getElementById("nav-menu");
+
+    if (hamburgerMenu && navMenu) {
+        hamburgerMenu.addEventListener("click", function() {
+            navMenu.classList.toggle("show");
+        });
+    } else {
+        console.error("Elementi hamburger menija ali navigacijskega menija niso najdeni.");
+    }
+});
+</script>
+</body>
+</html>
