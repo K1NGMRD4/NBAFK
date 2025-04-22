@@ -1,0 +1,248 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ekipe</title>
+    <link rel="icon" type="image/x-icon" href="logos/logoliga.png">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        figcaption {
+            text-align: center;
+            font-family: Arial;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        figure.spodnja {
+            display: flex;
+            justify-content: center;
+            width: 70%;
+        }
+    </style>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    let basePath = window.location.origin + window.location.pathname.split("/").slice(0, 2).join("/") + "/";
+    
+    // Naloži navigacijo iz nav.html
+    fetch(basePath + "nav.html")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("nav-placeholder").innerHTML = data;
+
+            // Po nalaganju navigacije doda funkcionalnost hamburger meniju
+            let hamburger = document.querySelector(".hamburger");
+            let navMenu = document.querySelector("nav ul");
+
+            if (hamburger && navMenu) {
+                hamburger.addEventListener("click", function() {
+                    navMenu.classList.toggle("show"); // Preklopi meni
+                });
+            }
+        })
+        .catch(error => console.error("Napaka pri nalaganju navigacije:", error));
+});
+
+</script>
+</head>
+<body>
+    <div id="nav-placeholder"></div>
+   
+    <main>
+        <div class="row">
+            <div class="col-2 sidenav">
+                <h1>EKIPE</h1>
+                <ul class="meniekipe">
+                    <li><a href="ekipe/alpacas.html">Caracas Alpacas</a> </li>
+                    <li><a href="ekipe/angus.html">Koprivna Black Angus</a></li>
+                    <li><a href="ekipe/carpio.html">Brdinje Cyprinus Carpio</a></li>
+                    <li><a href="ekipe/clowns.html">Vuzenica Clowns</a></li>
+                    <li><a href="ekipe/cobras.html">Bundoran Cobras</a></li>
+                    <li><a href="ekipe/cows.html">New Delhi Holy Cows</a></li>
+                    <li><a href="ekipe/ducks.html">Belgrade Ducks</a></li>
+                    <li><a href="ekipe/hedgehogs.html">Lagos Hedgehogs</a></li>
+                    <li><a href="ekipe/kakapos.html">Waipo Kakapos</a></li>
+                    <li><a href="ekipe/koalas.html">Kuala Lumpur Koalas</a></li>
+                    <li><a href="ekipe/koze.html">Gorske Koze</a></li>
+                    <li><a href="ekipe/lions.html">Green Hill Lions</a></li>
+                    <li><a href="ekipe/sloths.html">Trbonje Sloths</a></li>
+                    <li><a href="ekipe/tarantulas.html">Tokyo Tarantulas</a></li>
+                    <li><a href="ekipe/tigers.html">Taipei Tigers</a></li>
+                    <li><a href="ekipe/vesoljcki.html">Veseli Vesoljčki</a></li>
+                    
+                </ul>
+            </div>
+
+            <div class="col-7 main">
+
+                <h1 style="text-align:center">Seznam sodelujočih ekip - sezona 2024/25</h1>
+                <div class="ekipeespnlinks" style="text-align:center;">
+                    <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
+                        <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=7">
+                            <img src="logos/alpacas.png" alt="Caracas Alpacas" style="width:140px;height:140px;" />
+                        </a>
+                        <figcaption><span style="color:red;">Gašper Herkovič</span><br />Caracas Alpacas</figcaption>
+                    </figure>
+
+                    <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
+                        <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=11">
+                            <img src="logos/angus.jpg" alt="Koprivna Black Angus" style="width:140px;height:140px;" />
+                        </a>
+                        <figcaption style="font-size: 13px;"><span style="color:red;">Rok Lačen</span><br />Koprivna Black Angus</figcaption>
+                    </figure>
+
+                    <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
+                        <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=10">
+                            <img src="logos/carpio.png" alt="Brdinje Cyprinus Carpio" style="width:140px;height:140px;" />
+                        </a>
+                        <figcaption style="font-size: 12px;"><span style="color:red;">Matevž Kavtičnik</span><br />Brdinje Cyprinus Carpio</figcaption>
+                    </figure>
+
+                    <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
+                        <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=13">
+                            <img src="logos/clowns.png" alt="Vuzenica Clowns" style="width:140px;height:140px;" />
+                        </a>
+                        <figcaption><span style="color:red;">Matic Maher</span><br />Vuzenica Clowns</figcaption>
+                    </figure>
+
+                    <figure style="width: 140px; height: 140px; margin: 0; margin: 0; display: inline-block; ">
+                        <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=15">
+                            <img src="logos/cobras.png" alt="Bundoran Cobras" style="width:140px;height:140px;" />
+                        </a>
+                        <figcaption><span style="color:red;">Nejc Podlesnik</span><br />Bundoran Cobras</figcaption>
+                    </figure>
+
+                    <figure style="width:140px; height:140px; margin: 0; display: inline-block;">
+                        <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=6">
+                            <img src="logos/cows.png" alt="New Delhi Holy Cows" style="width:140px;height:140px;" />
+                        </a>
+                        <figcaption style="font-size: 13px;"><span style="color:red;">Gašper Potočnik</span><br />New Delhi Holy Cows</figcaption>
+                    </figure>
+
+                    <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
+                        <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=14">
+                            <img src="logos/ducks.png" alt="Belgrade Ducks" style="width:140px;height:140px;" />
+                        </a>
+                        <figcaption><span style="color:red;">Tine Kavtičnik</span><br />Belgrade Ducks</figcaption>
+                    </figure>
+
+                    <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
+                        <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=4">
+                            <img src="logos/hedgehogs.png" alt="Lagos Hedgehogs" style="width:140px;height:140px;" />
+                        </a>
+                        <figcaption><span style="color:red;">Aleks Jurhar</span><br />Lagos Hedgehogs</figcaption>
+                    </figure>
+
+
+                    <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
+                        <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=18">
+                            <img src="logos/kakapos.jpg" alt="Waipo Kakapos" style="width:140px;height:140px;" />
+                        </a>
+                        <figcaption><span style="color:red;">Damjan Ilievski</span><br />Waipo Kakapos</figcaption>
+                    </figure>
+
+                    <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
+                        <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=2">
+                            <img src="logos/koalas.png" alt="Kuala Lumpur Koalas" style="width:140px;height:140px;" />
+                        </a>
+                        <figcaption style="font-size: 13px;"><span style="color:red;">Rok Verčko</span><br />Kuala Lumpur Koalas</figcaption>
+                    </figure>
+
+                    <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
+                        <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=5">
+                            <img src="logos/koze.png" alt="Gorske Koze" style="width:140px;height:140px;" />
+                        </a>
+                        <figcaption><span style="color:red;">Vid Urnaut</span><br />Gorske Koze</figcaption>
+                    </figure>
+
+                    <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
+                        <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=17">
+                            <img src="logos/lions.jpg" alt="Green Hill Lions" style="width:140px;height:140px;" />
+                        </a>
+                        <figcaption><span style="color:red;">Vid Ranc</span><br />Green Hill Lions</figcaption>
+                    </figure>
+                        <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
+                            <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=8">
+                                <img src="logos/sloths.png" alt="Trbonje Sloths" style="width:140px;height:140px;" />
+                            </a>
+                            <figcaption><span style="color:red;">Jan Kupljen</span><br />Trbonje Sloths</figcaption>
+                        </figure>
+
+                        <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
+                            <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=16">
+                                <img src="logos/tarantulas.png" alt="Tokyo Tarantulas" style="width:140px;height:140px;" />
+                            </a>
+                            <figcaption><span style="color:red;">Vito Torej</span><br />Tokyo Tarantulas</figcaption>
+                        </figure>
+
+                        <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
+                            <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=1">
+                                <img src="logos/tigers.png" alt="Taipei Tigers" style="width:140px;height:140px;" />
+                            </a>
+                            <figcaption><span style="color:red;">Jošt Mrdavšič</span><br />Taipei Tigers</figcaption>
+                        </figure>
+
+                        <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
+                            <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=9">
+                                <img src="logos/vesolcki.png" alt="Veseli Vesoljčki" style="width:140px;height:140px;" />
+                            </a>
+                            <figcaption><span style="color:red;">Dušan Špalir</span><br />Veseli Vesoljčki</figcaption>
+                        </figure> <br>
+                     <p>
+                    Klik na logotip ekipe vas odpelje na pripadajočo ESPN stran ekipe. Za stran z intervjujem in osnovnimi podatki izberite stranski ali dropdown meni. <br>
+                    
+                </p>  
+                </div>
+    
+                         
+            </div>
+
+            <div class="col-3 lestvica">
+                    <!--TABELA-->
+                <div class="iframelestvica">
+                    <iframe scrolling="no" src="trenutnalestvica.html" class="trenutnalestvica"></iframe>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <nav class="header">
+            <h3><a href="https://fantasy.espn.com/basketball/league?leagueId=32010985" target="_blank"><img src="logos/espn.png" alt="logo" style="height:90px; width:180px;" /></a>  </h3>
+            <ul>
+                <li><a href="index.html">Domov</a></li>
+                <li><a href="ekipe.html">Ekipe</a>
+                <li><a href="sezona2425.html">Sezona 2024/25</a></li>
+                <li><a href="zgodovina.html">Zgodovina</a></li>
+                <li><a href="predictions.html">Predictions</a></li>
+            </ul>
+            <form class="donatebtn" action="https://www.paypal.com/donate" method="post" target="_blank">
+                <!-- Identify your business so that you can collect the payments. -->
+                <input type="hidden" name="business" value="jost.mrdavsic@gmail.com">
+                <!-- Specify details about the contribution -->
+                <input type="hidden" name="no_recurring" value="5">
+                <input type="hidden" name="item_name" value="NBA Fantasy Koroska">
+                <input type="hidden" name="item_number" value="LM, Content creation & WebPage design">
+                <input type="hidden" name="currency_code" value="EUR">
+                <!-- Display the payment button. -->
+                <input type="image" name="submit" src="donate.png" alt="Donate">
+            </form>
+        </nav>
+        <p style="text-align:center; margin-top: 10px;"> <span style="font-weight: bold">&copy; NBA Fantasy Koroška &copy;</span><br /><br /> SEASON 8 <br /> <span style="font-size: 12px">since 2017</span></p>
+    </footer>
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+    var hamburgerMenu = document.getElementById("hamburger-menu");
+    var navMenu = document.getElementById("nav-menu");
+
+    if (hamburgerMenu && navMenu) {
+        hamburgerMenu.addEventListener("click", function() {
+            navMenu.classList.toggle("show");
+        });
+    } else {
+        console.error("Elementi hamburger menija ali navigacijskega menija niso najdeni.");
+    }
+});
+</script>
+
+</body>
+</html>
