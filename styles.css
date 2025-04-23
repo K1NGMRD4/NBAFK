@@ -115,9 +115,6 @@ nav ul {
     display: flex;
 }
 
-nav.header ul {
-    margin: auto;
-}
 /* Seznamni elementi v navigaciji */
 nav ul li {
     list-style-type: none; /* Odstrani točke */
