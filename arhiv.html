@@ -7,33 +7,53 @@
     <link rel="icon" type="image/x-icon" href="logos/logoliga.png">
     <link rel="stylesheet" href="styles.css">
     <style>
-        details {
-          border: 1px solid #aaa;
-          border-radius: 8px;
-          padding: 10px;
-          max-width: 500px;
-          margin: 20px auto;
-          background-color: #f9f9f9;
-          font-family: Arial, sans-serif;
-          box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-    
-        summary {
-          font-weight: bold;
-          font-size: 1.2em;
-          cursor: pointer;
-          outline: none;
-        }
-    
-        details[open] {
-          animation: fadeIn 0.3s ease-in-out;
-        }
-    
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(-5px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      </style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #eef2f5;
+      margin: 0;
+      padding: 20px;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    details {
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 15px;
+      background-color: #ffffff;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    summary {
+      font-size: 1.3em;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 10px;
+      outline: none;
+    }
+
+    details[open] {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .slike-container img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 <body>
 
@@ -96,8 +116,8 @@ document.addEventListener("DOMContentLoaded", function() {
             <div class="col-7 main">
 
                 <details>
-  <summary>Povzetek sezone 2024/25</summary>
-  <p>8. sezona NBA Fantasy Koroška se je začela kot si nihče ni želel. S hudo dominacijo Matevža Kavtičnika. Mato je seveda vse skupaj začinil z ogromno 
+                    <summary>Povzetek sezone 2024/25</summary>
+                    <p>8. sezona NBA Fantasy Koroška se je začela kot si nihče ni želel. S hudo dominacijo Matevža Kavtičnika. Mato je seveda vse skupaj začinil z ogromno 
                     jaz-jazi na naš račun in s tem dodatno posolil rane. Izenačil je Joletov rekord za najboljši štart v sezono (7-0), preden ga je v 8. tednu končno
                     utišal heroj ljudstva, Dušan Špalir. Od tam je šlo za Matevža samo še navzdol, po nekaj poškodbah svojih rotation playerjev je namreč do konca rednega dela
                     zabeležil le še 1 zmago in se je pred končnico pozicioniral na skromno 7. mesto. Za nameček pa je v končnici njegov krvnik postal še Cici of all people. <br> <br>
@@ -118,8 +138,18 @@ document.addEventListener("DOMContentLoaded", function() {
                     odločilni dvoboj, bi zadeva morda lahko bila drugačna, toda Vid je izgleda mislil, da lahko za neporabljena FA sredstva zahteva izplačilo na transakcijski račun. 
                     Na koncu vendarle premierna titula za Verčkija, ki je prijetnih 150€ med drugim investiral v dres svojega heroja Jokerja. Zdaj njegovo ime v nekoliko zažganem fontu že 
                     krasi spominsko tablico zmagovalcev in Rok je že napovedal boj za back to back naslov v prihodnji sezoni!</p>
-</details>
-
+                  </details>
+                
+                  <!-- Drugo razširljivo okno s slikami -->
+                  <details>
+                    <summary>Best memes</summary>
+                    <div class="slike-container">
+                        <img src="memedump/akrapovic.PNG" alt="Roki Akrapovic">
+                        <img src="memedump/trinula.PNG" alt="Tri nula">
+                        <img src="memedump/kavtTrash.PNG" alt="Fastest things on Earth">
+                        <img src="memedump/kavtmissing.PNG" alt="Missing">
+                    </div>
+                  </details>
             </div>
 
             <div class="col-3 lestvica">
