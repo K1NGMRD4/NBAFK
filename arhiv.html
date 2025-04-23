@@ -7,7 +7,36 @@
     <link rel="icon" type="image/x-icon" href="logos/logoliga.png">
     <link rel="stylesheet" href="styles.css">
     <style>
-    </style>
+        details {
+          border: 1px solid #aaa;
+          border-radius: 8px;
+          padding: 10px;
+          max-width: 500px;
+          margin: 20px auto;
+          background-color: #f9f9f9;
+          font-family: Arial, sans-serif;
+          box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+    
+        summary {
+          font-weight: bold;
+          font-size: 1.2em;
+          cursor: pointer;
+          outline: none;
+        }
+    
+        details[open] {
+          animation: fadeIn 0.3s ease-in-out;
+        }
+    
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-5px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      </style>
+</head>
+<body>
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     let basePath = window.location.origin + window.location.pathname.split("/").slice(0, 2).join("/") + "/";
@@ -66,10 +95,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
             <div class="col-7 main">
 
-                <h2 style="text-align: center;"> Povzetek sezone 2024/25</h2>
-                <p>
-                    <br/>
-                    8. sezona NBA Fantasy Koroška se je začela kot si nihče ni želel. S hudo dominacijo Matevža Kavtičnika. Mato je seveda vse skupaj začinil z ogromno 
+                <details>
+  <summary>Povzetek sezone 2024/25</summary>
+  <p>8. sezona NBA Fantasy Koroška se je začela kot si nihče ni želel. S hudo dominacijo Matevža Kavtičnika. Mato je seveda vse skupaj začinil z ogromno 
                     jaz-jazi na naš račun in s tem dodatno posolil rane. Izenačil je Joletov rekord za najboljši štart v sezono (7-0), preden ga je v 8. tednu končno
                     utišal heroj ljudstva, Dušan Špalir. Od tam je šlo za Matevža samo še navzdol, po nekaj poškodbah svojih rotation playerjev je namreč do konca rednega dela
                     zabeležil le še 1 zmago in se je pred končnico pozicioniral na skromno 7. mesto. Za nameček pa je v končnici njegov krvnik postal še Cici of all people. <br> <br>
@@ -89,8 +117,8 @@ document.addEventListener("DOMContentLoaded", function() {
                     izostanek Jokiča in Cada, kar se najbrž prevede v dejstvo, da je imel veliko več rezerve Verčko. No, če bi Urnaut svojo streaming formo iz polfinala prenesel tudi na 
                     odločilni dvoboj, bi zadeva morda lahko bila drugačna, toda Vid je izgleda mislil, da lahko za neporabljena FA sredstva zahteva izplačilo na transakcijski račun. 
                     Na koncu vendarle premierna titula za Verčkija, ki je prijetnih 150€ med drugim investiral v dres svojega heroja Jokerja. Zdaj njegovo ime v nekoliko zažganem fontu že 
-                    krasi spominsko tablico zmagovalcev in Rok je že napovedal boj za back to back naslov v prihodnji sezoni!
-                </p> 
+                    krasi spominsko tablico zmagovalcev in Rok je že napovedal boj za back to back naslov v prihodnji sezoni!</p>
+</details>
 
             </div>
 
