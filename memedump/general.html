@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let basePath = window.location.origin + window.location.pathname.split("/").slice(0, 2).join("/") + "/";
     
     // Naloži navigacijo iz nav.html
-    fetch(basePath + "nav.html")
+    fetch(basePath + "nav2.html")
         .then(response => response.text())
         .then(data => {
             document.getElementById("nav-placeholder").innerHTML = data;
@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function() {
     </main>
     <footer>
         <nav class="header">
-            <h3><a href="https://fantasy.espn.com/basketball/league?leagueId=32010985" target="_blank"><img src="logos/espn.png" alt="logo" style="height:90px; width:180px;" /></a>  </h3>
+            <h3><a href="https://fantasy.espn.com/basketball/league?leagueId=32010985" target="_blank"><img src="../logos/espn.png" alt="logo" style="height:90px; width:180px;" /></a>  </h3>
             <ul>
                 <li><a href="../index.html">Domov</a></li>
                 <li><a href="../ekipe.html">Ekipe</a>
