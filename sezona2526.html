@@ -1,0 +1,170 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sezona 2024/25</title>
+    <link rel="icon" type="image/x-icon" href="logos/logoliga.png">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+    </style>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    let basePath = window.location.origin + window.location.pathname.split("/").slice(0, 2).join("/") + "/";
+    
+    // Naloži navigacijo iz nav.html
+    fetch(basePath + "nav.html")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("nav-placeholder").innerHTML = data;
+
+            // Po nalaganju navigacije doda funkcionalnost hamburger meniju
+            let hamburger = document.querySelector(".hamburger");
+            let navMenu = document.querySelector("nav ul");
+
+            if (hamburger && navMenu) {
+                hamburger.addEventListener("click", function() {
+                    navMenu.classList.toggle("show"); // Preklopi meni
+                });
+            }
+        })
+        .catch(error => console.error("Napaka pri nalaganju navigacije:", error));
+});
+
+</script>
+</head>
+<body>
+    <div id="nav-placeholder"></div>
+   
+    <main>
+        <div class="row">
+            <div class="col-2 sidenav">
+                <h1>SEZONA 24/25</h1>
+                <ul class="meniseason2425">
+                    <li><a href="krogi/basic.html">Pravila in sistem tekmovanja</a> </li>
+                    <li><a href="krogi/matchup1.html">Matchup1 (Oct 22 - Oct 27)</a> </li>
+                    <li><a href="krogi/matchup2.html">Matchup2 (Oct 28 - Nov 3)</a></li>
+                    <li><a href="krogi/matchup3.html">Matchup3 (Nov 4 - Nov 10)</a></li>
+                    <li><a href="krogi/matchup4.html">Matchup4 (Nov 11 - Nov 17)</a></li>
+                    <li><a href="krogi/matchup5.html">Matchup5 (Nov 18 - Nov 24)</a></li>
+                    <li><a href="krogi/matchup6.html">Matchup6 (Nov 25 - Dec 1)</a></li>
+                    <li><a href="krogi/matchup7.html">Matchup7 (Dec 2 - Dec 8)</a></li>
+                    <li><a href="krogi/matchup8.html">Matchup8 (Dec 9 - Dec 15)</a></li>
+                    <li><a href="krogi/matchup9.html">Matchup9 (Dec 16 - Dec 22)</a></li>
+                    <li><a href="krogi/matchup10.html">Matchup10 (Dec 23 - Jan 29)</a></li>
+                    <li><a href="krogi/matchup11.html">Matchup11 (Dec 30 - Jan 5)</a></li>
+                    <li><a href="krogi/matchup12.html">Matchup12 (Jan 6 - Jan 12)</a></li>
+                    <li><a href="krogi/matchup13.html">Matchup13 (Jan 13 - Jan 19)</a></li>
+                    <li><a href="krogi/matchup14.html">Matchup14 (Jan 20 - Feb 26)</a></li>
+                    <li><a href="krogi/matchup15.html">Matchup15 (Jan 27 - Feb 2)</a></li>
+                    <li><a href="krogi/playin.html">Play-in (Feb 3 - Feb 23) </a></li>
+                    <li><a href="krogi/playoff1.html">Playoff 1 (Feb 24 - Mar 9)</a></li>
+                    <li><a href="krogi/playoff2.html">Playoff 2 (Mar 10 - Mar 23)</a></li>
+                    <li><a href="krogi/playoff3.html">Playoff 3 (Mar 24 - Apr 6)</a></li>
+                </ul>
+            </div>
+
+            <div class="col-7 main">
+                <h1 style="text-align: center;"><span style="color:red; font-size: 20px;">2024/25</span> - Fantasy Koroška - <span style="color:red; font-size: 20px;">sezona 8</span> </h1>
+                <h2 style="text-align: center;">DRAFT COUNTDOWN:</h2>
+                <p id="demo"></p>
+                <script>
+                    // Set the date we're counting down to
+                    var countDownDate = new Date("Oct 19, 2025 21:30:00").getTime();
+
+                    // Update the count down every 1 second
+                    var x = setInterval(function () {
+
+                        // Get today's date and time
+                        var now = new Date().getTime();
+
+                        // Find the distance between now and the count down date
+                        var distance = countDownDate - now;
+
+                        // Time calculations for days, hours, minutes and seconds
+                        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                        // Output the result in an element with id="demo"
+                        document.getElementById("demo").innerHTML = days + "d " + hours + "h "
+                            + minutes + "m " + seconds + "s ";
+
+                        // If the count down is over, write some text
+                        if (distance < 0) {
+                            clearInterval(x);
+                            document.getElementById("demo").innerHTML = "SEASON TIME";
+                        }
+                    }, 1000);
+                </script>
+
+                <p>
+                    <br />
+                    Težko pričakovana sezona 2024/25 se bo začela s prvim in morda celo najpomembnejšim mejnikom - draftom - v nedeljo 20.10.2024, ob predvidoma 21.30 uri. <br /><br />
+                    V tej sezoni bo premierno ligo sestavljalo kar 16 ekip. Trije rookiji bodo poskušali mešati štrene 9 managerjem, ki so tu že od samega začetka, vmes pa so še nekateri prekaljeni mački,
+                    ki sicer tu niso od samega začetka a vendar gre za izkušene stratege, vključno z zadnjima dvema prvakoma - Nejcem Podlesnikom in Gašperjem Herkovičem. <br /> <br />
+
+                    Tekmovanje bo tudi tokrat sestavljeno iz 15 krogov rednega dela, le da bo zaradi ugodnega števila ekip tokrat vsak z vsakim obračunal le enkrat in ne bo ponovnih obračunov v zadnjih dveh matchupih. <br />
+                    Kot je razvidno tudi s tabele, ki krasi desno stran spletne strani, se bosta najboljša dva uvrstila neposredno v četrtfinale, zadnja dva bosta neposredno izpadla in s tem tudi prisiljena počastiti gajbo na pikniku,
+                    medtem ko se bodo vsi v sredini, torej na mestih med 3-14 udarili v t.i. play-inu po vzoru lige NBA. <br />
+                    Pari bodo seveda standardnih 3-14, 4-13 itd., zmagovalci parov pa se bodo zmagovalcema rednega dela priključili v polfinalu.
+
+                    Obračuni vključno s play-inom in naprej trajajo 2 tedna, medtem ko so obračuni rednega dela na sporedu znotraj enega tedna. <br />
+
+                    Za več informacij o sistemu tekmovanja si lahko ogledate celoten pravilnik tekmovanja, ki ga lahko najdete <a href="krogi/basic.html">TUKAJ.</a> <br />
+                    Prav tako lahko na spletni strani najdete razpored matchupov za vse kroge rednega dela. Pari prvega kroga so tako na voljo na <a href="krogi/matchup1.html">NA TEJ POVEZAVI.</a>
+                    Za vse ostale kroge uporabite stranski meni.
+                </p>
+
+            </div>
+
+            <div class="col-3 lestvica">
+                    <!--TABELA-->
+                <div class="iframelestvica">
+                    <iframe scrolling="no" src="trenutnalestvica.html" class="trenutnalestvica"></iframe>
+                </div>
+            </div>
+         </div>
+    </main>
+    <footer>
+        <nav class="header">
+            <h3><a href="https://fantasy.espn.com/basketball/league?leagueId=32010985" target="_blank"><img src="logos/espn.png" alt="logo" style="height:90px; width:180px;" /></a>  </h3>
+            <ul>
+                <li><a href="index.html">Domov</a></li>
+                <li><a href="ekipe.html">Ekipe</a>
+                <li><a href="sezona2425.html">Sezona 2024/25</a></li>
+                <li><a href="zgodovina.html">Zgodovina</a></li>
+                <li><a href="predictions.html">Predictions</a></li>
+            </ul>
+            <form class="donatebtn" action="https://www.paypal.com/donate" method="post" target="_blank">
+                <!-- Identify your business so that you can collect the payments. -->
+                <input type="hidden" name="business" value="jost.mrdavsic@gmail.com">
+                <!-- Specify details about the contribution -->
+                <input type="hidden" name="no_recurring" value="5">
+                <input type="hidden" name="item_name" value="NBA Fantasy Koroska">
+                <input type="hidden" name="item_number" value="LM, Content creation & WebPage design">
+                <input type="hidden" name="currency_code" value="EUR">
+                <!-- Display the payment button. -->
+                <input type="image" name="submit" src="donate.png" alt="Donate">
+            </form>
+        </nav>
+        <p style="text-align:center; margin-top: 10px;"> <span style="font-weight: bold">&copy; NBA Fantasy Koroška &copy;</span><br /><br /> SEASON 8 <br /> <span style="font-size: 12px">since 2017</span></p>
+    </footer>
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+    var hamburgerMenu = document.getElementById("hamburger-menu");
+    var navMenu = document.getElementById("nav-menu");
+
+    if (hamburgerMenu && navMenu) {
+        hamburgerMenu.addEventListener("click", function() {
+            navMenu.classList.toggle("show");
+        });
+    } else {
+        console.error("Elementi hamburger menija ali navigacijskega menija niso najdeni.");
+    }
+});
+</script>
+
+</body>
+</html>
