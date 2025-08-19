@@ -1,4 +1,11 @@
-    .crta {
+.col-7.main img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto; /* če želiš centrirati */
+}
+
+.crta {
       height: 2px;
       background: linear-gradient(to right, #ff8c00, #ffa500, #ff8c00);
       border-radius: 2px;
