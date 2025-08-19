@@ -92,11 +92,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
     <main>
         <div class="row">
+            <!-- Leva stran -->
             <div class="col-2 sidenav">
                 <h1>SEZONA 24/25</h1>
                 <ul class="meniseason2425">
-                    <li><a href="basic.html">Pravila in sistem tekmovanja</a> </li>
-                    <li><a href="matchup1.html">Matchup1 (Oct 22 - Oct 27)</a> </li>
+                    <li><a href="basic.html">Pravila in sistem tekmovanja</a></li>
+                    <li><a href="matchup1.html">Matchup1 (Oct 22 - Oct 27)</a></li>
                     <li><a href="matchup2.html">Matchup2 (Oct 28 - Nov 3)</a></li>
                     <li><a href="matchup3.html">Matchup3 (Nov 4 - Nov 10)</a></li>
                     <li><a href="matchup4.html">Matchup4 (Nov 11 - Nov 17)</a></li>
@@ -111,42 +112,43 @@ document.addEventListener("DOMContentLoaded", function() {
                     <li><a href="matchup13.html">Matchup13 (Jan 13 - Jan 19)</a></li>
                     <li><a href="matchup14.html">Matchup14 (Jan 20 - Feb 26)</a></li>
                     <li><a href="matchup15.html">Matchup15 (Jan 27 - Feb 2)</a></li>
-                    <li><a href="playin.html">Play-in (Feb 3 - Feb 23) </a></li>
+                    <li><a href="playin.html">Play-in (Feb 3 - Feb 23)</a></li>
                     <li><a href="playoff1.html">Playoff 1 (Feb 24 - Mar 9)</a></li>
                     <li><a href="playoff2.html">Playoff 2 (Mar 10 - Mar 23)</a></li>
                     <li><a href="playoff3.html">Playoff 3 (Mar 24 - Apr 6)</a></li>
                 </ul>
             </div>
 
+            <!-- Glavna vsebina -->
             <div class="col-7 main">
-                <h1 style="text-align: center;"><span style="color:red; font-size: 20px;">2025/26</span> - Fantasy Koroška - <span style="color:red; font-size: 20px;">sezona 9</span> </h1>
-                <h1 style="color: green; font-weight: bold;"> MATCHUP 1 &nbsp; (Oct 21 - 26)</h1>
-                    <img src="matchup1.PNG" style="width:85%">
-                
-                    <details>
+                <h1 style="text-align: center;">
+                    <span style="color:red; font-size: 20px;">2025/26</span> - Fantasy Koroška - 
+                    <span style="color:red; font-size: 20px;">sezona 9</span>
+                </h1>
+                <h1 style="color: green; font-weight: bold;">MATCHUP 1 &nbsp; (Oct 21 - 26)</h1>
+                <img src="matchup1.PNG" style="width:85%">
+
+                <details>
                     <summary>Recap: MATCHUP 1</summary>
-                    <p>
-                        
-                    </p>
-                  </details>
-                
-                  <!-- Drugo razširljivo okno s slikami -->
-                  <details>
+                    <p></p>
+                </details>
+
+                <details>
                     <summary>Best memes</summary>
                     <div class="slike-container">
                         <figure>
-                            <img src="..memedump/akrapovic.PNG" alt="Roki Akrapovic">
+                            <img src="../memedump/akrapovic.PNG" alt="Roki Akrapovic">
                             <figcaption>Roki Akrapovič</figcaption>
                         </figure>
-                         <div class="crta"></div>
-                        
+                        <div class="crta"></div>
                     </div>
-                  </details>
+                </details>
+
+                <!-- Komentarji -->
+                <div id="disqus_thread"></div>
             </div>
 
-<div id="disqus_thread"></div>
-            </div>
-
+            <!-- Desna stran (lestvica) -->
             <div class="col-3 lestvica">
                 <div class="iframelestvica">
                     <iframe scrolling="no" src="../trenutnalestvica.html" class="trenutnalestvica"></iframe>
@@ -154,70 +156,36 @@ document.addEventListener("DOMContentLoaded", function() {
             </div>
         </div>
     </main>
+
+    <!-- Footer -->
     <footer>
         <nav>
-            <h3><a href="https://fantasy.espn.com/basketball/league?leagueId=32010985" target="_blank"><img src="../logos/espn.png" alt="logo" style="height:90px; width:180px;" /></a>  </h3>
+            <h3>
+                <a href="https://fantasy.espn.com/basketball/league?leagueId=32010985" target="_blank">
+                    <img src="../logos/espn.png" alt="logo" style="height:90px; width:180px;" />
+                </a>
+            </h3>
             <ul>
                 <li><a href="../index.html">Domov</a></li>
-                <li><a href="../ekipe.html">Ekipe</a>
+                <li><a href="../ekipe.html">Ekipe</a></li>
                 <li><a href="../sezona2425.html">Sezona 2024/25</a></li>
                 <li><a href="../zgodovina.html">Zgodovina</a></li>
                 <li><a href="../predictions.html">Predictions</a></li>
             </ul>
             <form class="donatebtn" action="https://www.paypal.com/donate" method="post" target="_blank">
-                <!-- Identify your business so that you can collect the payments. -->
                 <input type="hidden" name="business" value="jost.mrdavsic@gmail.com">
-                <!-- Specify details about the contribution -->
                 <input type="hidden" name="no_recurring" value="5">
                 <input type="hidden" name="item_name" value="NBA Fantasy Koroska">
                 <input type="hidden" name="item_number" value="LM, Content creation & WebPage design">
                 <input type="hidden" name="currency_code" value="EUR">
-                <!-- Display the payment button. -->
                 <input type="image" name="submit" src="../donate.png" alt="Donate">
             </form>
         </nav>
-        <p style="text-align:center; margin-top: 10px;"> <span style="font-weight: bold">&copy; NBA Fantasy Koroška &copy;</span><br /><br /> SEASON 8 <br /> <span style="font-size: 12px">since 2017</span></p>
+        <p style="text-align:center; margin-top: 10px;">
+            <span style="font-weight: bold">&copy; NBA Fantasy Koroška &copy;</span><br /><br />
+            SEASON 8 <br />
+            <span style="font-size: 12px">since 2017</span>
+        </p>
     </footer>
-    <script>
-document.addEventListener("DOMContentLoaded", function() {
-    var hamburgerMenu = document.getElementById("hamburger-menu");
-    var navMenu = document.getElementById("nav-menu");
-
-    if (hamburgerMenu && navMenu) {
-        hamburgerMenu.addEventListener("click", function() {
-            navMenu.classList.toggle("show");
-        });
-    } else {
-        console.error("Elementi hamburger menija ali navigacijskega menija niso najdeni.");
-    }
-});
-    </script>
-<script>
-
-    var disqus_config = function () {
-        // Replace PAGE_URL with your page's canonical URL variable
-        this.page.url = "https://k1ngmrd4.github.io/NBAFK/krogi/matchup1.html";  
-        
-        // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-        this.page.identifier = 'matchup1'; 
-    };
-    
-    (function() {  // REQUIRED CONFIGURATION VARIABLE: EDIT THE SHORTNAME BELOW
-        var d = document, s = d.createElement('script');
-        
-        // IMPORTANT: Replace EXAMPLE with your forum shortname!
-        s.src = 'https://https-k1ngmrd4-github-io-nbafk.disqus.com/embed.js';
-        
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-</script>
-<noscript>
-    Please enable JavaScript to view the 
-    <a href="https://disqus.com/?ref_noscript" rel="nofollow">
-        comments powered by Disqus.
-    </a>
-</noscript>
-    
 </body>
 </html>
