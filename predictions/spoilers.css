@@ -27,6 +27,7 @@
     }
 
     summary {
+      color: forestgreen;
       font-size: 1.3em;
       font-weight: bold;
       cursor: pointer;
