@@ -1,0 +1,62 @@
+.col-7.main img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto; /* če želiš centrirati */
+}
+
+.crta {
+      height: 2px;
+      background: linear-gradient(to right, #ff8c00, #ffa500, #ff8c00);
+      border-radius: 2px;
+      margin: 10px auto;
+      width: 60%;
+    }
+        
+    figure, figcaption {
+        text-align: center;
+    }
+        
+    details {
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 15px;
+      background-color: #ffffff;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        
+    }
+
+    summary {
+      font-size: 1.3em;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 10px;
+      outline: none;
+    }
+
+    summary img {
+      display: block;
+      margin: 0 auto;
+      width: 60px;
+      height: auto;
+    }
+        
+    details[open] {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .slike-containter {
+        text-align: center; 
+    }
+        
+    .slike-container img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
