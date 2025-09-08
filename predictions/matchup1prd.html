@@ -37,32 +37,8 @@ document.addEventListener("DOMContentLoaded", function() {
     <div id="nav2-placeholder"></div>
     <main>
         <div class="row">
-            <div class="col-2 sidenav">
-                <h1>SEZONA 25/26</h1>
-                <ul class="menipredictions">
-                    <li><a href="basicprd.html">Season long predictions</a> </li>
-                    <li><a href="matchup1prd.html">Matchup1 (Oct 21 - Oct 26)</a> </li>
-                    <li><a href="matchup2prd.html">Matchup2 (Oct 27 - Nov 2)</a></li>
-                    <li><a href="matchup3prd.html">Matchup3 (Nov 3 - Nov 9)</a></li>
-                    <li><a href="matchup4prd.html">Matchup4 (Nov 10 - Nov 16)</a></li>
-                    <li><a href="matchup5prd.html">Matchup5 (Nov 17 - Nov 23)</a></li>
-                    <li><a href="matchup6prd.html">Matchup6 (Nov 24 - Nov 30)</a></li>
-                    <li><a href="matchup7prd.html">Matchup7 (Dec 1 - Dec 7)</a></li>
-                    <li><a href="matchup8prd.html">Matchup8 (Dec 8 - Dec 14)</a></li>
-                    <li><a href="matchup9prd.html">Matchup9 (Dec 15 - Dec 21)</a></li>
-                    <li><a href="matchup10prd.html">Matchup10 (Dec 22 - Dec 28)</a></li>
-                    <li><a href="matchup11prd.html">Matchup11 (Dec 29 - Jan 4)</a></li>
-                    <li><a href="matchup12prd.html">Matchup12 (Jan 5 - Jan 11)</a></li>
-                    <li><a href="matchup13prd.html">Matchup13 (Jan 12 - Jan 18)</a></li>
-                    <li><a href="matchup14prd.html">Matchup14 (Jan 19 - Feb 25)</a></li>
-                    <li><a href="matchup15prd.html">Matchup15 (Jan 24 - Feb 1)</a></li>
-                    <li><a href="playinprd.html">Play-in (Feb 2 - Feb 22) </a></li>
-                    <li><a href="playoff1prd.html">Playoff 1 (Feb 23 - Mar 8)</a></li>
-                    <li><a href="playoff2prd.html">Playoff 2 (Mar 9 - Mar 22)</a></li>
-                    <li><a href="playoff3prd.html">Playoff 3 (Mar 23 - Apr 5)</a></li>
-                </ul>
-            </div>
-
+            <div id="sidenav-placeholder"></div>
+        </div>
             <div class="col-7 main">
                 <h1 style="text-align: center;"><span style="color:red; font-size: 20px;">2025/26</span> - Fantasy Koroška - <span style="color:red; font-size: 20px;">sezona 9</span> </h1>
                 <h1 style="color: green; font-weight: bold;"> MATCHUP 1 &nbsp; (Oct 21 - 26)</h1>
@@ -133,6 +109,20 @@ document.addEventListener("DOMContentLoaded", function() {
         console.error("Elementi hamburger menija ali navigacijskega menija niso najdeni.");
     }
 });
+
+    // Funkcija za nalaganje HTML iz datoteke
+    function loadSidenav() {
+        fetch('sidenavPRD.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('sidenav-placeholder').innerHTML = data;
+        })
+        .catch(error => console.error('Error loading sidenav:', error));
+    }
+
+    // Pokliči funkcijo ob nalaganju strani
+    document.addEventListener('DOMContentLoaded', loadSidenav);
+
 </script>
 </body>
 </html>
