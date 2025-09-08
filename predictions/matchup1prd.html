@@ -34,10 +34,9 @@ document.addEventListener("DOMContentLoaded", function() {
     </script>
 </head>
 <body>
-    <div id="sidenav-placeholder" class="col-2"></div>
     <main>
         <div class="row">
-            <div id="sidenav-placeholder"></div>
+            <div id="sidenav-placeholder" class="col-2"></div>
             <div class="col-7 main">
                 <h1 style="text-align: center;"><span style="color:red; font-size: 20px;">2025/26</span> - Fantasy Koroška - <span style="color:red; font-size: 20px;">sezona 9</span> </h1>
                 <h1 style="color: green; font-weight: bold;"> MATCHUP 1 &nbsp; (Oct 21 - 26)</h1>
@@ -97,31 +96,38 @@ document.addEventListener("DOMContentLoaded", function() {
     </footer>
     <script>
 document.addEventListener("DOMContentLoaded", function() {
-    var hamburgerMenu = document.getElementById("hamburger-menu");
-    var navMenu = document.getElementById("nav-menu");
-
-    if (hamburgerMenu && navMenu) {
-        hamburgerMenu.addEventListener("click", function() {
-            navMenu.classList.toggle("show");
-        });
-    } else {
-        console.error("Elementi hamburger menija ali navigacijskega menija niso najdeni.");
-    }
-});
-
-    // Funkcija za nalaganje HTML iz datoteke
-    function loadSidenav() {
-        fetch('sidenavPRD.html')
+    // --- 1. Naloži glavno navigacijo ---
+    fetch('../nav2.html')
         .then(response => response.text())
         .then(data => {
-            document.getElementById('sidenav-placeholder').innerHTML = data;
+            const navPlaceholder = document.getElementById("nav2-placeholder");
+            if (navPlaceholder) {
+                navPlaceholder.innerHTML = data;
+
+                // Po nalaganju navigacije dodaj hamburger funkcionalnost
+                const hamburger = document.querySelector(".hamburger");
+                const navMenu = document.querySelector("nav ul");
+
+                if (hamburger && navMenu) {
+                    hamburger.addEventListener("click", function() {
+                        navMenu.classList.toggle("show");
+                    });
+                }
+            }
         })
-        .catch(error => console.error('Error loading sidenav:', error));
-    }
+        .catch(error => console.error("Napaka pri nalaganju glavne navigacije:", error));
 
-    // Pokliči funkcijo ob nalaganju strani
-    document.addEventListener('DOMContentLoaded', loadSidenav);
-
+    // --- 2. Naloži sidebar (sidenav) ---
+    fetch('sidenavPRD.html')
+        .then(response => response.text())
+        .then(data => {
+            const sidenavPlaceholder = document.getElementById("sidenav-placeholder");
+            if (sidenavPlaceholder) {
+                sidenavPlaceholder.innerHTML = data;
+            }
+        })
+        .catch(error => console.error("Napaka pri nalaganju sidebar-a:", error));
+});
 </script>
 </body>
 </html>
