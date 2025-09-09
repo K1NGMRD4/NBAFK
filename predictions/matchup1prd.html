@@ -103,10 +103,12 @@
         fetch("sidenavPRD.html")
             .then(r => r.text())
             .then(html => {
-                document.getElementById("sidenav-placeholder").innerHTML = html;
+                // Zamenjamo placeholder kar z vsebino iz datoteke (outerHTML ohrani col-2)
+                document.getElementById("sidenav-placeholder").outerHTML = html;
             })
             .catch(err => console.error("Napaka pri nalaganju sidenav:", err));
     });
     </script>
 </body>
 </html>
+
