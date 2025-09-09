@@ -9,87 +9,39 @@
     <link rel="stylesheet" href="spoilers.css">
     <style>
     </style>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    let basePath = window.location.origin + window.location.pathname.split("/").slice(0, 2).join("/") + "/";
-    
-    // Naloži navigacijo iz nav2.html
-    fetch(basePath + "nav2.html")
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById("nav2-placeholder").innerHTML = data;
-
-            // Po nalaganju navigacije doda funkcionalnost hamburger meniju
-            let hamburger = document.querySelector(".hamburger");
-            let navMenu = document.querySelector("nav ul");
-
-            if (hamburger && navMenu) {
-                hamburger.addEventListener("click", function() {
-                    navMenu.classList.toggle("show"); // Preklopi meni
-                });
-            }
-        })
-        .catch(error => console.error("Napaka pri nalaganju navigacije:", error));
-});
-    </script>
 </head>
 <body>
+    <!-- NAVIGATION PLACEHOLDER -->
     <div id="nav2-placeholder"></div>
+
     <main>
         <div class="row">
-            <div class="col-2 sidenav">
-                <h1>SEZONA 24/25</h1>
-                <ul class="menipredictions">
-                    <li><a href="basicprd.html">Season long predictions</a> </li>
-                    <li><a href="matchup1prd.html">Matchup1 (Oct 22 - Oct 27)</a> </li>
-                    <li><a href="matchup2prd.html">Matchup2 (Oct 28 - Nov 3)</a></li>
-                    <li><a href="matchup3prd.html">Matchup3 (Nov 4 - Nov 10)</a></li>
-                    <li><a href="matchup4prd.html">Matchup4 (Nov 11 - Nov 17)</a></li>
-                    <li><a href="matchup5prd.html">Matchup5 (Nov 18 - Nov 24)</a></li>
-                    <li><a href="matchup6prd.html">Matchup6 (Nov 25 - Dec 1)</a></li>
-                    <li><a href="matchup7prd.html">Matchup7 (Dec 2 - Dec 8)</a></li>
-                    <li><a href="matchup8prd.html">Matchup8 (Dec 9 - Dec 15)</a></li>
-                    <li><a href="matchup9prd.html">Matchup9 (Dec 16 - Dec 22)</a></li>
-                    <li><a href="matchup10prd.html">Matchup10 (Dec 23 - Jan 29)</a></li>
-                    <li><a href="matchup11prd.html">Matchup11 (Dec 30 - Jan 5)</a></li>
-                    <li><a href="matchup12prd.html">Matchup12 (Jan 6 - Jan 12)</a></li>
-                    <li><a href="matchup13prd.html">Matchup13 (Jan 13 - Jan 19)</a></li>
-                    <li><a href="matchup14prd.html">Matchup14 (Jan 20 - Feb 26)</a></li>
-                    <li><a href="matchup15prd.html">Matchup15 (Jan 27 - Feb 2)</a></li>
-                    <li><a href="playinprd.html">Play-in (Feb 3 - Feb 23) </a></li>
-                    <li><a href="playoff1prd.html">Playoff 1 (Feb 24 - Mar 9)</a></li>
-                    <li><a href="playoff2prd.html">Playoff 2 (Mar 10 - Mar 23)</a></li>
-                    <li><a href="playoff3prd.html">Playoff 3 (Mar 24 - Apr 6)</a></li>
-                </ul>
-            </div>
+            <!-- SIDENAV PLACEHOLDER -->
+            <div id="sidenav-placeholder"></div>
 
             <div class="col-7 main">
-                <h1 style="text-align: center;"><span style="color:red; font-size: 20px;">2025/26</span> - Fantasy Koroška - <span style="color:red; font-size: 20px;">sezona 9</span> </h1>
+                <h1 style="text-align: center;">
+                    <span style="color:red; font-size: 20px;">2025/26</span> - Fantasy Koroška - 
+                    <span style="color:red; font-size: 20px;">sezona 9</span> 
+                </h1>
                 <h1 style="color: green; font-weight: bold;"> MATCHUP 5 &nbsp; (Nov 17 - Nov 23)</h1>
                 <img class="predictions" src="matchup5prd.PNG">
 
-
-                
-                <h1 style="text-align: left; margin-left: 5%;">Bonus questions:</h1>
-                 <img class="predictions" src="bonusiMUP5.PNG" style="width:95%">
-                <p>
-                    BONUS1: <br />
-                    BONUS2: <br />
-                    BONUS3: <br />
-
-                </p>
-                <h1 style="text-align: left; margin-left: 5%;">TOP3 of the weeek:</h1>
-
-               
-                <p>
-                    1st: <br />
-                    2nd: <br />
-                    3rd: <br />
-
+                <h1>Bonus questions:</h1>
+                <p style="text-align: center;">
+                    BONUS1:  <br />
+                    BONUS2:  <br />
+                    BONUS3:  <br /> <br>
+                    <img class="predictions" src="bonusiMUP5.PNG" style="width: 80%; height: 80%;"> <br>
                 </p>
 
-                <img class="tockekrog" src="ptsRD5prd.PNG">
-
+                <h1>TOP3 of the weeek:</h1>
+                <p style="text-align:center;">
+                    1st:  <br />
+                    2nd:  <br />
+                    3rd:  <br />
+                </p>
+                <img class="tockekrog" src="ptsRD5prd.PNG" style="vertical-align: top;">
             </div>
 
             <div class="col-3 lestvica">
@@ -99,44 +51,65 @@ document.addEventListener("DOMContentLoaded", function() {
             </div>
         </div>
     </main>
+
     <footer>
         <nav>
-            <h3><a href="https://fantasy.espn.com/basketball/league?leagueId=32010985" target="_blank"><img src="../logos/espn.png" alt="logo" style="height:90px; width:180px;" /></a>  </h3>
+            <h3>
+                <a href="https://fantasy.espn.com/basketball/league?leagueId=32010985" target="_blank">
+                    <img src="../logos/espn.png" alt="logo" style="height:90px; width:180px;" />
+                </a>
+            </h3>
             <ul>
                 <li><a href="../index.html">Domov</a></li>
-                <li><a href="../ekipe.html">Ekipe</a>
+                <li><a href="../ekipe.html">Ekipe</a></li>
                 <li><a href="../sezona2425.html">Sezona 2024/25</a></li>
                 <li><a href="../zgodovina.html">Zgodovina</a></li>
                 <li><a href="../predictions.html">Predictions</a></li>
             </ul>
             <form class="donatebtn" action="https://www.paypal.com/donate" method="post" target="_blank">
-                <!-- Identify your business so that you can collect the payments. -->
                 <input type="hidden" name="business" value="jost.mrdavsic@gmail.com">
-                <!-- Specify details about the contribution -->
                 <input type="hidden" name="no_recurring" value="5">
                 <input type="hidden" name="item_name" value="NBA Fantasy Koroska">
                 <input type="hidden" name="item_number" value="LM, Content creation & WebPage design">
                 <input type="hidden" name="currency_code" value="EUR">
-                <!-- Display the payment button. -->
                 <input type="image" name="submit" src="../donate.png" alt="Donate">
             </form>
         </nav>
-        <p style="text-align:center; margin-top: 10px;"> <span style="font-weight: bold">&copy; NBA Fantasy Koroška &copy;</span><br /><br /> SEASON 8 <br /> <span style="font-size: 12px">since 2017</span></p>
+        <p style="text-align:center; margin-top: 10px;">
+            <span style="font-weight: bold">&copy; NBA Fantasy Koroška &copy;</span><br /><br />
+            SEASON 9 <br /> <span style="font-size: 12px">since 2017</span>
+        </p>
     </footer>
-    
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    var hamburgerMenu = document.getElementById("hamburger-menu");
-    var navMenu = document.getElementById("nav-menu");
 
-    if (hamburgerMenu && navMenu) {
-        hamburgerMenu.addEventListener("click", function() {
-            navMenu.classList.toggle("show");
-        });
-    } else {
-        console.error("Elementi hamburger menija ali navigacijskega menija niso najdeni.");
-    }
-});
-</script>
+    <!-- SCRIPT ZA VSTAVLJANJE NAV2 IN SIDENAV -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Naloži nav2 (datoteka v korenu)
+        fetch("../nav2.html")
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById("nav2-placeholder").innerHTML = html;
+
+                // hamburger menu logika
+                let hamburger = document.querySelector(".hamburger");
+                let navMenu = document.querySelector("nav ul");
+                if (hamburger && navMenu) {
+                    hamburger.addEventListener("click", function() {
+                        navMenu.classList.toggle("show");
+                    });
+                }
+            })
+            .catch(err => console.error("Napaka pri nalaganju nav2:", err));
+
+        // Naloži sidenav (datoteka v isti mapi)
+        fetch("sidenavPRD.html")
+            .then(r => r.text())
+            .then(html => {
+                // Zamenjamo placeholder kar z vsebino iz datoteke (outerHTML ohrani col-2)
+                document.getElementById("sidenav-placeholder").outerHTML = html;
+            })
+            .catch(err => console.error("Napaka pri nalaganju sidenav:", err));
+    });
+    </script>
 </body>
 </html>
