@@ -135,6 +135,40 @@ nav ul li a:hover {
 }
 
 
+/* Glavni naslov menija (primer: HOME) */
+.menu-title {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #1e293b; /* temno modra-siva */
+  letter-spacing: 2px;
+  text-align: center;
+
+  /* podčrtan poudarek */
+  position: relative;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+}
+
+.menu-title::after {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(90deg, #3b82f6, #06b6d4); /* modro-turkizni preliv */
+  margin: 8px auto 0;
+  border-radius: 2px;
+}
+
+/* Hover efekt */
+.menu-title:hover {
+  color: #3b82f6;
+  transition: color 0.3s ease;
+}
+
+
+
 /*STYLE ZA SLIKE V SUBPAGIH PREDICTIONS - MATCHUPS*/
 /*SLIKA ODDANIH PREDICTIONOV*/
 img.predictions {
