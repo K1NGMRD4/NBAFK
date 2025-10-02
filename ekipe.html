@@ -21,11 +21,12 @@
         }
 
 .ekipeespnlinks {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 kartice v eni vrstici */
+    gap: 20px; /* razmik med karticami */
+    justify-items: center; /* da so kartice lepo centrirane */
 }
+
 
 .team-card {
     width: 180px;
@@ -54,6 +55,18 @@
     font-size: 14px;
     font-weight: bold;
     line-height: 1.4;
+}
+
+        @media (max-width: 900px) {
+    .ekipeespnlinks {
+        grid-template-columns: repeat(2, 1fr); /* 2 v vrsti na tabletih */
+    }
+}
+
+@media (max-width: 500px) {
+    .ekipeespnlinks {
+        grid-template-columns: 1fr; /* 1 v vrsti na mobitelih */
+    }
 }
 
         
