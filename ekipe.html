@@ -7,37 +7,33 @@
     <link rel="icon" type="image/x-icon" href="logos/logoliga.png">
     <link rel="stylesheet" href="styles.css">
     <style>
-        figcaption {
-            text-align: center;
-            font-family: Arial;
-            font-size: 14px;
-            font-weight: bold;
-        }
+       figcaption {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+}
 
-        figure.spodnja {
-            display: flex;
-            justify-content: center;
-            width: 70%;
-        }
+figure.spodnja {
+    display: flex;
+    justify-content: center;
+    width: 70%;
+}
 
 .ekipeespnlinks {
-    display: grid;
-    grid-template-columns: repeat(5, 180px); /* vedno 5 stolpcev */
-    gap: 15px;
-    justify-content: center; /* centriraj celotno mrežo */
+    display: block; /* samo wrapper */
+    text-align: center;
 }
 
 .team-row {
-    display: flex;              /* vsaka vrstica bo flex-container */
-    justify-content: center;    /* kartice v sredini */
-    gap: 15px;                  /* razmak med karticami */
-    margin-bottom: 20px;        /* razmik med vrsticami */
-    flex-wrap: nowrap;          /* prepreči, da bi se kartice prelile v novo vrstico */
+    display: flex;
+    justify-content: center; /* poravnava vrstic na sredino */
+    gap: 15px;              /* razmik med karticami */
+    margin-bottom: 20px;    /* razmik med vrsticami */
 }
 
 .team-card {
-    width: 180px; /* ostane fiksna širina */
-    margin: 0 auto;       /* centriraj, če so ožje od stolpca */
+    width: 180px;
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.15);
@@ -45,7 +41,6 @@
     padding: 15px 10px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-
 
 .team-card:hover {
     transform: translateY(-5px);
@@ -66,19 +61,24 @@
     line-height: 1.4;
 }
 
-        @media (max-width: 900px) {
-    .ekipeespnlinks {
-        grid-template-columns: repeat(2, 1fr); /* 2 v vrsti na tabletih */
+/* Responsive */
+@media (max-width: 900px) {
+    .team-row {
+        flex-wrap: wrap;
+    }
+    .team-card {
+        flex: 1 1 40%; /* 2 v vrsto */
+        max-width: 180px;
     }
 }
 
 @media (max-width: 500px) {
-    .ekipeespnlinks {
-        grid-template-columns: 1fr; /* 1 v vrsti na mobitelih */
+    .team-card {
+        flex: 1 1 100%; /* 1 v vrsto */
+        max-width: 180px;
     }
 }
 
-        
     </style>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
