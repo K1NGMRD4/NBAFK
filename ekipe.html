@@ -21,16 +21,17 @@ figure.spodnja {
 }
 
 .ekipeespnlinks {
-    display: grid;
-    grid-template-columns: repeat(5, 180px); /* 5 stolpcev */
-    justify-content: center; /* centriraj mrežo */
-    gap: 15px; /* razmik med karticami */
+    text-align: center;  /* centrira vse vrstice */
+    max-width: 100%;
+    margin: 0 auto;
 }
 
 .team-row {
-    display: contents; /* ohrani kartice v mreži, wrapper se ne upošteva */
+    display: flex;
+    justify-content: center;  /* centrira kartice v vrstici */
+    gap: 15px;
+    margin-bottom: 20px;
 }
-
 
 .team-card {
     width: 180px;
