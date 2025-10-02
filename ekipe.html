@@ -22,13 +22,15 @@
 
 .ekipeespnlinks {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 kartice v eni vrstici */
-    justify-items: center; /* da so kartice lepo centrirane */
+    grid-template-columns: repeat(4, 1fr); /* 4 kartice v vrsti */
+    gap: 15px; /* razmik med karticami */
+    justify-items: stretch; /* kartice zapolnijo cel stolpec */
 }
 
-
 .team-card {
-    width: 180px;
+    width: 100%;          /* kartica naj sledi stolpcu */
+    max-width: 180px;     /* ampak naj bo max 180px */
+    margin: 0 auto;       /* centriraj, če so ožje od stolpca */
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.15);
@@ -36,6 +38,7 @@
     padding: 15px 10px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
 
 .team-card:hover {
     transform: translateY(-5px);
