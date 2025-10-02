@@ -19,6 +19,44 @@
             justify-content: center;
             width: 70%;
         }
+
+.ekipeespnlinks {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.team-card {
+    width: 180px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    text-align: center;
+    padding: 15px 10px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.team-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+}
+
+.team-card img {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+.team-card figcaption {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.4;
+}
+
+        
     </style>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
@@ -77,11 +115,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 <h1 style="text-align:center">Seznam sodelujočih ekip - sezona 2025/26</h1>
                 <div class="ekipeespnlinks" style="text-align:center;">
-                    <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
-                        <a style="width:140px; height:140px;" href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=7">
-                            <img src="logos/alpacas.png" alt="Caracas Alpacas" style="width:140px;height:140px;" />
+                    <figure class="team-card">
+                        <a href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=7" target="_blank">
+                            <img src="logos/alpacas.png" alt="Caracas Alpacas" />
                         </a>
-                        <figcaption><span style="color:red;">Gašper Herkovič</span><br />Caracas Alpacas</figcaption>
+                        <figcaption>
+                            <span style="color:red;">Gašper Herkovič</span><br>
+                            Caracas Alpacas
+                        </figcaption>
                     </figure>
 
                     <figure style="width: 140px; height: 140px; margin: 0; display: inline-block;">
