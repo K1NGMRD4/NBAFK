@@ -28,10 +28,11 @@
 }
 
 .team-row {
-    display: flex;
-    justify-content: center; /* centriraj kartice v vrstici */
-    gap: 15px;
-    margin-bottom: 10px;
+    display: flex;              /* vsaka vrstica bo flex-container */
+    justify-content: center;    /* kartice v sredini */
+    gap: 15px;                  /* razmak med karticami */
+    margin-bottom: 20px;        /* razmik med vrsticami */
+    flex-wrap: nowrap;          /* prepreči, da bi se kartice prelile v novo vrstico */
 }
 
 .team-card {
