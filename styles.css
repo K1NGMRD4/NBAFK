@@ -379,7 +379,7 @@ header, footer {
 
 /*STOLPCI, MOŽNE ŠIRINE*/
 [class*="col-"] {
-    float: left;
+
     padding: 0.5em;
     height: 100%;
 }
