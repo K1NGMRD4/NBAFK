@@ -167,6 +167,13 @@ nav ul li a:hover {
   transition: color 0.3s ease;
 }
 
+[class*="col-"] {
+    min-width: 0;
+}
+
+.col-3.lestvica {
+    overflow-x: auto;
+}
 
 
 /*STYLE ZA SLIKE V SUBPAGIH PREDICTIONS - MATCHUPS*/
@@ -379,7 +386,7 @@ header, footer {
 
 /*STOLPCI, MOŽNE ŠIRINE*/
 [class*="col-"] {
-
+    min-width: 0;
     padding: 0.5em;
     height: 100%;
 }
