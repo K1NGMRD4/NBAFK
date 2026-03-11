@@ -448,9 +448,14 @@ table.h2hstatsbyseason {
 /* ---- 2 COLUMN DROPDOWN ---- */
 
 .dropdown-columns {
-    display: none;
-    grid-template-columns: repeat(2, auto);
-    gap: 0 30px;
+    display: grid;
+    grid-template-rows: repeat(8, auto); /* 8 elementov na stolpec */
+    grid-auto-flow: column;               /* nato napolni naslednji stolpec */
+    gap: 0.25em 20px;                     /* vrstični in stolpični razmik */
+    background-color: #333;
+    padding: 0.5em;
+    min-width: 220px;                     /* da linki ne stisnejo */
+    z-index: 1;
 }
 
 /* ko hoveraš dropdown z columns */
