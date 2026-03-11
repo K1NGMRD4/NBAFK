@@ -133,6 +133,9 @@ nav ul li a:hover {
     border-radius: 4px;
 }
 
+.home-icon {
+    display: none;
+}
 
 /* Glavni naslov menija (primer: HOME) */
 .menu-title {
@@ -584,6 +587,18 @@ table.h2hstatsbyseason {
         font-size: 30px;
         color: white;
     }
+
+        .home-icon {
+        display: block;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 30px;
+        color: white;
+        text-decoration: none;
+        z-index: 200;
+    }
+
 
     /* Navigacija */
     nav ul {
