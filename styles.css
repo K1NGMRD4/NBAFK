@@ -544,61 +544,62 @@ table.h2hstatsbyseason {
     }
 }
 
-/* ------------------------- */
-/* MOBILE STYLING <=768px (hamburger menu) */
-/* ------------------------- */
 @media screen and (max-width: 768px) {
-    /* fallback: en stolpec, brez 2-column */
-    .dropdown-columns {
-        display: flex !important;
+
+    /* ---------------- */
+    /* DROPDOWN MOBILE */
+    /* ---------------- */
+    .dropdown-content,
+    .dropdown-columns,
+    .dropdown-sub-content {
+        display: none !important;
+        position: static !important;
+        box-shadow: none !important;
+        background-color: #333 !important;
         flex-direction: column !important;
-        grid-template-rows: none !important;
-        grid-auto-flow: row !important;
-        gap: 0 !important;
-        min-width: 180px !important;
+        opacity: 1 !important;
+        transform: none !important;
         padding: 0 !important;
+        min-width: auto !important;
     }
 
-    /* hover efekt na gumbu in linkih ostane standardni mobilni */
-    .dropdown .dropbtn:hover {
-        color: white;
-        background-color: transparent;
-    }
-
+    .dropdown .dropbtn:hover,
     .dropdown-content a:hover,
-    .dropdown-columns a:hover {
-        color: white;
-        background-color: transparent;
+    .dropdown-columns a:hover,
+    .dropdown-sub-content a:hover {
+        color: white !important;
+        background-color: transparent !important;
     }
-}
 
+    .dropdown-content.show,
+    .dropdown-columns.show,
+    .dropdown-sub-content.show {
+        display: flex !important;
+    }
 
-
-/* Postavitev za manjše zaslone (npr. telefoni) */
-@media screen and (max-width: 768px) {
+    /* ---------------- */
+    /* OSTALI MOBILE STILI */
+    /* ---------------- */
     header {
         flex-direction: column;
         align-items: flex-start;
+        position: relative;
     }
 
-    /*LOGO*/
-    .header h3 a img {
-       display: none;
-    }
+    .header h3 a img,
     .header h3 a {
         display: none;
     }
 
-    
     div.col-7.main img {
         width: 100%;
         margin: 0;
     }
-    
-      footer {
+
+    footer {
         display: none;
     }
-    
+
     .row {
         flex-direction: column;
     }
@@ -614,6 +615,7 @@ table.h2hstatsbyseason {
         margin: 0;
         padding: 0;
     }
+
     .main-content {
         width: 100%;
     }
@@ -622,21 +624,21 @@ table.h2hstatsbyseason {
         width: 100%;
     }
 
-   nav ul {
-        display: none; 
-        flex-direction: column; /* Urejanje v stolpec */
-        background-color: #333; /* Barva ozadja menija */
-        padding: 0; /* Odstrani privzeti padding */
-        margin: 0; /* Odstrani privzeti margin */
-        position: absolute; /* Zasnova za plavajoč meni */
-        width: 75%; /* Da zavzame celotno širino */
-        z-index: 100; /* Z-index, da je vedno na vrhu */
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Senčenje menija */
-        transition: max-height 0.3s ease-out; /* Prehod za gladko odpiranje/zapiranje */
-}
-  
+    nav ul {
+        display: none;
+        flex-direction: column;
+        background-color: #333;
+        padding: 0;
+        margin: 0;
+        position: absolute;
+        width: 75%;
+        z-index: 100;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        transition: max-height 0.3s ease-out;
+    }
+
     nav ul.show {
-        display: flex;   /*prikaži meni ob kliku na hamburger*/
+        display: flex;
         margin-top: 22.5em;
         margin-left: 2.5em;
     }
@@ -644,114 +646,6 @@ table.h2hstatsbyseason {
     .hamburger {
         display: block;
     }
-    
-    nav ul li {
-        border-right: none;
-        padding: 0.35em;
-    }
 
-    nav ul li:first-child {
-        border-left: none;
-    }
-    
-    nav ul li:last-child {
-        border-bottom: none;    
-    }
+    nav u
 
-    
-    nav ul li a {
-        color: white; 
-        text-decoration: none;
-        display: block;
-        transition: background-color 0.2s;
-    }
-
-    header, nav, main, iframe, footer {
-        width: 100%;
-    }
-
-    form.donatebtn {
-        margin-left: auto;
-    }
-    
-    form.donatebtn input {
-        height: 5em;
-        float: right;
-    }
-
-    div.col-2.sidenav img {
-        width: 50%;
-        }
-
-    div.col-3.lestvica {
-        
-        width: 100%;
-    }
-
-    div.slikePRD {
-        margin-left: 0;
-        width: 100%;
-    }
-    
-    iframe.trenutnalestvica, iframe.trenutnalestvicapredictions {
-        height: 200vh;
-        width: 100%;
-    }
-}
-
-div.tableh2h {
-    display: flex;
-    overflow-y: auto;
-    overflow-x: auto;
-}
-    @media screen and (min-width: 768px) and (max-width: 1200px) {
-        header {
-            padding: 0.5em;
-        }
-
-        .col-2.sidenav h1 {
-        font-size: 1.25em; /* Manjša velikost pisave na manjših zaslonih */
-        }
-        
-        nav ul {
-            flex-wrap: wrap;
-        }
-        
-        nav ul li {
-            padding: 0.25em 0.5em;
-            margin-right: 10px;
-        }
-
-        nav ul li a {
-            font-size: 0.75em;
-        }
-        
-        form.donatebtn input {
-            width: auto;
-            margin: 0 auto;
-        }
-    }      
-
-
-/* HOME ikona - skrita na večjih zaslonih */
-.home-icon {
-    display: none;
-    font-size: 30px;
-    color: white;
-    margin-left: 0.5em;
-    text-decoration: none;
-}
-
-/* Prikaži ikono poleg hamburger menija na mobilnih */
-@media screen and (max-width: 768px) {
-    .home-icon {
-        display: block;
-        position: absolute;
-        left: 50%;
-        transform: translateX(-100%);
-    }
-
-    header {
-        position: relative;
-    }
-}
