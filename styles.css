@@ -281,21 +281,19 @@ p {
     height: auto;
 }
 
-.iframelestvica {
-    position: relative;
-    width: 100%;
-    padding-bottom: 75%; /* višina v % glede na širino, prilagodite po potrebi */
-    overflow: hidden;
-    text-align: center;
-}
+.iframelestvica,
+.iframelestvicapredictions { 
+    overflow: auto; 
+    text-align: center; 
+} 
 
-iframe.trenutnalestvica {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+iframe.trenutnalestvica,
+iframe.trenutnalestvicapredictions {
     border: none;
+    margin: 0;
+    width: 100%;
+    height: 200vh; /* po potrebi prilagodi */
+    font-size: 0.5em; /* vpliva na iframe element, ne vsebino */
 }
 
 
