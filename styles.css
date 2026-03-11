@@ -470,6 +470,29 @@ table.h2hstatsbyseason {
     white-space: nowrap;
 }
 
+.dropdown::after {
+    content: "";
+    position: absolute;
+    height: 10px;
+    width: 100%;
+    bottom: -10px;
+    left: 0;
+}
+
+.dropdown-content,
+.dropdown-columns {
+    opacity: 0;
+    transform: translateY(5px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.dropdown:hover .dropdown-content,
+.dropdown:hover .dropdown-columns {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
 /* Postavitev za manjše zaslone (npr. telefoni) */
 @media screen and (max-width: 768px) {
     header {
