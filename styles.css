@@ -262,26 +262,7 @@ p {
 }
 
 
-/* Submenu */
-.dropdown-sub {
-  position: relative;
-}
 
-.dropdown-sub-content {
-  display: none;
-  position: absolute;
-  left: 100%;
-  top: 0;
-  background-color: #333;
-  min-width: 200px;
-  z-index: 1;
-  list-style: none;
-  padding: 0;
-}
-
-.dropdown-sub:hover .dropdown-sub-content {
-  display: block;
-}
 
 
 /*LASTNOSTI LEVEGA MENIJA V BODYJU*/
@@ -412,12 +393,14 @@ table.h2hstatsbyseason {
     
 }
 
-/*DROPDOWN MENI*/
-/* Dropdown container - relative positioning */
+/* DROPDOWN MENI */
+
+/* container */
 .dropdown {
     position: relative;
 }
 
+/* gumb */
 .dropdown .dropbtn {
     background-color: #333;
     color: white;
@@ -425,44 +408,62 @@ table.h2hstatsbyseason {
     display: flex;
     padding: 0.75em 1.25em;
 }
-/* Dropdown content (hidden by default) */
+
+/* osnovni dropdown (1 stolpec) */
 .dropdown-content {
     display: none;
     position: absolute;
     background-color: #333;
-    box-shadow: 0em 0.4em 0.8em 0em rgba(0,0,0,0.2);
+    box-shadow: 0em 0.4em 0.8em rgba(0,0,0,0.2);
     z-index: 1;
-    list-style-type: none;
+    list-style: none;
     padding: 0;
     margin: 0;
     top: 100%;
     left: 20%;
-}
-.dropdown-content a {
-    padding: 0.5em 0.5em;
-    font-weight: normal;
-    white-space: nowrap;
-    }
-/* Links inside the dropdown */
-.dropdown-content li {
-    display: flex;
     flex-direction: column;
 }
 
-.dropdown-content ul li {
+/* dropdown z 2 stolpcema */
+.dropdown-columns {
+    display: none;
+    position: absolute;
+    background-color: #333;
+    box-shadow: 0em 0.4em 0.8em rgba(0,0,0,0.2);
+    z-index: 1;
+    list-style: none;
     padding: 0;
-}
+    margin: 0;
+    top: 100%;
+    left: 20%;
 
-/* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {
     display: grid;
     grid-template-columns: repeat(2, auto);
-    gap: 0px 20px; /* razmak med stolpci */
+    gap: 0 20px;
 }
-/* Change the background color of the dropdown button when the dropdown content is shown */
+
+/* linki */
+.dropdown-content a,
+.dropdown-columns a {
+    padding: 0.5em 0.75em;
+    font-weight: normal;
+    white-space: nowrap;
+}
+
+/* prikaz menija */
+.dropdown:hover .dropdown-content {
+    display: flex;
+}
+
+.dropdown:hover .dropdown-columns {
+    display: grid;
+}
+
+/* hover gumb */
 .dropdown:hover .dropbtn {
     background-color: #575757;
 }
+
 
 /* Postavitev za manjše zaslone (npr. telefoni) */
 @media screen and (max-width: 768px) {
