@@ -455,8 +455,9 @@ table.h2hstatsbyseason {
 
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 0px 20px; /* razmak med stolpci */
 }
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {
