@@ -393,6 +393,21 @@ table.h2hstatsbyseason {
     
 }
 
+
+/* Submenu */ 
+
+.dropdown-sub { 
+    position: relative; 
+} 
+
+.dropdown-sub-content { 
+    isplay: none; position: absolute; left: 100%; top: 0; background-color: #333; min-width: 200px; z-index: 1; list-style: none; padding: 0; 
+} 
+
+.dropdown-sub:hover .dropdown-sub-content { 
+    display: block; 
+}
+
 /* DROPDOWN MENI */
 
 /* container */
