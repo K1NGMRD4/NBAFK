@@ -111,7 +111,6 @@ nav a {
     transition: background-color 0.2s, color 0.3s;
 
     font-family: "Segoe UI", "Inter", Arial, sans-serif;
-    font-size: 0.95rem;
     font-weight: 500;
     letter-spacing: 0.3px;
 }
