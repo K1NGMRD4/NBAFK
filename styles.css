@@ -499,6 +499,12 @@ table.h2hstatsbyseason {
     padding: 0.45em 1em;
 }
 
+.dropdown-content,
+.dropdown-columns,
+.dropdown-sub-content {
+    min-width: 180px;       /* vsaj toliko, da so linki lepo razmaknjeni */
+}
+
 .dropdown-content li,
 .dropdown-columns li {
     padding: 0;
