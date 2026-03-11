@@ -401,7 +401,14 @@ table.h2hstatsbyseason {
 } 
 
 .dropdown-sub-content { 
-    isplay: none; position: absolute; left: 100%; top: 0; background-color: #333; min-width: 200px; z-index: 1; list-style: none; padding: 0; 
+    display: none; 
+    position: absolute; 
+    left: 100%; top: 0; 
+    background-color: #333; 
+    min-width: 200px; 
+    z-index: 1; 
+    list-style: none; 
+    padding: 0; 
 } 
 
 .dropdown-sub:hover .dropdown-sub-content { 
