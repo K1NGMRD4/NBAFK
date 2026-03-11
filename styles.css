@@ -549,36 +549,13 @@ table.h2hstatsbyseason {
 
 @media screen and (max-width: 768px) {
 
-    /* Dropdown content default: skrito na mobilnih */
-    .dropdown-content,
-    .dropdown-columns,
-    .dropdown-sub-content {
-        display: none;
-        position: static;
-        box-shadow: none;
-        background-color: #333;
-        flex-direction: column;
-        opacity: 1;
-        transform: none;
-        padding: 0;
-        min-width: auto;
+        /* Odstrani hover obnašanje za dropdown na mobilnih */
+    .dropdown:hover .dropdown-content,
+    .dropdown:hover .dropdown-columns,
+    .dropdown-sub:hover .dropdown-sub-content {
+        display: none; /* nič se ne zgodi ob hoverju */
     }
-
-    /* Če ima dropdown razred .show, ga pokaži */
-    .dropdown-content.show,
-    .dropdown-columns.show,
-    .dropdown-sub-content.show {
-        display: flex;
-    }
-
-    /* Odstrani hover efekti */
-    .dropdown .dropbtn:hover,
-    .dropdown-content a:hover,
-    .dropdown-columns a:hover,
-    .dropdown-sub-content a:hover {
-        color: white;
-        background-color: transparent;
-    }
+}
 
     /* Hamburger meni */
     .hamburger {
