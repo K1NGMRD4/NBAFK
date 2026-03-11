@@ -510,6 +510,15 @@ table.h2hstatsbyseason {
     padding: 0;
 }
 
+/* Dropdown hover efekt, enak kot glavni meni */
+.dropdown-content a:hover,
+.dropdown-columns a:hover,
+.dropdown-sub-content a:hover {
+    color: #ff3b3b;                  /* rdeča barva besedila */
+    background-color: rgba(255,255,255,0.05); /* svetlo sivo ozadje */
+    border-radius: 4px;              /* zaokroženi robovi */
+    transition: background-color 0.2s, color 0.2s;
+}
 
 
 /* Postavitev za manjše zaslone (npr. telefoni) */
