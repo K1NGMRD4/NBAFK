@@ -546,40 +546,66 @@ table.h2hstatsbyseason {
 
 @media screen and (max-width: 768px) {
 
-    /* ---------------- */
-    /* DROPDOWN MOBILE */
-    /* ---------------- */
+    /* Dropdown content default: skrito na mobilnih */
     .dropdown-content,
     .dropdown-columns,
     .dropdown-sub-content {
-        display: none !important;
-        position: static !important;
-        box-shadow: none !important;
-        background-color: #333 !important;
-        flex-direction: column !important;
-        opacity: 1 !important;
-        transform: none !important;
-        padding: 0 !important;
-        min-width: auto !important;
+        display: none;
+        position: static;
+        box-shadow: none;
+        background-color: #333;
+        flex-direction: column;
+        opacity: 1;
+        transform: none;
+        padding: 0;
+        min-width: auto;
     }
 
+    /* Če ima dropdown razred .show, ga pokaži */
+    .dropdown-content.show,
+    .dropdown-columns.show,
+    .dropdown-sub-content.show {
+        display: flex;
+    }
+
+    /* Odstrani hover efekti */
     .dropdown .dropbtn:hover,
     .dropdown-content a:hover,
     .dropdown-columns a:hover,
     .dropdown-sub-content a:hover {
-        color: white !important;
-        background-color: transparent !important;
+        color: white;
+        background-color: transparent;
     }
 
-    .dropdown-content.show,
-    .dropdown-columns.show,
-    .dropdown-sub-content.show {
-        display: flex !important;
+    /* Hamburger meni */
+    .hamburger {
+        display: block;
+        cursor: pointer;
+        font-size: 30px;
+        color: white;
     }
 
-    /* ---------------- */
-    /* OSTALI MOBILE STILI */
-    /* ---------------- */
+    /* Navigacija */
+    nav ul {
+        display: none;
+        flex-direction: column;
+        background-color: #333;
+        padding: 0;
+        margin: 0;
+        position: absolute;
+        width: 75%;
+        z-index: 100;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        transition: max-height 0.3s ease-out;
+    }
+
+    nav ul.show {
+        display: flex;
+        margin-top: 22.5em;
+        margin-left: 2.5em;
+    }
+
+    /* Header adjustments */
     header {
         flex-direction: column;
         align-items: flex-start;
@@ -623,29 +649,5 @@ table.h2hstatsbyseason {
     p#demo {
         width: 100%;
     }
-
-    nav ul {
-        display: none;
-        flex-direction: column;
-        background-color: #333;
-        padding: 0;
-        margin: 0;
-        position: absolute;
-        width: 75%;
-        z-index: 100;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        transition: max-height 0.3s ease-out;
-    }
-
-    nav ul.show {
-        display: flex;
-        margin-top: 22.5em;
-        margin-left: 2.5em;
-    }
-
-    .hamburger {
-        display: block;
-    }
-
-    nav u
+}
 
