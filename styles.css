@@ -630,6 +630,12 @@ table.h2hstatsbyseason {
     .main-content {
         width: 100%;
     }
+    
+    .col-3 {
+        width: 100%;
+        
+    }
+    
 
     p#demo {
         width: 100%;
