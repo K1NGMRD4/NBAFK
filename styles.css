@@ -125,7 +125,6 @@ nav ul li {
     display: flex;
     flex-direction: row;
     padding: 0.25em 0.75em;
-    border-right: 1px solid white;
 }
 
 nav ul li a:hover {
@@ -218,10 +217,6 @@ ul.menizgodovina li a, ul.meniekipe li a, ul.meniseason2425 li a, ul.menipredict
 ul.menizgodovina li a:hover, ul.meniekipe li a:hover, ul.meniseason2425 li a:hover, ul.menipredictions li a:hover {
     color: red;
     transition: .1s;
-}
-
-nav ul li:first-child {
-    border-left: 1px solid white; /* Rob na levi strani prvega elementa */
 }
 
 .meniekipe, .menizgodovina, .menipredictions {
