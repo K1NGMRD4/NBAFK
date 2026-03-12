@@ -383,6 +383,14 @@ table.h2hstatsbyseason {
 /* DROPDOWN MENI - POPOLNA KODA */
 /* ------------------------- */
 
+nav:hover .dropdown:hover .dropdown-content {
+    display: flex;
+}
+
+nav:hover .dropdown:hover .dropdown-columns {
+    display: grid;
+}
+
 /* Submenu */
 .dropdown-sub { 
     position: relative; 
