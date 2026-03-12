@@ -432,8 +432,8 @@ table.h2hstatsbyseason {
     flex-direction: column;
 }
 
-/* Default hover (za mobilne naprave) */
-nav:hover .dropdown:hover .dropdown-content {
+/* Dropdown se odpre samo ko je hover na gumbu */
+.dropdown .dropbtn:hover + .dropdown-content {
     display: flex;
 }
 
@@ -451,8 +451,8 @@ nav:hover .dropdown:hover .dropdown-content {
     transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-nav:hover .dropdown:hover .dropdown-content,
-nav:hover .dropdown:hover .dropdown-columns {
+.dropdown .dropbtn:hover + .dropdown-content,
+.dropdown .dropbtn:hover + .dropdown-columns {
     opacity: 1;
     transform: translateY(0);
 }
@@ -497,16 +497,16 @@ nav:hover .dropdown:hover .dropdown-columns {
     /* 2-column dropdown */
     .dropdown-columns {
         display: grid;
-        grid-template-rows: repeat(8, auto); /* 8 elementov na stolpec */
-        grid-auto-flow: column;               /* nato napolni naslednji stolpec */
-        gap: 0.25em 20px;                     /* vrstični in stolpični razmik */
+        grid-template-rows: repeat(8, auto);
+        grid-auto-flow: column;
+        gap: 0.25em 20px;
         background-color: #333;
         padding: 0.5em;
-        min-width: 220px;                     /* da linki ne stisnejo */
+        min-width: 220px;
         z-index: 1;
     }
 
-    nav:hover .dropdown:hover .dropdown-columns {
+    .dropdown .dropbtn:hover + .dropdown-columns {
         display: grid;
     }
 
