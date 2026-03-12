@@ -693,25 +693,6 @@ li.dropdown:hover .dropdown-columns {
     .dropdown-columns a {
         padding: 0.75em 1em !important;
     }
-    
-    /* Podmeniji - naredimo jih relativne in zamaknemo */
-    nav ul.show li.dropdown .dropdown-content,
-    nav ul.show li.dropdown .dropdown-columns,
-    nav ul.show li.dropdown .dropdown-sub-content {
-        position: relative !important;  /* zdaj sledijo toku menija */
-        top: 0 !important;
-        left: 0 !important;
-        margin-left: 15px;             /* zamik desno */
-        display: flex !important;
-        flex-direction: column !important;
-        width: calc(100% - 15px);      /* da se ne razleze čez meni */
-        box-shadow: none;              /* po želji odstranimo shadow */
-    }
-
-    /* Še za globlje poddropdowne, da se zamik poveča */
-    nav ul.show li.dropdown li.dropdown-sub .dropdown-sub-content {
-        margin-left: 30px;
-    }
 }
 
 
