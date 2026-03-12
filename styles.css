@@ -431,11 +431,6 @@ table.h2hstatsbyseason {
     flex-direction: column;
 }
 
-/* Default hover (za mobilne naprave) */
-.dropdown:hover .dropdown-content {
-    display: flex;
-}
-
 .dropdown-content li a {
     display: block;
     padding: 0.5em 1em;
@@ -449,9 +444,19 @@ table.h2hstatsbyseason {
     transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-.dropdown:hover .dropdown-content, .dropdown:hover .dropdown-columns {
+/* PRIKAZ: samo ob hoverju na gumbu */
+.dropdown .dropbtn:hover + .dropdown-content,
+.dropdown .dropbtn:hover + .dropdown-columns {
+    display: flex;  /* za dropdown-content */
     opacity: 1;
     transform: translateY(0);
+}
+
+/* Za 2-column dropdown mora display: grid (logika vedno aktivna v media query) */
+@media screen and (min-width: 769px) {
+    .dropdown .dropbtn:hover + .dropdown-columns {
+        display: grid;
+    }
 }
 
 .dropdown-content a, .dropdown-sub-content a {
@@ -499,10 +504,6 @@ table.h2hstatsbyseason {
         z-index: 1;
     }
 
-    .dropdown:hover .dropdown-columns {
-        display: grid;
-    }
-
     /* Hover efekt za linke v 2-column */
     .dropdown-columns a {
         font-weight: 500;
@@ -528,6 +529,7 @@ table.h2hstatsbyseason {
         transition: background-color 0.2s, color 0.2s;
     }
 }
+
 
 
 
