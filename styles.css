@@ -410,6 +410,16 @@ table.h2hstatsbyseason {
     position: relative;
 }
 
+/* zaščitna cona proti hoveru od spodaj */
+.dropdown::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 20px;
+}
+
 .dropdown .dropbtn {
     background-color: #333;
     color: white;
@@ -428,12 +438,12 @@ table.h2hstatsbyseason {
     list-style: none;
     padding: 0;
     margin: 0;
-    top: 100%;
+    top: calc(100% + 20px);
     left: 0;
     flex-direction: column;
 }
 
-/* Dropdown se odpre ko je hover na dropdown kontejnerju */
+/* Dropdown se odpre samo ko je hover na dropdown kontejnerju */
 .dropdown:hover .dropdown-content {
     display: flex;
 }
