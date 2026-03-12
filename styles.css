@@ -508,6 +508,37 @@ li.dropdown:hover .dropdown-columns {
     padding: 0;
 }
 
+/* Wrapper za animacijo */
+.dropdown-wrapper {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    opacity: 0;
+    transform: translateY(5px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+/* Ob hoverju nad li.dropdown */
+li.dropdown:hover .dropdown-wrapper {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* Dropdown-columns ostane grid */
+.dropdown-columns {
+    display: grid;
+    grid-template-rows: repeat(8, auto);
+    grid-auto-flow: column;
+    gap: 0.25em 20px;
+    background-color: #333;
+    padding: 0.5em;
+    min-width: 220px;
+}
+
+
 /* ------------------------- */
 /* DESKTOP ENHANCEMENTS >=769px */
 /* ------------------------- */
