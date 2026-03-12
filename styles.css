@@ -596,9 +596,16 @@ li.dropdown:hover .dropdown-columns {
 
     nav ul.show {
         display: flex;
-        margin-top: 22.5em;
-        margin-left: 2.5em;
+        flex-direction: column;
+        position: absolute;
+        top: 3.5em; /* višina headerja, prilagodi po potrebi */
+        left: 0;     /* povsem levo */
+        width: 75%;  /* ali 100% če želiš, da pokrije cel zaslon */
+        margin: 0;
+        padding: 0;
+        z-index: 100;
     }
+
 
     /* Header adjustments */
     header {
