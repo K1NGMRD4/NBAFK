@@ -416,79 +416,68 @@ table.h2hstatsbyseason {
     padding: 0.75em 1.25em;
 }
 
-/* Osnovni dropdown (mobilna verzija in fallback) */
-.dropdown-content {
-    display: none;
+/* Osnovni dropdown (privzeto skrito) */
+.dropdown-content,
+.dropdown-columns {
+    display: flex; /* za osnovni dropdown */
+    flex-direction: column;
     position: absolute;
+    top: 100%;
+    left: 0;
     background-color: #333;
     box-shadow: 0em 0.4em 0.8em rgba(0,0,0,0.2);
     z-index: 1;
     list-style: none;
     padding: 0;
     margin: 0;
-    top: 100%;
-    left: 0;
-    flex-direction: column;
-}
 
-.dropdown-content li a {
-    display: block;
-    padding: 0.5em 1em;
-    white-space: nowrap;
-}
-
-/* Animacije za dropdown */
-.dropdown-content, .dropdown-columns {
+    /* Animacija */
     opacity: 0;
     transform: translateY(5px);
     transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none; /* ne klikabilno, ko je skrito */
 }
 
-/* PRIKAZ: samo ob hoverju na gumbu */
-.dropdown:hover .dropdown-content,
-.dropdown:hover .dropdown-columns {
+/* Dropdown linki */
+.dropdown-content a, .dropdown-sub-content a, .dropdown-columns a {
+    display: block;
+    padding: 0.45em 1em;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* Hover efekti za linke */
+.dropdown-content a:hover, .dropdown-sub-content a:hover, .dropdown-columns a:hover {
+    color: #ff3b3b;
+    background-color: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+/* Hover efekt za gumb dropdown */
+.dropdown .dropbtn:hover {
+    color: #ff3b3b;
+    background-color: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+/* PRIKAZ: ob hoverju nad celotnim li.dropdown */
+li.dropdown:hover .dropdown-content,
+li.dropdown:hover .dropdown-columns {
     display: flex; /* za dropdown-content */
     opacity: 1;
     transform: translateY(0);
+    pointer-events: auto; /* omogoči klikanje */
 }
 
-/* Za 2-column dropdown mora display: grid (logika vedno aktivna v media query) */
-@media screen and (min-width: 769px) {
-    .dropdown:hover .dropdown-columns {
-        display: grid;
-    }
-}
-
-
-
-
-.dropdown-content a, .dropdown-sub-content a {
-    font-weight: 500;
-    padding: 0.45em 1em;
-}
-
+/* Min-width dropdownov */
 .dropdown-content, .dropdown-sub-content {
     min-width: 180px;
 }
 
 .dropdown-content li, .dropdown-sub-content li {
     padding: 0;
-}
-
-/* Hover efekt za linke (mobilno in desktop) */
-.dropdown-content a:hover, .dropdown-sub-content a:hover {
-    color: #ff3b3b;
-    background-color: rgba(255,255,255,0.05);
-    border-radius: 4px;
-    transition: background-color 0.2s, color 0.2s;
-}
-
-/* Hover efekt za gumb dropdown (desktop) */
-.dropdown .dropbtn:hover {
-    color: #ff3b3b;
-    background-color: rgba(255,255,255,0.05);
-    border-radius: 4px;
-    transition: background-color 0.2s, color 0.2s;
 }
 
 /* ------------------------- */
@@ -507,7 +496,7 @@ table.h2hstatsbyseason {
         z-index: 1;
     }
 
-    /* Hover efekt za linke v 2-column */
+    /* Dropdown linki v 2-column */
     .dropdown-columns a {
         font-weight: 500;
         padding: 0.45em 1em;
@@ -532,6 +521,8 @@ table.h2hstatsbyseason {
         transition: background-color 0.2s, color 0.2s;
     }
 }
+
+
 
 
 
