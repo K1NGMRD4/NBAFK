@@ -433,7 +433,7 @@ table.h2hstatsbyseason {
 }
 
 /* Default hover (za mobilne naprave) */
-.dropdown:hover .dropdown-content {
+nav:hover .dropdown:hover .dropdown-content {
     display: flex;
 }
 
@@ -451,8 +451,8 @@ table.h2hstatsbyseason {
     transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-.dropdown:hover .dropdown-content,
-.dropdown:hover .dropdown-columns {
+nav:hover .dropdown:hover .dropdown-content,
+nav:hover .dropdown:hover .dropdown-columns {
     opacity: 1;
     transform: translateY(0);
 }
@@ -506,7 +506,7 @@ table.h2hstatsbyseason {
         z-index: 1;
     }
 
-    .dropdown:hover .dropdown-columns {
+    nav:hover .dropdown:hover .dropdown-columns {
         display: grid;
     }
 
@@ -535,6 +535,7 @@ table.h2hstatsbyseason {
         transition: background-color 0.2s, color 0.2s;
     }
 }
+
 
 @media screen and (max-width: 768px) {
 
