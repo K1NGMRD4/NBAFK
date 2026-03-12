@@ -383,7 +383,6 @@ table.h2hstatsbyseason {
 /* DROPDOWN MENI - POPOLNA KODA */
 /* ------------------------- */
 
-
 /* Submenu */
 .dropdown-sub { 
     position: relative; 
@@ -410,16 +409,6 @@ table.h2hstatsbyseason {
     position: relative;
 }
 
-/* zaščitna cona proti hoveru od spodaj */
-.dropdown::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    height: 20px;
-}
-
 .dropdown .dropbtn {
     background-color: #333;
     color: white;
@@ -438,13 +427,13 @@ table.h2hstatsbyseason {
     list-style: none;
     padding: 0;
     margin: 0;
-    top: calc(100% + 20px);
+    top: 100%;
     left: 0;
     flex-direction: column;
 }
 
-/* Dropdown se odpre samo ko je hover na dropdown kontejnerju */
-.dropdown:hover .dropdown-content {
+/* POMEMBNO: dropdown se odpre samo, če je hover na gumbu */
+.dropdown .dropbtn:hover + .dropdown-content {
     display: flex;
 }
 
@@ -454,29 +443,15 @@ table.h2hstatsbyseason {
     white-space: nowrap;
 }
 
-/* Animacije za dropdown */
-.dropdown-content,
-.dropdown-columns {
-    opacity: 0;
-    transform: translateY(5px);
-    transition: opacity 0.2s ease, transform 0.2s ease;
-}
+/* Brez animacij, čisti display efekt */
 
-.dropdown:hover .dropdown-content,
-.dropdown:hover .dropdown-columns {
-    opacity: 1;
-    transform: translateY(0);
-}
-
+/* Slogi linkov */
 .dropdown-content a,
 .dropdown-sub-content a {
     font-weight: 500;
     padding: 0.45em 1em;
-}
-
-.dropdown-content,
-.dropdown-sub-content {
-    min-width: 180px;
+    color: white;
+    text-decoration: none;
 }
 
 .dropdown-content li,
@@ -490,15 +465,13 @@ table.h2hstatsbyseason {
     color: #ff3b3b;
     background-color: rgba(255,255,255,0.05);
     border-radius: 4px;
-    transition: background-color 0.2s, color 0.2s;
 }
 
-/* Hover efekt za gumb dropdown (desktop) */
+/* Hover efekt za gumb dropdown */
 .dropdown .dropbtn:hover {
     color: #ff3b3b;
     background-color: rgba(255,255,255,0.05);
     border-radius: 4px;
-    transition: background-color 0.2s, color 0.2s;
 }
 
 /* ------------------------- */
@@ -518,11 +491,10 @@ table.h2hstatsbyseason {
         z-index: 1;
     }
 
-    .dropdown:hover .dropdown-columns {
+    .dropdown .dropbtn:hover + .dropdown-columns {
         display: grid;
     }
 
-    /* Hover efekt za linke v 2-column */
     .dropdown-columns a {
         font-weight: 500;
         padding: 0.45em 1em;
@@ -536,7 +508,6 @@ table.h2hstatsbyseason {
         color: #ff3b3b;
         background-color: rgba(255,255,255,0.05);
         border-radius: 4px;
-        transition: background-color 0.2s, color 0.2s;
     }
 
     /* Hover efekt za gumb dropdown */
@@ -544,7 +515,6 @@ table.h2hstatsbyseason {
         color: #ff3b3b;
         background-color: rgba(255,255,255,0.05);
         border-radius: 4px;
-        transition: background-color 0.2s, color 0.2s;
     }
 }
 
