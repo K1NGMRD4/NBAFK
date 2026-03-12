@@ -432,7 +432,7 @@ table.h2hstatsbyseason {
 }
 
 /* Default hover (za mobilne naprave) */
-.dropdown .dropdown:hover + .dropdown-content {
+.dropdown .dropbtn:hover + .dropdown-content {
     display: flex;
 }
 
@@ -443,16 +443,20 @@ table.h2hstatsbyseason {
 }
 
 /* Animacije za dropdown */
-.dropdown-content, .dropdown-columns {
+
+.dropdown-content,
+.dropdown-columns {
     opacity: 0;
     transform: translateY(5px);
     transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-.dropdown:hover .dropdown-content, .dropdown:hover .dropdown-columns {
+.dropdown .dropbtn:hover + .dropdown-content,
+.dropdown:hover .dropdown-columns {
     opacity: 1;
     transform: translateY(0);
 }
+
 
 .dropdown-content a, .dropdown-sub-content a {
     font-weight: 500;
