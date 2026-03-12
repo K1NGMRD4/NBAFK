@@ -606,6 +606,20 @@ li.dropdown:hover .dropdown-columns {
         z-index: 100;
     }
 
+    nav ul.show li.dropdown .dropdown-content {
+        position: relative; /* da ne bo več absolutno */
+        top: 0;
+        left: 0;
+        margin-left: 10px; /* zamik desno */
+        min-width: calc(100% - 10px); /* da se ne razleze čez */
+        display: flex;
+        flex-direction: column;
+    }
+
+    nav ul.show li.dropdown .dropdown-sub-content {
+        margin-left: 10px; /* še globlje podmeni enako */
+    }
+
 
     /* Header adjustments */
     header {
