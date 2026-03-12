@@ -444,23 +444,22 @@ table.h2hstatsbyseason {
     transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-/* PRIKAZ: ob hoverju na gumbu ali dropdown vsebino */
-.dropdown .dropbtn:hover + .dropdown-content,
-.dropdown .dropbtn:hover + .dropdown-columns,
-.dropdown-content:hover,
-.dropdown-columns:hover {
-    display: flex;   /* za dropdown-content */
+/* PRIKAZ: dropdown se pokaže, ko je hover nad gumbom ali nad dropdown vsebino */
+.dropdown:hover .dropbtn,
+.dropdown:hover .dropdown-content,
+.dropdown:hover .dropdown-columns {
     opacity: 1;
     transform: translateY(0);
+    display: flex; /* za dropdown-content */
 }
 
 /* Za 2-column dropdown na desktopu ostane display: grid */
 @media screen and (min-width: 769px) {
-    .dropdown .dropbtn:hover + .dropdown-columns,
-    .dropdown-columns:hover {
+    .dropdown:hover .dropdown-columns {
         display: grid;
     }
 }
+
 
 
 .dropdown-content a, .dropdown-sub-content a {
