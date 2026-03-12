@@ -445,8 +445,8 @@ table.h2hstatsbyseason {
 }
 
 /* PRIKAZ: samo ob hoverju na gumbu */
-.dropdown .dropbtn:hover + .dropdown-content,
-.dropdown .dropbtn:hover + .dropdown-columns {
+.dropdown:hover .dropdown-content,
+.dropdown:hover .dropdown-columns {
     display: flex; /* za dropdown-content */
     opacity: 1;
     transform: translateY(0);
@@ -454,7 +454,7 @@ table.h2hstatsbyseason {
 
 /* Za 2-column dropdown mora display: grid (logika vedno aktivna v media query) */
 @media screen and (min-width: 769px) {
-    .dropdown .dropbtn:hover + .dropdown-columns {
+    .dropdown:hover .dropdown-columns {
         display: grid;
     }
 }
