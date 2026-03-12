@@ -432,7 +432,7 @@ table.h2hstatsbyseason {
 }
 
 /* Default hover (za mobilne naprave) */
-.dropdown .dropbtn:hover + .dropdown-content {
+.dropdown:hover .dropdown-content {
     display: flex;
 }
 
