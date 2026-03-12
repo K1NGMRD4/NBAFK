@@ -417,9 +417,8 @@ table.h2hstatsbyseason {
 }
 
 /* Osnovni dropdown (privzeto skrito) */
-.dropdown-content,
-.dropdown-columns {
-    display: flex; /* za osnovni dropdown */
+.dropdown-content {
+    display: flex; /* enostolpčni dropdown ostane flex */
     flex-direction: column;
     position: absolute;
     top: 100%;
@@ -435,8 +434,29 @@ table.h2hstatsbyseason {
     opacity: 0;
     transform: translateY(5px);
     transition: opacity 0.2s ease, transform 0.2s ease;
-    pointer-events: none; /* ne klikabilno, ko je skrito */
+    pointer-events: none;
 }
+
+.dropdown-columns {
+    display: grid; /* vedno grid, da se ohranijo stolpci */
+    grid-template-rows: repeat(8, auto);
+    grid-auto-flow: column;
+    gap: 0.25em 20px;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #333;
+    padding: 0.5em;
+    min-width: 220px;
+    z-index: 1;
+
+    /* Animacija */
+    opacity: 0;
+    transform: translateY(5px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+}
+
 
 /* Dropdown linki */
 .dropdown-content a, .dropdown-sub-content a, .dropdown-columns a {
@@ -463,13 +483,20 @@ table.h2hstatsbyseason {
 }
 
 /* PRIKAZ: ob hoverju nad celotnim li.dropdown */
-li.dropdown:hover .dropdown-content,
+li.dropdown:hover .dropdown-content {
+    display: flex; /* ostane flex za enostolpčni dropdown */
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
 li.dropdown:hover .dropdown-columns {
-    display: flex; /* za dropdown-content */
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto; /* omogoči klikanje */
+    /* display: grid je že privzeto, ne spreminjaj ga */
 }
+
 
 /* Min-width dropdownov */
 .dropdown-content, .dropdown-sub-content {
