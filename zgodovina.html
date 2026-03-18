@@ -6,7 +6,9 @@
     <link rel="stylesheet" href="styles.css">
     <title>Pretekli zmagovalci</title>
     <link rel="icon" type="image/x-icon" href="logos/logoliga.png">
-   .sezone-grid {
+  
+    <style> 
+    .sezone-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* 3 stolpci = 3 sezone */
     gap: 20px;
@@ -78,7 +80,7 @@
         grid-template-columns: 1fr;
     }
 }
-
+</style>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     let basePath = window.location.origin + window.location.pathname.split("/").slice(0, 2).join("/") + "/";
