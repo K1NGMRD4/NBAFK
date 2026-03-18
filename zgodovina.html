@@ -8,9 +8,78 @@
     <link rel="icon" type="image/x-icon" href="logos/logoliga.png">
     <style>
 
-        caption {
-            caption-side: bottom;
-        }
+ .zmagovalci-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 stolpci */
+    gap: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.zmagovalec-card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    text-align: center;
+    padding: 15px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.zmagovalec-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 18px rgba(0,0,0,0.25);
+}
+
+.zmagovalec-card img {
+    width: 100%;
+    height: auto;
+    max-height: 140px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+.zmagovalec-card h3 {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+.zmagovalec-card p {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    margin: 3px 0;
+}
+
+/* Medal styles */
+.gold {
+    border-top: 5px solid gold;
+}
+
+.silver {
+    border-top: 5px solid silver;
+}
+
+.bronze {
+    border-top: 5px solid #cd7f32;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .zmagovalci-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 v vrsto */
+    }
+}
+
+@media (max-width: 500px) {
+    .zmagovalci-grid {
+        grid-template-columns: 1fr; /* 1 v vrsto */
+    }
+}
 
 
     </style>
@@ -64,6 +133,30 @@ document.addEventListener("DOMContentLoaded", function() {
                 <h1 style="text-align: center;"><span style="color:red; font-size: 20px;">2025/26</span> - Fantasy Koroška - <span style="color:red; font-size: 20px;">sezona 9    </span> </h1>
                 <img style="width: 95%;" src="zgodovina/top3-8yrs.PNG">
                 <img src="zgodovina/tabelauvrstitev.PNG">
+
+                <div class="zmagovalci-grid">
+
+                    <div class="zmagovalec-card gold">
+                        <img src="slika1.png" alt="">
+                        <h3>Ekipa A 🏆</h3>
+                        <p>2023</p>
+                    </div>
+                
+                    <div class="zmagovalec-card silver">
+                        <img src="slika2.png" alt="">
+                        <h3>Ekipa B 🥈</h3>
+                        <p>2022</p>
+                    </div>
+                
+                    <div class="zmagovalec-card bronze">
+                        <img src="slika3.png" alt="">
+                        <h3>Ekipa C 🥉</h3>
+                        <p>2021</p>
+                    </div>
+                
+                </div>
+
+                
             </div>
 
             <div class="col-3 lestvica">
