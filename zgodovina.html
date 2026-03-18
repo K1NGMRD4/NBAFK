@@ -7,81 +7,6 @@
     <title>Pretekli zmagovalci</title>
     <link rel="icon" type="image/x-icon" href="logos/logoliga.png">
   
-    <style> 
-    .sezone-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 stolpci = 3 sezone */
-    gap: 20px;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 10px;
-}
-
-.sezona {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-/* Kartice */
-.zmagovalec-card {
-    background: #fff;
-    border-radius: 14px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    text-align: center;
-    padding: 12px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.zmagovalec-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.25);
-}
-
-.zmagovalec-card img {
-    width: 100%;
-    max-height: 100px;
-    object-fit: contain;
-    margin-bottom: 8px;
-}
-
-.zmagovalec-card h3 {
-    font-size: 14px;
-    margin: 4px 0;
-    text-align: center;
-}
-
-.zmagovalec-card p {
-    font-size: 13px;
-    margin: 2px 0;
-}
-
-/* Medal bar */
-.gold {
-    border-left: 6px solid gold;
-}
-
-.silver {
-    border-left: 6px solid silver;
-}
-
-.bronze {
-    border-left: 6px solid #cd7f32;
-}
-
-/* Responsive */
-@media (max-width: 900px) {
-    .sezone-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 500px) {
-    .sezone-grid {
-        grid-template-columns: 1fr;
-    }
-}
-</style>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     let basePath = window.location.origin + window.location.pathname.split("/").slice(0, 2).join("/") + "/";
@@ -132,69 +57,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 <h1 style="text-align: center;"><span style="color:red; font-size: 20px;">2025/26</span> - Fantasy Koroška - <span style="color:red; font-size: 20px;">sezona 9    </span> </h1>
                 <img style="width: 95%;" src="zgodovina/top3-8yrs.PNG">
                 <img src="zgodovina/tabelauvrstitev.PNG">
-
-               <div class="sezone-grid">
-
-    <!-- Sezona 2023 -->
-    <div class="sezona">
-        <div class="zmagovalec-card gold">
-            <h3>🏆🥇</h3>
-            <h2>Taipei Tigers</h2>
-            <h3>Jošt Mrdavšič</h3>
-        </div>
-
-        <div class="zmagovalec-card silver">
-            <h3>Ekipa B 🥈</h3>
-            <p>2. mesto</p>
-        </div>
-
-        <div class="zmagovalec-card bronze">
-            <h3>Ekipa C 🥉</h3>
-            <p>3. mesto</p>
-        </div>
-    </div>
-
-    <!-- Sezona 2022 -->
-    <div class="sezona">
-        <div class="zmagovalec-card gold">
-            <h3>Ekipa D 🏆</h3>
-            <p>1. mesto (2022)</p>
-        </div>
-
-        <div class="zmagovalec-card silver">
-            <h3>Ekipa E 🥈</h3>
-            <p>2. mesto</p>
-        </div>
-
-        <div class="zmagovalec-card bronze">
-            <h3>Ekipa F 🥉</h3>
-            <p>3. mesto</p>
-        </div>
-    </div>
-
-    <!-- Sezona 2021 -->
-    <div class="sezona">
-        <div class="zmagovalec-card gold">
-            <h3>Ekipa G 🏆</h3>
-            <p>1. mesto (2021)</p>
-        </div>
-
-        <div class="zmagovalec-card silver">
-            <h3>Ekipa H 🥈</h3>
-            <p>2. mesto</p>
-        </div>
-
-        <div class="zmagovalec-card bronze">
-            <h3>Ekipa I 🥉</h3>
-            <p>3. mesto</p>
-        </div>
-    </div>
-
-</div>
-
-
-                
             </div>
+            
 
             <div class="col-3 lestvica">
                 <!--TABELA-->
