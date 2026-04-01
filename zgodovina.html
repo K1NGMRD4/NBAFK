@@ -6,7 +6,98 @@
     <link rel="stylesheet" href="styles.css">
     <title>Pretekli zmagovalci</title>
     <link rel="icon" type="image/x-icon" href="logos/logoliga.png">
-  
+          <style>
+          @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap');
+          .lb-wrap {
+            background: linear-gradient(135deg, #0f0c29, #1a1440, #24243e);
+            padding: 2rem 1.5rem 2rem;
+            border-radius: 20px;
+            font-family: 'DM Sans', sans-serif;
+          }
+          .lb-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.2rem;
+            letter-spacing: 0.12em;
+            color: #fff;
+            text-align: center;
+            margin: 0 0 0.2rem;
+          }
+          .lb-subtitle {
+            text-align: center;
+            font-size: 0.78rem;
+            letter-spacing: 0.2em;
+            color: rgba(255,255,255,0.35);
+            text-transform: uppercase;
+            margin: 0 0 1.6rem;
+          }
+          .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+          }
+          .card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            padding: 1rem 1rem 0.9rem;
+            position: relative;
+            overflow: hidden;
+          }
+          .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(245,166,35,0.5), transparent);
+          }
+          .card-season {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.05rem;
+            letter-spacing: 0.1em;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 0.65rem;
+          }
+          .entry {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 5px;
+          }
+          .medal {
+            font-size: 1.1rem;
+            line-height: 1;
+            flex-shrink: 0;
+            width: 22px;
+            text-align: center;
+          }
+          .player-name {
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.88);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          .card.latest {
+            background: rgba(245,166,35,0.06);
+            border-color: rgba(245,166,35,0.25);
+          }
+          .card.latest::before {
+            background: linear-gradient(90deg, transparent, rgba(245,166,35,0.9), transparent);
+          }
+          .new-badge {
+            position: absolute;
+            top: 10px; right: 10px;
+            font-size: 0.55rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #0f0c29;
+            background: #F5A623;
+            padding: 2px 6px;
+            border-radius: 20px;
+          }
+        </style>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     let basePath = window.location.origin + window.location.pathname.split("/").slice(0, 2).join("/") + "/";
@@ -56,6 +147,80 @@ document.addEventListener("DOMContentLoaded", function() {
 
             <div class="col-7 main" style="text-align: center;">
                 <h1 style="text-align: center;"><span style="color:red; font-size: 20px;">2025/26</span> - Fantasy Koroška - <span style="color:red; font-size: 20px;">sezona 9    </span> </h1>
+                <div class="lb-wrap">
+                      <div class="lb-title">NBA Fantasy Koroška</div>
+                      <div class="lb-subtitle">Season Hall of Fame</div>
+                      <div class="grid">
+                    
+                        <div class="card latest">
+                          <div class="new-badge">New</div>
+                          <div class="card-season">2025/26</div>
+                          <div class="entry"><span class="medal">🥇</span><span class="player-name"></span></div>
+                          <div class="entry"><span class="medal">🥈</span><span class="player-name"></span></div>
+                          <div class="entry"><span class="medal">🥉</span><span class="player-name"></span></div>
+                        </div>
+                    
+                        <div class="card">
+                          <div class="card-season">2024/25</div>
+                          <div class="entry"><span class="medal">🥇</span><span class="player-name">Rok Verčko</span></div>
+                          <div class="entry"><span class="medal">🥈</span><span class="player-name">Vid Urnaut</span></div>
+                          <div class="entry"><span class="medal">🥉</span><span class="player-name">Aleks Jurhar</span></div>
+                        </div>
+                    
+                        <div class="card">
+                          <div class="card-season">2023/24</div>
+                          <div class="entry"><span class="medal">🥇</span><span class="player-name">Nejc Podlesnik</span></div>
+                          <div class="entry"><span class="medal">🥈</span><span class="player-name">Jošt Mrdavšič</span></div>
+                          <div class="entry"><span class="medal">🥉</span><span class="player-name">Jan Kupljen</span></div>
+                        </div>
+                    
+                        <div class="card">
+                          <div class="card-season">2022/23</div>
+                          <div class="entry"><span class="medal">🥇</span><span class="player-name">Gašper Herkovič</span></div>
+                          <div class="entry"><span class="medal">🥈</span><span class="player-name">Jan Kupljen</span></div>
+                          <div class="entry"><span class="medal">🥉</span><span class="player-name">Matevž Kavtičnik</span></div>
+                        </div>
+                    
+                        <div class="card">
+                          <div class="card-season">2021/22</div>
+                          <div class="entry"><span class="medal">🥇</span><span class="player-name">Alex Jurhar</span></div>
+                          <div class="entry"><span class="medal">🥈</span><span class="player-name">Gašper Lužnic</span></div>
+                          <div class="entry"><span class="medal">🥉</span><span class="player-name">Gašper Herkovič</span></div>
+                        </div>
+                    
+                        <div class="card">
+                          <div class="card-season">2020/21</div>
+                          <div class="entry"><span class="medal">🥇</span><span class="player-name">Alex Jurhar</span></div>
+                          <div class="entry"><span class="medal">🥈</span><span class="player-name">Gašper Lužnic</span></div>
+                          <div class="entry"><span class="medal">🥉</span><span class="player-name">Matevž Kavtičnik</span></div>
+                        </div>
+                    
+                        <div class="card">
+                          <div class="card-season">2019/20</div>
+                          <div class="entry"><span class="medal">🥇</span><span class="player-name">Dušan Špalir</span></div>
+                          <div class="entry"><span class="medal">🥈</span><span class="player-name">Matic Maher</span></div>
+                          <div class="entry"><span class="medal">🥉</span><span class="player-name">Jošt Mrdavšič</span></div>
+                        </div>
+                    
+                        <div class="card">
+                          <div class="card-season">2018/19</div>
+                          <div class="entry"><span class="medal">🥇</span><span class="player-name">Jan Kupljen</span></div>
+                          <div class="entry"><span class="medal">🥈</span><span class="player-name">Dušan Špalir</span></div>
+                          <div class="entry"><span class="medal">🥉</span><span class="player-name">Gašper Lužnic</span></div>
+                        </div>
+                    
+                        <div class="card">
+                          <div class="card-season">2017/18</div>
+                          <div class="entry"><span class="medal">🥇</span><span class="player-name">Jošt Mrdavšič</span></div>
+                          <div class="entry"><span class="medal">🥈</span><span class="player-name">Gašper Lužnic</span></div>
+                          <div class="entry"><span class="medal">🥉</span><span class="player-name">Jan Kupljen</span></div>
+                        </div>
+                    
+                      </div>
+                    </div>
+
+                
+                
                 <img style="width: 95%;" src="zgodovina/top3-8yrs.PNG">
                 <img src="zgodovina/tabelauvrstitev.PNG">
             </div>
