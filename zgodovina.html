@@ -6,7 +6,105 @@
     <link rel="stylesheet" href="styles.css">
     <title>Pretekli zmagovalci</title>
     <link rel="icon" type="image/x-icon" href="logos/logoliga.png">
-  
+   <style>
+               body {
+          font-family: Arial, sans-serif;
+          background: #f5f7fa;
+          padding: 20px;
+          color: #333;
+        }
+        
+        h1 {
+          text-align: center;
+        }
+        
+        h2 {
+          margin-top: 40px;
+        }
+        
+        /* SEASON CARD */
+        .season {
+          background: white;
+          padding: 20px;
+          margin-bottom: 25px;
+          border-radius: 12px;
+          box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+        
+        /* PODIUM */
+        .podium {
+          display: flex;
+          justify-content: center;
+          align-items: flex-end;
+          gap: 15px;
+          margin-top: 20px;
+        }
+        
+        .place {
+          width: 100px;
+          text-align: center;
+          border-radius: 10px;
+          color: white;
+          font-weight: bold;
+          padding: 10px;
+        }
+        
+        /* POSAMEZNE POZICIJE */
+        .first {
+          background: gold;
+          height: 120px;
+        }
+        
+        .second {
+          background: silver;
+          height: 90px;
+        }
+        
+        .third {
+          background: #cd7f32;
+          height: 70px;
+        }
+        
+        .position {
+          display: block;
+          font-size: 24px;
+        }
+        
+        .team {
+          display: block;
+          margin-top: 10px;
+        }
+        
+        /* TABELA */
+        .standings {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 20px;
+          background: white;
+          border-radius: 10px;
+          overflow: hidden;
+        }
+        
+        .standings th,
+        .standings td {
+          padding: 12px;
+          text-align: center;
+        }
+        
+        .standings th {
+          background: #222;
+          color: white;
+        }
+        
+        .standings tr:nth-child(even) {
+          background: #f2f2f2;
+        }
+        
+        .standings tr:hover {
+          background: #e6f0ff;
+        }
+        
+           </style>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     let basePath = window.location.origin + window.location.pathname.split("/").slice(0, 2).join("/") + "/";
@@ -59,7 +157,28 @@ document.addEventListener("DOMContentLoaded", function() {
                 <img style="width: 95%;" src="zgodovina/top3-8yrs.PNG">
                 <img src="zgodovina/tabelauvrstitev.PNG">
             </div>
+
+            <div class="season">
+              <h2>Sezona 2024</h2>
             
+              <div class="podium">
+                <div class="place second">
+                  <span class="position">🥈</span>
+                  <span class="team">Ekipa B</span>
+                </div>
+            
+                <div class="place first">
+                  <span class="position">🥇</span>
+                  <span class="team">Ekipa A</span>
+                </div>
+            
+                <div class="place third">
+                  <span class="position">🥉</span>
+                  <span class="team">Ekipa C</span>
+                </div>
+              </div>
+            </div>
+
 
             <div class="col-3 lestvica">
                 <!--TABELA-->
