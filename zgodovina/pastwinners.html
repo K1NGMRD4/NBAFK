@@ -6,8 +6,100 @@
     <link rel="stylesheet" href="../styles.css">
     <title>Pretekli zmagovalci</title>
     <link rel="icon" type="image/x-icon" href="../logos/logoliga.png">
-    <style>
-    </style>
+<style>
+          @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap');
+          .lb-wrap {
+            background: linear-gradient(135deg, #0f0c29, #1a1440, #24243e);
+            padding: 1.4rem 1.2rem;
+            border-radius: 20px;
+            font-family: 'DM Sans', sans-serif;
+            max-width: 750px;
+              margin: 0 auto;
+          }
+          .lb-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            letter-spacing: 0.12em;
+            color: #fff;
+            text-align: center;
+            margin: 0 0 0.2rem;
+          }
+          .lb-subtitle {
+            text-align: center;
+            font-size: 0.78rem;
+            letter-spacing: 0.2em;
+            color: rgba(255,255,255,0.35);
+            text-transform: uppercase;
+            margin: 0 0 1.6rem;
+          }
+          .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+          }
+          .card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 11px;
+            padding: 0.85rem 0.9rem 0.8rem;
+            position: relative;
+            overflow: hidden;
+          }
+          .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(245,166,35,0.5), transparent);
+          }
+          .card-season {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.2rem;
+            letter-spacing: 0.1em;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 0.45rem;
+          }
+          .entry {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 3px;
+          }
+          .medal {
+            font-size: 1.1rem;
+            line-height: 1;
+            flex-shrink: 0;
+            width: 18px;
+            text-align: center;
+          }
+          .player-name {
+            font-size: 1rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.88);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          .card.latest {
+            background: rgba(245,166,35,0.06);
+            border-color: rgba(245,166,35,0.25);
+          }
+          .card.latest::before {
+            background: linear-gradient(90deg, transparent, rgba(245,166,35,0.9), transparent);
+          }
+          .new-badge {
+            position: absolute;
+            top: 10px; right: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #0f0c29;
+            background: #F5A623;
+            padding: 2px 6px;
+            border-radius: 20px;
+          }
+        </style>
     <script>
     document.addEventListener("DOMContentLoaded", function() {
         let basePath = window.location.origin + window.location.pathname.split("/").slice(0, 2).join("/") + "/";
