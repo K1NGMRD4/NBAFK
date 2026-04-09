@@ -449,7 +449,7 @@ table.h2hstatsbyseason {
     padding: 0.5em;
     min-width: 220px;
     z-index: 1;
-
+   
     /* Animacija */
     opacity: 0;
     transform: translateY(5px);
@@ -457,6 +457,10 @@ table.h2hstatsbyseason {
     pointer-events: none;
 }
 
+
+.dropdown-columns--small {
+    grid-template-rows: repeat(6,auto);
+}
 
 /* Dropdown linki */
 .dropdown-content a, .dropdown-sub-content a, .dropdown-columns a {
