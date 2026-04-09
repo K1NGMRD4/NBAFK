@@ -457,11 +457,6 @@ table.h2hstatsbyseason {
     pointer-events: none;
 }
 
-
-.dropdown-columns--small {
-    grid-template-rows: repeat(6,auto);
-}
-
 /* Dropdown linki */
 .dropdown-content a, .dropdown-sub-content a, .dropdown-columns a {
     display: block;
@@ -510,6 +505,11 @@ li.dropdown:hover .dropdown-columns {
 
 .dropdown-content li, .dropdown-sub-content li {
     padding: 0;
+}
+
+
+.dropdown-columns--small {
+    grid-template-rows: repeat(6,auto);
 }
 
 
