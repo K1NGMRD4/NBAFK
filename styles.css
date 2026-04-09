@@ -493,8 +493,6 @@ li.dropdown:hover .dropdown-columns {
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto; /* omogoči klikanje */
-    /* display: grid je že privzeto, ne spreminjaj ga */
-    grid-template-rows: repeat(8, auto);
 }
 
 
