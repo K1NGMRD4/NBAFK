@@ -681,7 +681,7 @@ li.dropdown:hover .dropdown-columns {
      iframe.trenutnalestvica,
     iframe.trenutnalestvicapredictions {
         width: 100%;
-        height: 200vh;
+        height: 250vh;
     }
 
         /* Mobile: force dropdown to flex column */
