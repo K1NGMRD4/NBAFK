@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
 /*MARGIN IN PADDING sta vključena v skupno velikost boxa*/
 * {
     box-sizing: border-box;
@@ -17,9 +19,33 @@ div.slikePRD {
     margin-left: 5%;
 }
 
-.header h3 a img {
-    width: 180px; 
-    height: 90px;
+.brand-logo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 0.95;
+    text-decoration: none;
+    color: white;
+    font-family: "Bebas Neue", "Segoe UI", Arial, sans-serif;
+    letter-spacing: 1px;
+    transition: color 0.2s;
+}
+
+.brand-logo span:first-child {
+    font-size: 26px;
+}
+
+.brand-logo span:last-child {
+    font-size: 20px;
+    color: #ff3b3b;
+}
+
+.brand-logo:hover {
+    color: #ff3b3b;
+}
+
+.brand-logo:hover span:last-child {
+    color: white;
 }
 
 header {
@@ -117,6 +143,8 @@ nav a {
 
 nav ul {
     display: flex;
+    flex: 1;
+    justify-content: center;
 }
 
 /* Seznamni elementi v navigaciji */
