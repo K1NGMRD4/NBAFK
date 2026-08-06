@@ -22,29 +22,27 @@ div.slikePRD {
 .brand-logo {
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
+    text-align: center;
     line-height: 0.95;
     text-decoration: none;
-    color: white;
+    color: #ff3b3b;
     font-family: "Bebas Neue", "Segoe UI", Arial, sans-serif;
     letter-spacing: 1px;
     transition: color 0.2s;
 }
 
 .brand-logo span:first-child {
-    font-size: 26px;
+    font-size: 24px;
 }
 
 .brand-logo span:last-child {
-    font-size: 20px;
-    color: #ff3b3b;
+    font-size: 34px;
+    letter-spacing: 2px;
 }
 
 .brand-logo:hover {
-    color: #ff3b3b;
-}
-
-.brand-logo:hover span:last-child {
     color: white;
 }
 
