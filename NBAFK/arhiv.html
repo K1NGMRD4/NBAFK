@@ -1,0 +1,231 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sezona 2024/25</title>
+    <link rel="icon" type="image/x-icon" href="logos/logoliga.png">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+
+    .crta {
+      height: 2px;
+      background: linear-gradient(to right, #ff8c00, #ffa500, #ff8c00);
+      border-radius: 2px;
+      margin: 10px auto;
+      width: 60%;
+    }
+        
+    figure, figcaption {
+        text-align: center;
+    }
+        
+    details {
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 15px;
+      background-color: #ffffff;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        
+    }
+
+    summary {
+      font-size: 1.3em;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 10px;
+      outline: none;
+    }
+
+    summary img {
+      display: block;
+      margin: 0 auto;
+      width: 60px;
+      height: auto;
+    }
+        
+    details[open] {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .slike-containter {
+        text-align: center; 
+    }
+        
+    .slike-container img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    let basePath = window.location.origin + window.location.pathname.split("/").slice(0, 2).join("/") + "/";
+    
+    // Naloži navigacijo iz nav.html
+    fetch(basePath + "nav.html")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("nav-placeholder").innerHTML = data;
+
+            // Po nalaganju navigacije doda funkcionalnost hamburger meniju
+            let hamburger = document.querySelector(".hamburger");
+            let navMenu = document.querySelector("nav ul");
+
+            if (hamburger && navMenu) {
+                hamburger.addEventListener("click", function() {
+                    navMenu.classList.toggle("show"); // Preklopi meni
+                });
+            }
+        })
+        .catch(error => console.error("Napaka pri nalaganju navigacije:", error));
+});
+
+</script>
+</head>
+<body>
+    <div id="nav-placeholder"></div>
+   
+    <main>
+        <div class="row">
+            <div class="col-2 sidenav">
+                <h1 class="menu-title">SEZONA 24/25</h1>
+                <ul class="meniseason2425">
+                    <li><a href="krogi/basic.html">Pravila in sistem tekmovanja</a> </li>
+                    <li><a href="krogi/matchup1.html">Matchup1 (Oct 22 - Oct 27)</a> </li>
+                    <li><a href="krogi/matchup2.html">Matchup2 (Oct 28 - Nov 3)</a></li>
+                    <li><a href="krogi/matchup3.html">Matchup3 (Nov 4 - Nov 10)</a></li>
+                    <li><a href="krogi/matchup4.html">Matchup4 (Nov 11 - Nov 17)</a></li>
+                    <li><a href="krogi/matchup5.html">Matchup5 (Nov 18 - Nov 24)</a></li>
+                    <li><a href="krogi/matchup6.html">Matchup6 (Nov 25 - Dec 1)</a></li>
+                    <li><a href="krogi/matchup7.html">Matchup7 (Dec 2 - Dec 8)</a></li>
+                    <li><a href="krogi/matchup8.html">Matchup8 (Dec 9 - Dec 15)</a></li>
+                    <li><a href="krogi/matchup9.html">Matchup9 (Dec 16 - Dec 22)</a></li>
+                    <li><a href="krogi/matchup10.html">Matchup10 (Dec 23 - Jan 29)</a></li>
+                    <li><a href="krogi/matchup11.html">Matchup11 (Dec 30 - Jan 5)</a></li>
+                    <li><a href="krogi/matchup12.html">Matchup12 (Jan 6 - Jan 12)</a></li>
+                    <li><a href="krogi/matchup13.html">Matchup13 (Jan 13 - Jan 19)</a></li>
+                    <li><a href="krogi/matchup14.html">Matchup14 (Jan 20 - Feb 26)</a></li>
+                    <li><a href="krogi/matchup15.html">Matchup15 (Jan 27 - Feb 2)</a></li>
+                    <li><a href="krogi/playin.html">Play-in (Feb 3 - Feb 23)</a></li>
+                    <li><a href="krogi/playoff1.html">Playoff 1 (Feb 24 - Mar 9)</a></li>
+                    <li><a href="krogi/playoff2.html">Playoff 2 (Mar 10 - Mar 23)</a></li>
+                    <li><a href="krogi/playoff3.html">Playoff 3 (Mar 24 - Apr 6)</a></li>
+                </ul>
+            </div>
+
+            <div class="col-7 main">
+               
+                <div style="text-align: center;">
+                    <img src="krogi/top3.PNG" style="width:85%" alt="Roki Akrapovic">
+                </div>
+                    <details>
+                    <summary>Povzetek sezone 2024/25</summary>
+                    <p>8. sezona NBA Fantasy Koroška se je začela kot si nihče ni želel. S hudo dominacijo Matevža Kavtičnika. Mato je seveda vse skupaj začinil z ogromno 
+                    jaz-jazi na naš račun in s tem dodatno posolil rane. Izenačil je Joletov rekord za najboljši štart v sezono (7-0), preden ga je v 8. tednu končno
+                    utišal heroj ljudstva, Dušan Špalir. Od tam je šlo za Matevža samo še navzdol, po nekaj poškodbah svojih rotation playerjev je namreč do konca rednega dela
+                    zabeležil le še 1 zmago in se je pred končnico pozicioniral na skromno 7. mesto. Za nameček pa je v končnici njegov krvnik postal še Cici of all people. <br> <br>
+
+                    Zaključek rednega dela so obeležili predvsem Taipei Tigersi, ki so si z neverjetnim nizom in dominacijo (kar 5x v zadnjih 7 tednih najboljši score) priigrali prvo mesto
+                    in s tem tudi denarno nagrado ter BYE. No, je pa v takoj v začetku Play-in runde začelo iti vse narobe, ko je krvni strdek povzročil izgubo Wembyja. Ko ima hudič mlade,
+                    pa jih ima veliko in nič drugače ni bilo niti tokrat. Poškodbe ali shutdowni do tedaj izjemnega triple upa Philadelphije (PG, Maxey, Oubre) in Jarena Jacksona so botrovale temu,
+                    da je Jole namesto prvi favorit lige, postal plen v nemoči Aleksa Jurharja. Slabše ne gre, a treba je priznati, da si je Fred napredovanje vsaj zaslužil. Neverjetno je odstreamal
+                    in si s tem priigral kar 700+ točk v četrtfinalu. No, vendarle ga je v dvoboju z visokimi vložki (uvrstitev v finale in uradno priznanje kdo je GOAT) utišal Verčko. Na krilih
+                    Jokiča in predvsem Quentina Grimesa se je uvrstil v premierno finale. <br><br>
+
+                    Z južnega dela bracketa je manjkal še njegov nasprotnik in na veselje mnogih je Urnaut vendarle našel free agency market, noro dobro odstreamal in se prav tako
+                    uvrstil v premierni finale. Sicer šibkejša stran razporeda je do polfinala popeljala tudi lanskega prvaka Cickona, ki pa je po izgubi Embiida in Foxa vendarle bil
+                    tako rekoč brez možnosti. Podoben scenarij ga je čakal tudi v obračunu za 3. mesto, ko je bil od njega boljši Fred in Cicko se je moral zadovoljiti s 4. mestom. <br> <br>
+
+                    Finalni obračun med Gorskimi Kozami in Kuala Lumpur Koalami je bil zelo zanimiv, zaznamovalo ga je neprestano menjavanje v vodstvu. K temu je botroval kakopak tudi 
+                    izostanek Jokiča in Cada, kar se najbrž prevede v dejstvo, da je imel veliko več rezerve Verčko. No, če bi Urnaut svojo streaming formo iz polfinala prenesel tudi na 
+                    odločilni dvoboj, bi zadeva morda lahko bila drugačna, toda Vid je izgleda mislil, da lahko za neporabljena FA sredstva zahteva izplačilo na transakcijski račun. 
+                    Na koncu vendarle premierna titula za Verčkija, ki je prijetnih 150€ med drugim investiral v dres svojega heroja Jokerja. Zdaj njegovo ime v nekoliko zažganem fontu že 
+                    krasi spominsko tablico zmagovalcev in Rok je že napovedal boj za back to back naslov v prihodnji sezoni!</p>
+                  </details>
+                
+                  <!-- Drugo razširljivo okno s slikami -->
+                  <details>
+                    <summary>Best memes</summary>
+                    <div class="slike-container">
+                        <figure>
+                            <img src="memedump/akrapovic.PNG" alt="Roki Akrapovic">
+                            <figcaption>Roki Akrapovič</figcaption>
+                        </figure>
+                         <div class="crta"></div>
+                        <figure>
+                            <img src="memedump/trinula.PNG" alt="Tri nula">
+                            <figcaption>3-0</figcaption>
+                        </figure>
+                         <div class="crta"></div>
+                        <figure>
+                            <img src="memedump/kavtTrash.PNG" style="width: 80%;" alt="Fastest things on Earth">
+                            <figcaption>Fastest things on Earth</figcaption>
+                        </figure>
+                         <div class="crta"></div>
+                        <figure>
+                            <img src="memedump/kavtmissing.PNG" style="width: 50%; height: 75%" alt="Missing">
+                            <figcaption>Kavt missing</figcaption>
+                        </figure>
+                    </div>
+                  </details>
+            </div>
+
+            <div class="col-3 lestvica">
+                    <!--TABELA-->
+                <div class="iframelestvica">
+                    <iframe scrolling="no" src="trenutnalestvica.html" class="trenutnalestvica"></iframe>
+                </div>
+            </div>
+         </div>
+    </main>
+    <footer>
+        <nav class="header">
+            <h3><a href="https://fantasy.espn.com/basketball/league?leagueId=32010985" target="_blank"><img src="logos/espn.png" alt="logo" style="height:90px; width:180px;" /></a>  </h3>
+            <ul>
+                <li><a href="index.html">Domov</a></li>
+                <li><a href="ekipe.html">Ekipe</a>
+                <li><a href="sezona2425.html">Sezona 2024/25</a></li>
+                <li><a href="zgodovina.html">Zgodovina</a></li>
+                <li><a href="predictions.html">Predictions</a></li>
+            </ul>
+            <form class="donatebtn" action="https://www.paypal.com/donate" method="post" target="_blank">
+                <!-- Identify your business so that you can collect the payments. -->
+                <input type="hidden" name="business" value="jost.mrdavsic@gmail.com">
+                <!-- Specify details about the contribution -->
+                <input type="hidden" name="no_recurring" value="5">
+                <input type="hidden" name="item_name" value="NBA Fantasy Koroska">
+                <input type="hidden" name="item_number" value="LM, Content creation & WebPage design">
+                <input type="hidden" name="currency_code" value="EUR">
+                <!-- Display the payment button. -->
+                <input type="image" name="submit" src="donate.png" alt="Donate">
+            </form>
+        </nav>
+        <p style="text-align:center; margin-top: 10px;"> <span style="font-weight: bold">&copy; NBA Fantasy Koroška &copy;</span><br /><br /> SEASON 8 <br /> <span style="font-size: 12px">since 2017</span></p>
+    </footer>
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+    var hamburgerMenu = document.getElementById("hamburger-menu");
+    var navMenu = document.getElementById("nav-menu");
+
+    if (hamburgerMenu && navMenu) {
+        hamburgerMenu.addEventListener("click", function() {
+            navMenu.classList.toggle("show");
+        });
+    } else {
+        console.error("Elementi hamburger menija ali navigacijskega menija niso najdeni.");
+    }
+});
+</script>
+
+</body>
+</html>

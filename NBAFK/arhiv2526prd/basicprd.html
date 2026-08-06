@@ -1,0 +1,182 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predictions 2025/26</title>
+    <link rel="icon" type="image/x-icon" href="../logos/logoliga.png">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="spoilers.css">
+    <style>
+
+    </style>
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+    let basePath = window.location.origin + window.location.pathname.split("/").slice(0, 2).join("/") + "/";
+    
+    // Naloži navigacijo iz nav2.html
+    fetch(basePath + "nav2.html")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("nav2-placeholder").innerHTML = data;
+
+            // Po nalaganju navigacije doda funkcionalnost hamburger meniju
+            let hamburger = document.querySelector(".hamburger");
+            let navMenu = document.querySelector("nav ul");
+
+            if (hamburger && navMenu) {
+                hamburger.addEventListener("click", function() {
+                    navMenu.classList.toggle("show"); // Preklopi meni
+                });
+            }
+        })
+        .catch(error => console.error("Napaka pri nalaganju navigacije:", error));
+});
+    </script>
+</head>
+<body>
+    <div id="nav2-placeholder"></div>
+    <main>
+        <div class="row">
+            <div id="sidenav-placeholder"></div>
+
+            <div class="col-7 main">
+                <h1 style="text-align: center;"><span style="color:red; font-size: 20px;">2025/26</span> - Fantasy Koroška - <span style="color:red; font-size: 20px;">sezona 9</span> </h1>
+
+                <p>V letošnji sezoni seštevek točk Season-long predictionov in napovedi All-star vikenda prinaša dodatne % možnosti za boljši izbor na draftu v prihodnji sezoni. <br>
+                Najboljši v seštevku prejme kar 5%, drugi prejme 3%, tretji pa 2%. Splača se!</p>
+                <div>
+                    <details>
+                    <summary>1) PREGLED TOČK PO KATEGORIJAH</summary>
+                    <p>
+                        <div class="slikePRD">
+                        <img src="pregled.PNG" alt="pregled" style="width: 75%";> 
+                        </div>
+                    </p>
+                    </details>
+
+                    <details>
+                    <summary>2) OSNOVNE INFORMACIJE</summary>
+                    <p>
+                        - Tudi letos bomo imeli t.i. season-long predictione<br>
+                        - Napovedi bodo oddane tekom prvega tedna sezone in bodo najbolj natančnim managerjem prinesle ogromno točk. <br>
+                        - Dodatnih predictionov za celo sezono bo 10, od tega jih bo 5 manager/team related, 5 pa se jih bo nanašalo na igralce in njihove fantasy doprinose. <br> 
+                        - Skupno je možno (a tudi nemogoče) zbrati 150 točk, <br>
+                        - Precej bolj realno pa je pričakovati točke nekje med 40-80. <br>
+                        - Vsekakor so lahko season-long predictioni velik game changer za končno razvrstitev in denarno nagrado. <br>
+                    </p>
+                    </details>
+
+                    <details>
+                    <summary>3) TEAM-RELATED PREDICTIONS</summary>
+                    <p>
+                        1) Kdo bo zmagovalec fantasy sezone 2024/25         <span style="color: red;"> [+20 točk] </span><br>
+                        2) Kateri dve ekipi bosta dosegli BYE v rednem delu?  <span style="color: red;"> [+10 točk pravilen, -2.5 točke napačen odgovor]  </span><br>
+                        3) Kateri dve ekipi bosta ostali brez playoffa (gajba)? <span style="color: red;"> [+10 točk pravilen, -2.5 točke napačen odgovor] </span> <br>
+                        4) Katero moštvo bo prejelo nagrado za najboljši weekly score v rednem delu? <span style="color: red;"> [+15 točk pravilen, -5 točk napačen odgovor] </span> <br>
+                        5) Stage of elimination - Napoved za vsa moštva, v katerem delu tekmovanja bodo izpadla <span style="color: red;"> [+2.5 točke vsak pravilen odgovor]. </span> <br>
+                    </p>
+                    <div class="slikePRD">
+                        <img src="TRprd.PNG" alt="TRprd" style="width: 90%";> 
+                    </div>
+                    </details>
+
+                    <details>
+                    <summary>4) PLAYER-RELATED PREDICTIONS</summary>
+                    <p>
+                        6) Kateri igralec bo fantasy MVP sezone? * <span style="color: red;">  [+15 točk]  </span> <br>
+                        7) Kateri igralec bo rookie of the year fantasy sezone? * <span style="color: red;">  [+10 točk] </span><br>
+                        8) Koliko bo najboljši single-game score za igralca?  <span style="color: red;">  [+5 točk] </span> <br>
+                        9) Kateri pick v prvih 5 rundah bo največji bust? **  <span style="color: red;">  [+10 točk] </span> <br>
+                        10) Kateri pick v zadnjih 5 rundah bo največji steal? ***  <span style="color: red;">  [+10 točk] </span> <br>
+                    </p>
+                        <div class="slikePRD">
+                        <img src="PRprd.PNG" alt="PRprd"> 
+
+                        <img src="bust.PNG" alt="bust">
+                        <img src="steal.PNG" alt="steal">
+                        </div>
+                        
+                    <p>    
+                        Opombe: <br>
+                        * gleda se kategorija most total points, igralec ne rabi biti v zmagovalni ekipi, da prejme MVP ali ROY. <br>
+                        Točke se podelijo tistim, ki so bili najbližje, če dejanskega rookija ali MVPja nihče ne na pove pravilno. <br>
+                        ** največja razlika med draft pozicijo in uvrstitvijo na lestvici most total points v sezoni. <br>
+                        Tudi tukaj točke prejme tisti, ki je napovedal igralca z največjim padcem.
+                        *** nagrado prejme igralec, ki je bil najvišje na lestvici TOTAL POINTS ob koncu sezone - rank. <br>
+                        Tudi tukaj se točke podelijo tistemu, ki je bil najbližje.
+                    </p>
+                    </details>
+
+                    <details>
+                    <summary>5) STAGE OF ELIMINATION</summary>
+                        <p>
+                            - Na spodnji sliki lahko vidite predictione managerjev za vprašanje #5, kdaj bo katero moštvo izpadlo iz tekmovanja. <br>
+                            - Vsak pravilen odgovor je vreden 2.5 točke <br>
+                        </p>
+                        <div class="slikePRD">
+                        <img src="SOEprd.PNG" alt="SOEprd" style="width: 90%";> 
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <div class="col-3 lestvica">
+                    <!--TABELA-->
+                <div class="iframelestvicapredictions">
+                    <iframe src="../trenutnalestvicapredictions.html" class="trenutnalestvicapredictions"></iframe>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <nav>
+            <h3><a href="https://fantasy.espn.com/basketball/league?leagueId=32010985" target="_blank"><img src="../logos/espn.png" alt="logo" style="height:90px; width:180px;" /></a>  </h3>
+            <ul>
+                <li><a href="../index.html">Domov</a></li>
+                <li><a href="../ekipe.html">Ekipe</a>
+                <li><a href="../sezona2425.html">Sezona 2024/25</a></li>
+                <li><a href="../zgodovina.html">Zgodovina</a></li>
+                <li><a href="../predictions.html">Predictions</a></li>
+            </ul>
+            <form class="donatebtn" action="https://www.paypal.com/donate" method="post" target="_blank">
+                <!-- Identify your business so that you can collect the payments. -->
+                <input type="hidden" name="business" value="jost.mrdavsic@gmail.com">
+                <!-- Specify details about the contribution -->
+                <input type="hidden" name="no_recurring" value="5">
+                <input type="hidden" name="item_name" value="NBA Fantasy Koroska">
+                <input type="hidden" name="item_number" value="LM, Content creation & WebPage design">
+                <input type="hidden" name="currency_code" value="EUR">
+                <!-- Display the payment button. -->
+                <input type="image" name="submit" src="../donate.png" alt="Donate">
+            </form>
+        </nav>
+        <p style="text-align:center; margin-top: 10px;"> <span style="font-weight: bold">&copy; NBA Fantasy Koroška &copy;</span><br /><br /> SEASON 8 <br /> <span style="font-size: 12px">since 2017</span></p>
+    </footer>
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+    var hamburgerMenu = document.getElementById("hamburger-menu");
+    var navMenu = document.getElementById("nav-menu");
+
+    if (hamburgerMenu && navMenu) {
+        hamburgerMenu.addEventListener("click", function() {
+            navMenu.classList.toggle("show");
+        });
+    } else {
+        console.error("Elementi hamburger menija ali navigacijskega menija niso najdeni.");
+    }
+});
+</script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Nalozi sidenav (datoteka v isti mapi)
+        fetch("sidenavPRD.html")
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById("sidenav-placeholder").outerHTML = html;
+            })
+            .catch(err => console.error("Napaka pri nalaganju sidenav:", err));
+    });
+    </script>
+</body>
+</html>

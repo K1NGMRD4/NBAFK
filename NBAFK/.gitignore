@@ -1,0 +1,14 @@
+# Editor/IDE cache
+*.vsidx
+.vs/
+
+# BFG repo-cleaner poročila
+.bfg-report/
+
+# Namestitvene datoteke
+*.exe
+
+# Ostalo
+NBAFK.git/
+cache.txt
+node_modules/

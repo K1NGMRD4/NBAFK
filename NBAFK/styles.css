@@ -1,0 +1,707 @@
+/*MARGIN IN PADDING sta vključena v skupno velikost boxa*/
+* {
+    box-sizing: border-box;
+}
+
+div.tableh2h {
+    display: flex;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+div.slikeszn3-7 {
+    text-align: center;
+}
+
+div.slikePRD {
+    margin-left: 5%;
+}
+
+.header h3 a img {
+    width: 180px; 
+    height: 90px;
+}
+
+header {
+    display: flex;              /* Flexbox layout */
+    justify-content: space-between; /* Razporedi elemente enakomerno med seboj */
+    align-items: center;        /* Poravnaj navpično v sredino */
+    padding: 0.5em 1em;         /* Dodaj padding za boljši izgled */
+    background-color: #333;
+    color: white;
+    flex-wrap: wrap; 
+}
+
+p.podlestvico {
+    text-align: center;
+    margin-block-start: 0;
+    margin-block-end: 0;
+}
+
+/*CONTAINER KI VSEBUJE COLUMNE - BODY*/
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; 
+}
+.row::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+/*OSNOVNE LASTNOSTI BODYJA*/
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    font-size: 20px;
+}
+
+/*HAMBURGER IKONA JE SKRITA PRI VEČJIH ZASLONIH*/
+.hamburger {
+    display: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: white;
+}
+
+/*OSNOVNE LASTNOSTI TABEL (TRENUTNA LESTVICA)*/
+table, th, td {
+    border: 0.5px solid black;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 0.85em;
+    padding: 0.25em;
+}
+/*TABELE UVRSTITEV - ZNOTRAJ STRANI POSAMEZNE EKIPE*/
+table.tabeleuvrstitev {
+    padding: 0;
+}
+
+table.tockovanjepredictions {
+    margin-left: 75px;
+}
+
+form.donatebtn input {
+    height: 5em;
+    width: 10em;
+}
+
+nav {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    align-items: center;
+    padding: 0.5em;
+}
+
+form.donatebtn {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+/* MENI V HEADERJU IN FOOTERJU */
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 0.75em 1.25em;
+    transition: background-color 0.2s, color 0.3s;
+
+    font-family: "Segoe UI", "Inter", Arial, sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+nav ul {
+    display: flex;
+}
+
+/* Seznamni elementi v navigaciji */
+nav ul li {
+    list-style-type: none; /* Odstrani točke */
+    display: flex;
+    flex-direction: row;
+    padding: 0.25em 0.75em;
+}
+
+nav ul li a:hover {
+    color: #ff3b3b;
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+}
+
+.home-icon {
+    display: none;
+}
+
+/* Glavni naslov menija (primer: HOME) */
+.menu-title {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #d51313; /* rdeča */
+  letter-spacing: 2px;
+  text-align: center;
+
+  /* podčrtan poudarek */
+  position: relative;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+}
+
+.menu-title::after {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(90deg, #d51313, #ff0022); /* modro-turkizni preliv */
+  margin: 8px auto 0;
+  border-radius: 2px;
+}
+
+/* Hover efekt */
+.menu-title:hover {
+  color: #ff0022;
+  transition: color 0.3s ease;
+}
+
+[class*="col-"] {
+    min-width: 0;
+}
+
+.col-3.lestvica {
+    overflow-x: auto;
+}
+
+
+/*STYLE ZA SLIKE V SUBPAGIH PREDICTIONS - MATCHUPS*/
+/*SLIKA ODDANIH PREDICTIONOV*/
+img.predictions {
+    object-fit: cover;
+    width: 100%;    
+}
+/*SLIKA ZBRANIH TOČK V POSAMEZNEM KROGU*/
+img.tockekrog {
+    display: none;
+}
+
+div.col-2.sidenav img {
+    width: 100%;
+}
+
+/*LASTNOSTI STRANSKEGA MENIJA V STRANEH IN PODSTRANEH*/
+ul.menizgodovina, ul.meniekipe, ul.meniseason2425, ul.menipredictions {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0;
+    font-size: 0.9em;
+    margin-left: 2%;
+    margin-right: 2%;
+    list-style-type: none;
+    text-decoration: none;
+    text-align: center;
+}
+ul.meniseason2425 li, ul.menipredictions li, ul.meniekipe li, ul.menizgodovina li {
+    list-style-type: none;
+    text-decoration: none;
+    padding: 0.5em 0.5em;
+    border: 0.5px solid white;
+}
+ul.menizgodovina li a, ul.meniekipe li a, ul.meniseason2425 li a, ul.menipredictions li a {
+   color: white;
+   text-decoration: none;
+   transition: background-color 0.2s;
+}
+ul.menizgodovina li a:hover, ul.meniekipe li a:hover, ul.meniseason2425 li a:hover, ul.menipredictions li a:hover {
+    color: red;
+    transition: .1s;
+}
+
+.meniekipe, .menizgodovina, .menipredictions {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+}
+
+/*NASLOVI IN BESEDILO*/
+h1 {
+    font-size: 1.5em;
+    text-align: center;
+}
+h2 {
+    font-size: 1.25em;
+    margin-left: 5%;
+    color: forestgreen;
+}
+/*NASLOV NAD TRENUTNO LESTVICO*/
+h2.lestvica {
+    margin-left: 0;
+    text-align: center;
+}
+/*NASLOV NAD TRENUTNO LESTVICO PREDICTIONS*/
+h2.lestvicapredictions {
+    text-align: center;
+    padding-top: 0px;
+}
+h3 {
+    margin-block-start: 0.1em;
+    margin-block-end: 0.1em;
+}
+p {
+    font-size: 0.9em;
+    margin-left: 5%;
+    margin-right: 5%;
+    text-align: justify;
+}
+
+
+
+
+
+/*LASTNOSTI LEVEGA MENIJA V BODYJU*/
+.col-2.sidenav {
+    background-color: #333;
+    border-top: 2px solid white;
+    border-bottom: 2px solid white;
+    padding: 0;
+    height: auto;
+}
+
+
+
+/*LASTNOSTI SREDINSKEGA DELA BODYJA - GLAVNE VSEBINE*/
+.col-7.main {
+    padding-left: 0.25em;
+    padding-right: 0;
+    height: auto;
+}
+
+.iframelestvica,
+.iframelestvicapredictions { 
+    overflow: auto; 
+    text-align: center; 
+} 
+
+iframe.trenutnalestvica,
+iframe.trenutnalestvicapredictions {
+    border: none;
+    margin: 0;
+    width: 100%;
+    height: 200vh; /* po potrebi prilagodi */
+    font-size: 0.5em; /* vpliva na iframe element, ne vsebino */
+}
+
+
+/*LESTVICA TOP3 V TABU ZGODOVINA - PRETEKLI ZMAGOVALCI*/
+table.podium tr th {
+    padding: 0.25em 0.25em;
+    border-collapse: collapse;
+}
+
+
+/*SKALIRANJE COLUMNOV*/
+main {
+    flex: 1;
+}
+
+/*ESPN LINK V HEADERJU BREZ SPODNJE MARGINE (ZARADI PREDICTIONS SLIK)*/
+img.espn {
+    margin-bottom: 0;
+}
+
+/*COUNTDOWN DO DRAFTA*/
+p#demo {
+            color: white;
+            text-align: center;
+            font-size: 3em;
+            border: none;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(148deg, #1b7b23, #8dc941);
+            border-radius: 10px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        p#demo:hover {
+            transform: scale(1.05);
+        }
+
+/*BARVE ZA HEADER IN FOOTER*/
+header, footer {
+    background-color: #333;
+    color: white;
+    padding: 0px 0px;
+}
+
+/*DONATE BUTTON*/
+.donate {
+    border: none;
+    background: red;
+    padding: 1em 1.75em;
+    border-radius: 1.5em;
+    color: white;
+    font-weight: bold;
+    font-size: 1em;
+}
+
+
+/*STOLPCI, MOŽNE ŠIRINE*/
+[class*="col-"] {
+    min-width: 0;
+    padding: 0.25em;
+    height: 100%;
+}
+.col-1 {width: 8.33%;}
+.col-2 {width: 16.66%;}
+.col-3 {width: 25%;}
+.col-4 {width: 33.33%}
+.col-5 {width: 41.66%;}
+.col-6 {width: 50%;}
+.col-7 {width: 58.33%;}
+.col-8 {width: 66.66%;}
+.col-9 {width: 75%;}
+.col-10 {width: 83.33%;}
+.col-11 {width: 91.66%;}
+.col-12 {width: 100%;}
+
+span.vprasanje {
+    font-weight: bold;
+    color: black;
+}
+
+table.h2hstatsbyseason {
+    
+}
+
+/* ------------------------- */
+/* DROPDOWN MENI - POPOLNA KODA */
+/* ------------------------- */
+
+/* Submenu */
+.dropdown-sub { 
+    position: relative; 
+} 
+
+.dropdown-sub-content { 
+    display: none; 
+    position: absolute; 
+    left: 100%; top: 0; 
+    background-color: #333; 
+    min-width: 200px; 
+    z-index: 1; 
+    list-style: none; 
+    padding: 0; 
+} 
+
+.dropdown-sub:hover .dropdown-sub-content { 
+    display: block; 
+}
+
+/* Osnovni dropdown gumb */
+.dropdown {
+    position: relative;
+}
+
+.dropdown .dropbtn {
+    background-color: #333;
+    color: white;
+    text-decoration: none;
+    display: flex;
+    padding: 0.75em 1.25em;
+}
+
+/* Osnovni dropdown (privzeto skrito) */
+.dropdown-content {
+    display: flex; /* enostolpčni dropdown ostane flex */
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #333;
+    box-shadow: 0em 0.4em 0.8em rgba(0,0,0,0.2);
+    z-index: 1;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    /* Animacija */
+    opacity: 0;
+    transform: translateY(5px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+}
+
+.dropdown-columns {
+    display: grid; /* vedno grid, da se ohranijo stolpci */
+    grid-template-rows: repeat(8, auto);
+    grid-auto-flow: column;
+    gap: 0.25em 20px;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #333;
+    padding: 0.5em;
+    min-width: 220px;
+    z-index: 1;
+   
+    /* Animacija */
+    opacity: 0;
+    transform: translateY(5px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+}
+
+/* Dropdown linki */
+.dropdown-content a, .dropdown-sub-content a, .dropdown-columns a {
+    display: block;
+    padding: 0.45em 1em;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* Hover efekti za linke */
+.dropdown-content a:hover, .dropdown-sub-content a:hover, .dropdown-columns a:hover {
+    color: #ff3b3b;
+    background-color: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+/* Hover efekt za gumb dropdown */
+.dropdown .dropbtn:hover {
+    color: #ff3b3b;
+    background-color: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+/* PRIKAZ: ob hoverju nad celotnim li.dropdown */
+li.dropdown:hover .dropdown-content {
+    display: flex; /* ostane flex za enostolpčni dropdown */
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+li.dropdown:hover .dropdown-columns {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto; /* omogoči klikanje */
+}
+
+
+/* Min-width dropdownov */
+.dropdown-content, .dropdown-sub-content {
+    min-width: 180px;
+}
+
+.dropdown-content li, .dropdown-sub-content li {
+    padding: 0;
+}
+
+
+.dropdown-columns--small {
+    grid-template-rows: repeat(6,auto);
+}
+
+
+/* ------------------------- */
+/* DESKTOP ENHANCEMENTS >=769px */
+/* ------------------------- */
+@media screen and (min-width: 769px) {
+    /* 2-column dropdown */
+    .dropdown-columns {
+        display: grid;
+        grid-template-rows: repeat(8, auto);
+        grid-auto-flow: column;
+        gap: 0.25em 20px;
+        background-color: #333;
+        padding: 0.5em;
+        min-width: 220px;
+        z-index: 1;
+    }
+
+    .dropdown-columns.dropdown-columns--small {
+        grid-template-rows: repeat(6, auto);
+    }
+    
+    /* Dropdown linki v 2-column */
+    .dropdown-columns a {
+        font-weight: 500;
+        padding: 0.45em 1em;
+    }
+
+    .dropdown-columns li {
+        padding: 0;
+    }
+
+    .dropdown-columns a:hover {
+        color: #ff3b3b;
+        background-color: rgba(255,255,255,0.05);
+        border-radius: 4px;
+        transition: background-color 0.2s, color 0.2s;
+    }
+
+    /* Hover efekt za gumb dropdown */
+    .dropdown .dropbtn:hover {
+        color: #ff3b3b;
+        background-color: rgba(255,255,255,0.05);
+        border-radius: 4px;
+        transition: background-color 0.2s, color 0.2s;
+    }
+}
+
+
+
+
+
+
+
+@media screen and (max-width: 768px) {
+
+
+    /* Hamburger meni */
+    .hamburger {
+        display: block;
+        cursor: pointer;
+        font-size: 30px;
+        color: white;
+    }
+
+        .home-icon {
+        display: block;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 30px;
+        color: white;
+        text-decoration: none;
+        z-index: 200;
+    }
+
+
+    /* Navigacija */
+    nav ul {
+        display: none;
+        flex-direction: column;
+        background-color: #333;
+        padding: 0;
+        margin: 0;
+        position: absolute;
+        width: 75%;
+        z-index: 100;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        transition: max-height 0.3s ease-out;
+    }
+
+    nav ul.show {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 3.5em; /* višina headerja, prilagodi po potrebi */
+        left: 0;     /* povsem levo */
+        width: 75%;  /* ali 100% če želiš, da pokrije cel zaslon */
+        margin: 0;
+        padding: 0;
+        z-index: 100;
+    }
+
+    nav ul.show li.dropdown .dropdown-content {
+        position: relative; /* da ne bo več absolutno */
+        top: 0;
+        left: 0;
+        margin-left: 10px; /* zamik desno */
+        min-width: calc(100% - 10px); /* da se ne razleze čez */
+        display: flex;
+        flex-direction: column;
+    }
+
+    nav ul.show li.dropdown .dropdown-sub-content {
+        margin-left: 10px; /* še globlje podmeni enako */
+    }
+
+
+    /* Header adjustments */
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        position: relative;
+    }
+
+    .header h3 a img,
+    .header h3 a {
+        display: none;
+    }
+
+    div.col-7.main img {
+        width: 100%;
+        margin: 0;
+    }
+
+    footer {
+        display: none;
+    }
+
+    .row {
+        flex-direction: column;
+    }
+
+    .col-2.sidenav {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .col-7.main {
+        width: 100%;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+    }
+
+    .main-content {
+        width: 100%;
+    }
+    
+    .col-3 {
+        width: 100%;
+        
+    }
+    
+
+    p#demo {
+        width: 100%;
+    }
+
+     iframe.trenutnalestvica,
+    iframe.trenutnalestvicapredictions {
+        width: 100%;
+        height: 250vh;
+    }
+
+        /* Mobile: force dropdown to flex column */
+    .dropdown-columns {
+        display: flex !important;
+        flex-direction: column !important;
+        grid-template-rows: none !important;
+        grid-auto-flow: unset !important;
+        gap: 0 !important;
+        left: 75px;
+        min-width: 100% !important;
+        padding: 0.5em 0 !important;
+    }
+    
+    /* Dropdown linki se obnašajo kot v enostolpčnem dropdown-content */
+    .dropdown-columns a {
+        padding: 0.75em 1em !important;
+    }
+}
+
+
+}
+

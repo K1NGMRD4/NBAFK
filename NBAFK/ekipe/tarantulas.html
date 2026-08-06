@@ -1,0 +1,200 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tokyo Tarantulas</title>
+    <link rel="icon" type="image/x-icon" href="../logos/logoliga.png">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        p {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+    let basePath = window.location.origin + window.location.pathname.split("/").slice(0, 2).join("/") + "/";
+    
+    // Naloži navigacijo iz nav2.html
+    fetch(basePath + "nav2.html")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("nav2-placeholder").innerHTML = data;
+
+            // Po nalaganju navigacije doda funkcionalnost hamburger meniju
+            let hamburger = document.querySelector(".hamburger");
+            let navMenu = document.querySelector("nav ul");
+
+            if (hamburger && navMenu) {
+                hamburger.addEventListener("click", function() {
+                    navMenu.classList.toggle("show"); // Preklopi meni
+                });
+            }
+        })
+        .catch(error => console.error("Napaka pri nalaganju navigacije:", error));
+});
+    </script>
+</head>
+<body>
+    <div id="nav2-placeholder"></div>
+    <main>
+        <div class="row">
+            <div id="sidenav-placeholder"></div>
+
+            <div class="col-7 main">
+                <h1 style="border: 2px solid#333; font-family: Dubai; font-size: 35px;"><span style="color: red; font-size: 35px;"> Vito Torej &nbsp;&nbsp;&nbsp;</span> Tokyo Tarantulas  </h1>
+
+                <img src="logos/tarantulas.png" style="height: 350px; width: 350px; display: inline-block">
+                <p style="display: inline-block; vertical-align: top;">
+
+                    <div style="display: inline-block; vertical-align: top; padding-left: 50px; padding-top: 25px; text-align: center;">
+                        Nickname: <span style="text-align: right; color: red;">Tokyo Tarantulas </span> <br />
+                        Team owner: <span style="text-align: right; color: red;">Vito Torej  </span>  <br />
+                        Joined league: <span style="text-align: right; color: red;"> 2024 (season 8) </span>  <br />
+                        History: <span style="text-align: right; color: red;">
+                            //
+                        </span>  <br />
+                        Arena:  <span style="text-align: right; color: red;"> Tokyo Dome  </span>  <br />
+                        Capacity: <span style="text-align: right; color: red;"> 50.000  </span> <br />
+                        Location: <span style="text-align: right; color: red;"> Tokyo, Japan  </span> <br />
+                        Average ranking: <span style="text-align: right; color: red;"> 7.00 (7th) </span>
+                    </div>
+
+                    <table class="tabeleuvrstitev" style="display: inline-block; vertical-align: top; float: right;">
+                        <tr style="background-color: dimgray">
+                            <th>Sezona</th>
+                            <th>Uvrstitev</th>
+                        </tr>
+                        <tr>
+                            <th>2017/18</th>
+                            <th>/////</th>
+                        </tr>
+                        <tr>
+                            <th>2018/19</th>
+                            <th>/////</th>
+                        </tr>
+                        <tr>
+                            <th>2019/20</th>
+                            <th>/////</th>
+                        </tr>
+                        <tr>
+                            <th>2020/21</th>
+                            <th>/////</th>
+                        </tr>
+                        <tr>
+                            <th>2021/22</th>
+                            <th>/////</th>
+                        </tr>
+                        <tr>
+                            <th>2022/23</th>
+                            <th>/////</th>
+                        </tr>
+                        <tr>
+                            <th>2023/24</th>
+                            <th>/////</th>
+                        </tr>
+                        <tr>
+                            <th>2024/25</th>
+                            <th>8.00</th>
+                        </tr>
+                        <tr>
+                            <th>2025/26</th>
+                            <th>6</th>
+                        </tr>
+                        <tr>
+                            <th>2026/27</th>
+                            <th>...</th>
+                        </tr>
+                        <tr style="background-color: green">
+                            <th>AVERAGE</th>
+                            <th>7.00</th>
+                        </tr>
+                    </table>
+                    <div>
+                        <h2> Uvodni intervju - VITO TOREJ (september, 2024)</h2>
+                        <p>
+                            Najprej seveda dobrodošli in veliko sreče. Upamo, da imate dovolj velike ekrane na telefonu, da boste vidni na lestvici brez scrollanja. Sedaj pa nekaj uvodnih vprašanj, da vas malce bolje spoznamo. <br /><br />
+                            <span class="vprasanje"> 1) Pojasnite na kratko širši javnosti ime in maskoto vaše franšize.  </span><br />
+                            Za Tokyo tarantele sm se odloco ker sm sprva isko malo besedno igrco z mojmo priimko se posebej ker sm rookie in s tem bote lazje vedli s komo trejdate (lejte kk prijazn sm ne me scammat pls)
+                            poleg tega sm pa isko neko kulsko zival ki usaj do neke mere vzbuja strah v mojih nasprotnikih in tarantela se je po obseznih raziskavah in vprasalnikih pokazala za bolj strasno od tukana, tjulnja in pa tapirja. <br /><br />
+                            <span class="vprasanje"> 2) Kakšni so cilji v vaši uvodni sezoni? Imate kakšne fantasy izkušnje iz drugih lig?  </span><br />
+                            Klub višji konkurenci kot v prejšnji fantasy ligi, ki sem jo za zdaj igral, se mi zdi da 3 leta, mislim da se absolutno lahk uspešno uvrstim v playoffe in pol prek trdega dela,
+                            pametnih tradov in z vlko sreče od bogov DTD-jev in O-jev borim za neke solidne enomestne uvrstitve na konco lige.
+                            <br /><br />
+                            <span class="vprasanje"> 3) S katerim managerjem v ligi imate že sedaj beef in katerega managerja se najbolj bojite?  </span><br />
+                            Beefa za zdaj se mislim da nimam s kom razn ce se motim pa me kdo secretly hejta… V prihodnosti bomo pa vidli ce se to spremeni ampak mislim da bom ostal dokaj pod radarjem kar se tege tice.
+                            Bojim se ne nobenga ampak bom pa priznal da bom malo bolj previdn glede Jurharja in Cicija, zarad tega ker sta to bla ubistvo človeka s katerima sm se do zdaj največ posvetoval glede fantasyja in vem da zelo aktivno spremljata sceno
+                            (dobo sm tot 700x warningov glede Jurharja, tk da to tot ne pomaga).<br /> <br />
+                            <span class="vprasanje"> 4) Kdo je vaš najljubši košarkar v ligi in za katero moštvo navijate?  </span><br />
+                            Kot vsakemo Slovenco mi je najjača ekipa Dallas in valda Doncic, ampak so mi zelo pri srcu tut Nuggetsi z Jokićem.<br /> <br />
+                            <span class="vprasanje"> 5) Kakšen bo vaš doprinos ligi?  </span><br />
+                            Moj doprinos upam da bo veliko dobre volje in širjenje radosti v tej izredno tekmovalni skupini.<br /> <br />
+                        </p>
+                        <h2>Zaključna misel</h2>
+                        <p>
+                            Se veselim zacetka sezone pobi💪🏻.<br /> <br /><br />
+                        </p>
+                    </div>
+                </p>
+            </div>
+
+            <div class="col-3 lestvica">
+                <div class="iframelestvica">
+                    <iframe scrolling="no" src="../trenutnalestvica.html" class="trenutnalestvica"></iframe>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <nav>
+            <h3><a href="https://fantasy.espn.com/basketball/league?leagueId=32010985" target="_blank"><img src="../logos/espn.png" alt="logo" style="height:90px; width:180px;" /></a>  </h3>
+            <ul>
+                <li><a href="../index.html">Domov</a></li>
+                <li><a href="../ekipe.html">Ekipe</a>
+                <li><a href="../sezona2425.html">Sezona 2024/25</a></li>
+                <li><a href="../zgodovina.html">Zgodovina</a></li>
+                <li><a href="../predictions.html">Predictions</a></li>
+            </ul>
+            <form class="donatebtn" action="https://www.paypal.com/donate" method="post" target="_blank">
+                <!-- Identify your business so that you can collect the payments. -->
+                <input type="hidden" name="business" value="jost.mrdavsic@gmail.com">
+                <!-- Specify details about the contribution -->
+                <input type="hidden" name="no_recurring" value="5">
+                <input type="hidden" name="item_name" value="NBA Fantasy Koroska">
+                <input type="hidden" name="item_number" value="LM, Content creation & WebPage design">
+                <input type="hidden" name="currency_code" value="EUR">
+                <!-- Display the payment button. -->
+                <input type="image" name="submit" src="../donate.png" alt="Donate">
+            </form>
+        </nav>
+        <p style="text-align:center; margin-top: 10px;"> <span style="font-weight: bold">&copy; NBA Fantasy Koroška &copy;</span><br /><br /> SEASON 8 <br /> <span style="font-size: 12px">since 2017</span></p>
+    </footer>
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+    var hamburgerMenu = document.getElementById("hamburger-menu");
+    var navMenu = document.getElementById("nav-menu");
+
+    if (hamburgerMenu && navMenu) {
+        hamburgerMenu.addEventListener("click", function() {
+            navMenu.classList.toggle("show");
+        });
+    } else {
+        console.error("Elementi hamburger menija ali navigacijskega menija niso najdeni.");
+    }
+});
+</script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Nalozi sidenav (datoteka v isti mapi)
+        fetch("sidenavEkipe.html")
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById("sidenav-placeholder").outerHTML = html;
+            })
+            .catch(err => console.error("Napaka pri nalaganju sidenav:", err));
+    });
+    </script>
+</body>
+</html>
