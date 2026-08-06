@@ -41,27 +41,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     <main>
         <div class="row">
-            <div class="col-2 sidenav">
-                <h1 class="menu-title">EKIPE</h1>
-                <ul class="meniekipe">
-                    <li><a href="alpacas.html">Caracas Alpacas</a> </li>
-                    <li><a href="angus.html">Koprivna Black Angus</a></li>
-                    <li><a href="carpio.html">Brdinje Cyprinus Carpio</a></li>
-                    <li><a href="clowns.html">Vuzenica Clowns</a></li>
-                    <li><a href="corgis.html">Carigrad Corgis</a></li>
-                    <li><a href="cows.html">New Delhi Holy Cows</a></li>
-                    <li><a href="ducks.html">Belgrade Ducks</a></li>
-                    <li><a href="kakapos.html">Waipo Kakapos</a></li>
-                    <li><a href="koalas.html">Kuala Lumpur Koalas</a></li>
-                    <li><a href="koze.html">Gorske Koze</a></li>
-                    <li><a href="lions.html">Green Hill Lions</a></li>
-                    <li><a href="shrimps.html">Ankaran Shrimps</a></li>
-                    <li><a href="sloths.html">Trbonje Sloths</a></li>
-                    <li><a href="tarantulas.html">Tokyo Tarantulas</a></li>
-                    <li><a href="tigers.html">Taipei Tigers</a></li>
-                    <li><a href="vesoljcki.html">Veseli Vesoljčki</a></li>
-                </ul>
-            </div>
+            <div id="sidenav-placeholder"></div>
 
             <div class="col-7 main">
                 <h1 style="border: 2px solid#333; font-family: Dubai; font-size: 35px;"><span style="color: red; font-size: 35px;"> Rok Lačen &nbsp;&nbsp;&nbsp;</span> Koprivna Black Angus  </h1>
@@ -198,5 +178,16 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 </script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Nalozi sidenav (datoteka v isti mapi)
+        fetch("sidenavEkipe.html")
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById("sidenav-placeholder").outerHTML = html;
+            })
+            .catch(err => console.error("Napaka pri nalaganju sidenav:", err));
+    });
+    </script>
 </body>
 </html>
