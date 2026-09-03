@@ -234,18 +234,27 @@
   .matchup:last-child{border-bottom:none;}
   .matchup .idx{font-family:var(--font-mono);color:var(--ink-faint);font-size:12px;padding-top:6px;}
   .pickbtn{
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+    display:flex;flex-direction:row;align-items:center;gap:10px;
     border:1.5px solid var(--border-strong);background:var(--surface);border-radius:var(--radius-m);
-    padding:14px 6px;min-height:120px;font-weight:600;font-size:12.5px;cursor:pointer;text-align:center;transition:all .12s;
+    padding:10px 12px;min-height:152px;font-weight:600;font-size:12.5px;cursor:pointer;text-align:left;transition:all .12s;
     color:var(--ink);
   }
   .pickbtn span{line-height:1.25;word-break:break-word;}
-  .pickbtn .team-logo{width:56px;height:56px;object-fit:contain;border-radius:50%;flex:none;background:rgba(127,127,127,0.08);}
+  .pickbtn .team-logo{width:84px;height:84px;object-fit:contain;border-radius:50%;flex:none;background:rgba(127,127,127,0.08);}
+  .pickbtn-info{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1;}
+  .pickbtn-team{font-size:13.5px;font-weight:800;}
+  .pickbtn-manager{font-size:11.5px;font-weight:500;color:var(--ink-dim);}
+  .pickbtn-score{font-family:var(--font-mono);font-size:13px;font-weight:700;}
+  .pickbtn-score.rec-good{color:var(--good);}
+  .pickbtn-score.rec-bad{color:var(--bad);}
+  .pickbtn-score.rec-tie{color:var(--focus);}
   .pickbtn:hover{border-color:var(--accent);}
   .pickbtn.selected{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);}
+  .pickbtn.selected .pickbtn-manager{color:var(--accent-ink);opacity:.85;}
   .pickbtn.correct{background:var(--good-soft);border-color:var(--good);color:var(--good);}
   .pickbtn.incorrect{opacity:.55;}
   .pickbtn.winner-marker{background:var(--good);border-color:var(--good);color:#fff;}
+  .pickbtn.winner-marker .pickbtn-manager{color:#fff;opacity:.85;}
 
   .bonusq{padding:12px 0;border-top:1px dashed var(--border);}
   .bonusq:first-child{border-top:none;}
@@ -326,8 +335,11 @@
     .grid-2{grid-template-columns:1fr;}
     table.board td,table.board th{padding:9px 10px;}
     .matchup{grid-template-columns:16px 1fr 1fr;gap:6px;}
-    .pickbtn{min-height:104px;padding:10px 4px;font-size:11.5px;}
-    .pickbtn .team-logo{width:46px;height:46px;}
+    .pickbtn{min-height:122px;padding:8px 8px;gap:8px;font-size:11px;}
+    .pickbtn .team-logo{width:60px;height:60px;}
+    .pickbtn-team{font-size:12px;}
+    .pickbtn-manager{font-size:9.5px;}
+    .pickbtn-score{font-size:11.5px;}
   }
 </style>
 <style>
@@ -479,6 +491,54 @@
     "Green Hill Lions (Ranac)": "data:image/webp;base64,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"
   };
   function teamLogoImg(team){ var src = TEAM_LOGOS[team]; return src ? '<img src="'+src+'" alt="" class="team-logo">' : ''; }
+  function teamNameOnly(team){
+    var m = /^(.*)\s\([^)]*\)\s*$/.exec(team||'');
+    return m ? m[1] : (team||'');
+  }
+  function teamNicknameOf(team){
+    var m = /\(([^)]*)\)\s*$/.exec(team||'');
+    return m ? m[1] : '';
+  }
+  // Polno ime managerja se poišče v roster (Admin > Igralci) po vzdevku, ki je zapisan v TEAMS v oklepaju.
+  function teamManagerFullName(team){
+    var nick = teamNicknameOf(team);
+    if(!nick) return '';
+    var found = roster.filter(function(r){ return (r.nickname||'').trim().toLowerCase()===nick.trim().toLowerCase(); })[0];
+    return (found && found.name) ? found.name : nick;
+  }
+  // Začasna W-L-T evidenca po ekipah (namesto v Firestore, ker gre za sezonski rezultat, ne podatek o napovedih).
+  // Uredi ročno spodaj ali pošlji posodobljen screenshot lestvice, da jih posodobim.
+  var TEAM_RECORDS = {
+    "Kuala Lumpur Koalas (Vera)": {w:0,l:0,t:0},
+    "Caracas Alpacas (Herko)": {w:0,l:0,t:0},
+    "Taipei Tigers (Mrda)": {w:0,l:0,t:0},
+    "Carigrad Corgis (Fred)": {w:0,l:0,t:0},
+    "Veseli Vesoljčki (Duka)": {w:0,l:0,t:0},
+    "Waipo Kakapos (Ilja)": {w:0,l:0,t:0},
+    "New Delhi Holy Cows (Geps)": {w:0,l:0,t:0},
+    "Belgrade Ducks (Tajn)": {w:0,l:0,t:0},
+    "Brdinje Cyprinus Carpio (Kavt)": {w:0,l:0,t:0},
+    "Vuzenica Clowns (Mahi)": {w:0,l:0,t:0},
+    "Ankraran Shrimps (Cici)": {w:0,l:0,t:0},
+    "Koprivna Black Angus (Voka)": {w:0,l:0,t:0},
+    "Trbonje Sloths (Kups)": {w:0,l:0,t:0},
+    "Gorske Koze (Ura)": {w:0,l:0,t:0},
+    "Tokyo Tarantulas (Torres)": {w:0,l:0,t:0},
+    "Green Hill Lions (Ranac)": {w:0,l:0,t:0}
+  };
+  function teamRecordHtml(team){
+    var r = TEAM_RECORDS[team] || {w:0,l:0,t:0};
+    var cls = r.w>r.l ? 'rec-good' : (r.l>r.w ? 'rec-bad' : 'rec-tie');
+    return '<span class="pickbtn-score '+cls+'">('+r.w+'-'+r.l+')</span>';
+  }
+  function pickbtnContent(team){
+    return teamLogoImg(team)
+      +'<span class="pickbtn-info">'
+      +'<span class="pickbtn-team">'+esc(teamNameOnly(team))+'</span>'
+      +'<span class="pickbtn-manager">'+esc(teamManagerFullName(team))+'</span>'
+      +teamRecordHtml(team)
+      +'</span>';
+  }
 
   /* ============================================================
      STATE
@@ -922,8 +982,8 @@
       (round.matchups||[]).forEach(function(m, i){
         html += '<div class="matchup" data-idx="'+i+'">';
         html += '<span class="idx">'+(i+1)+'</span>';
-        html += '<button type="button" class="pickbtn'+(picks[i]===m.a?' selected':'')+'" data-team="'+esc(m.a)+'">'+teamLogoImg(m.a)+'<span>'+esc(m.a)+'</span></button>';
-        html += '<button type="button" class="pickbtn'+(picks[i]===m.b?' selected':'')+'" data-team="'+esc(m.b)+'">'+teamLogoImg(m.b)+'<span>'+esc(m.b)+'</span></button>';
+        html += '<button type="button" class="pickbtn'+(picks[i]===m.a?' selected':'')+'" data-team="'+esc(m.a)+'">'+pickbtnContent(m.a)+'</button>';
+        html += '<button type="button" class="pickbtn'+(picks[i]===m.b?' selected':'')+'" data-team="'+esc(m.b)+'">'+pickbtnContent(m.b)+'</button>';
         html += '</div>';
       });
       html += '</div>';
@@ -1663,7 +1723,7 @@
       (round.matchups||[]).forEach(function(m, i){
         html += '<div class="matchup" data-gi="'+i+'"><span class="idx">'+(i+1)+'</span>';
         [m.a, m.b].forEach(function(team){
-          html += '<button type="button" class="pickbtn'+(gradingWinners[i]===team?' winner-marker':'')+'" data-team="'+esc(team)+'">'+teamLogoImg(team)+'<span>'+esc(team)+'</span></button>';
+          html += '<button type="button" class="pickbtn'+(gradingWinners[i]===team?' winner-marker':'')+'" data-team="'+esc(team)+'">'+pickbtnContent(team)+'</button>';
         });
         html += '</div>';
       });
