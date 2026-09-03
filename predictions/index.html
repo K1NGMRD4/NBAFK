@@ -1236,8 +1236,11 @@
       if(r.status==='locked') html += '<button class="btn small" data-act="reopen" data-id="'+r.id+'">Ponovno odpri</button>';
       if(r.status!=='draft') html += '<button class="btn small" data-act="grade" data-id="'+r.id+'">Ocenjevanje</button>';
       html += '<button class="btn small danger" data-act="del" data-id="'+r.id+'">Izbriši</button>';
+      html += '<button class="btn small ghost" data-act="seed" data-id="'+r.id+'" title="Ustvari izmišljene oddaje za vse igralce iz Admin > Igralci — za testiranje ocenjevanja, lestvice in zgodovine.">🧪 Testni podatki</button>';
+      html += '<button class="btn small danger" data-act="clearsubs" data-id="'+r.id+'" title="Izbriše VSE oddane napovedi tega kroga (tudi prave, ne le testne).">🗑️ Izbriši oddaje</button>';
       html += '</div></div>';
     });
+    html += '<p class="small muted" style="margin-top:8px;">🧪 Testni podatki ustvari/prepiše izmišljene oddaje za vse trenutne igralce iz Admin → Igralci (uporabno za preizkus ocenjevanja, lestvice in zgodovine) — če krog že ima prave oddaje, jih prepiše. 🗑️ Izbriši oddaje počisti čisto vse oddaje tega kroga.</p>';
     html += '</div>';
 
     var editKind = editing ? editing.kind : null;
@@ -1639,7 +1642,86 @@
             db.doc('rounds/'+id).delete().then(function(){ toast('Krog izbrisan.'); });
           });
         }
+        else if(act==='seed'){
+          armConfirm(btn, 'Prepiše oddaje?', function(){
+            var orig = btn.textContent; btn.disabled = true; btn.textContent = 'Ustvarjam …';
+            seedTestSubmissions(id).then(function(n){
+              toast('Testne oddaje ustvarjene za '+n+' igralcev.');
+            }).catch(function(e){
+              console.error(e); toast('Napaka: '+e.message, 6000);
+            }).then(function(){
+              btn.disabled = false; btn.textContent = orig;
+            });
+          });
+        }
+        else if(act==='clearsubs'){
+          armConfirm(btn, 'Izbriši VSE oddaje?', function(){
+            var orig = btn.textContent; btn.disabled = true; btn.textContent = 'Brišem …';
+            clearSubmissions(id).then(function(n){
+              toast('Izbrisanih oddaj: '+n+'.');
+            }).catch(function(e){
+              console.error(e); toast('Napaka: '+e.message, 6000);
+            }).then(function(){
+              btn.disabled = false; btn.textContent = orig;
+            });
+          });
+        }
       });
+    });
+  }
+
+  // ---------- Testni podatki (Admin > Krogi) ----------
+  function randomAnswerForQuestion(q){
+    var type = q.type || 'text';
+    if(type==='choice'){
+      var choices = q.choices||[];
+      return choices.length ? choices[Math.floor(Math.random()*choices.length)] : 'Testni odgovor';
+    }
+    if(type==='multichoice'){
+      var mchoices = q.choices||[];
+      if(!mchoices.length) return 'Testni odgovor';
+      var shuffled = mchoices.slice().sort(function(){ return Math.random()-0.5; });
+      var n = 1 + Math.floor(Math.random()*Math.min(3, shuffled.length));
+      return shuffled.slice(0, n).join(', ');
+    }
+    if(type==='grid'){
+      var rows = q.gridRows||[], cols = q.gridCols||[];
+      if(!rows.length || !cols.length) return '';
+      return rows.map(function(r){
+        return r+': '+cols[Math.floor(Math.random()*cols.length)];
+      }).join('; ');
+    }
+    var texts = ['Da', 'Ne', 'Mogoče', '17', '42', 'Ni šans', 'Verjetno da', 'Testni odgovor'];
+    return texts[Math.floor(Math.random()*texts.length)];
+  }
+  function seedTestSubmissions(roundId){
+    var round = rounds.filter(function(r){ return r.id===roundId; })[0];
+    if(!round) return Promise.reject(new Error('Krog ne obstaja.'));
+    if(!roster.length) return Promise.reject(new Error('Najprej dodaj igralce v Admin > Igralci.'));
+    var isSpecial = round.kind==='special';
+    var questions = isSpecial ? (round.questions||[]) : (round.bonusQuestions||[]);
+    var writes = roster.map(function(u){
+      var data = { userId: u.id, name: rosterName(u.id), submittedAt: new Date().toISOString() };
+      var bonusVals = questions.map(randomAnswerForQuestion);
+      if(isSpecial){
+        data.answers = bonusVals;
+        data.points = null;
+        data.roundTotal = null;
+      } else {
+        data.picks = (round.matchups||[]).map(function(m){ return Math.random()<0.5 ? m.a : m.b; });
+        data.bonusAnswers = bonusVals;
+        data.matchPoints = null;
+        data.bonusPoints = null;
+        data.roundTotal = null;
+      }
+      return db.doc('rounds/'+roundId+'/submissions/'+u.id).set(data);
+    });
+    return Promise.all(writes).then(function(){ return roster.length; });
+  }
+  function clearSubmissions(roundId){
+    return db.collection('rounds/'+roundId+'/submissions').get().then(function(snap){
+      var dels = snap.docs.map(function(d){ return db.doc('rounds/'+roundId+'/submissions/'+d.id).delete(); });
+      return Promise.all(dels).then(function(){ return dels.length; });
     });
   }
 
