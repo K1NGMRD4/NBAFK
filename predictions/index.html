@@ -506,6 +506,11 @@
     var found = roster.filter(function(r){ return (r.nickname||'').trim().toLowerCase()===nick.trim().toLowerCase(); })[0];
     return (found && found.name) ? found.name : nick;
   }
+  // Za prikaz v seznamih možnih odgovorov (npr. "Vse ekipe") — polno ime managerja namesto vzdevka.
+  function teamWithManagerName(team){
+    var mgr = teamManagerFullName(team);
+    return mgr ? (teamNameOnly(team) + ' (' + mgr + ')') : team;
+  }
   // Začasna W-L-T evidenca po ekipah (namesto v Firestore, ker gre za sezonski rezultat, ne podatek o napovedih).
   // Uredi ročno spodaj ali pošlji posodobljen screenshot lestvice, da jih posodobim.
   var TEAM_RECORDS = {
@@ -1402,7 +1407,7 @@
       var fillTeams = row.querySelector('.bq-fill-teams');
       if(fillTeams) fillTeams.onclick = function(){
         var inp = row.querySelector('.bq-choices');
-        if(inp) inp.value = TEAMS.join(', ');
+        if(inp) inp.value = TEAMS.map(teamWithManagerName).join(', ');
       };
       var fillAbcd = row.querySelector('.bq-fill-abcd');
       if(fillAbcd) fillAbcd.onclick = function(){
@@ -1423,7 +1428,7 @@
       var fillGridTeams = row.querySelector('.bq-fill-grid-teams');
       if(fillGridTeams) fillGridTeams.onclick = function(){
         var inp = row.querySelector('.bq-grid-rows');
-        if(inp) inp.value = TEAMS.join(', ');
+        if(inp) inp.value = TEAMS.map(teamWithManagerName).join(', ');
       };
     }
     var addBtn = $('#'+wrapId+'-add');
