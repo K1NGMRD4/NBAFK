@@ -258,6 +258,18 @@
   .ptbtn:hover{border-color:var(--accent);}
   .ptbtn.selected{background:var(--good);border-color:var(--good);color:#fff;}
 
+  .mc-options{display:flex;flex-direction:column;gap:8px;margin-top:6px;}
+  .mc-opt{display:flex;align-items:center;gap:9px;font-weight:600;font-size:13.5px;cursor:pointer;
+    border:1.5px solid var(--border-strong);border-radius:var(--radius-s);padding:8px 10px;background:var(--surface);}
+  .mc-opt:hover{border-color:var(--accent);}
+  .mc-opt input{width:auto;}
+  table.grid-table{border-collapse:collapse;width:100%;min-width:420px;}
+  table.grid-table th,table.grid-table td{padding:7px 10px;text-align:center;border-bottom:1px solid var(--border);font-size:12.5px;white-space:nowrap;}
+  table.grid-table thead th{font-weight:700;color:var(--ink-dim);background:var(--surface-alt);}
+  table.grid-table td.grow-label{text-align:left;font-weight:600;position:sticky;left:0;background:var(--surface);border-right:1px solid var(--border);}
+  table.grid-table input[type="radio"]{width:auto;}
+  .bq-choices-field textarea, .bq-grid-field textarea{resize:vertical;}
+
   .submitted-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
   .chip{background:var(--surface-alt);border-radius:99px;padding:4px 10px;font-size:12.5px;color:var(--ink-dim);}
   .chip.me{background:var(--accent-soft);color:var(--accent-soft-ink);font-weight:700;}
@@ -812,6 +824,81 @@
     }).catch(function(e){ console.error(e); area.innerHTML = emptyState('⚠️','Napaka pri nalaganju.'); });
   }
 
+  function renderQuestionInput(q, i, val){
+    var type = q.type || 'text';
+    if(type==='choice'){
+      var html = '<select data-bonus="'+i+'"><option value="">— izberi —</option>';
+      (q.choices||[]).forEach(function(c){
+        html += '<option value="'+esc(c)+'"'+(val===c?' selected':'')+'>'+esc(c)+'</option>';
+      });
+      html += '</select>';
+      return html;
+    }
+    if(type==='multichoice'){
+      var selected = (val||'').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+      var html = '<input type="hidden" data-bonus="'+i+'" value="'+esc(val||'')+'">';
+      html += '<div class="mc-options" data-mc="'+i+'">';
+      (q.choices||[]).forEach(function(c){
+        var checked = selected.indexOf(c)>=0;
+        html += '<label class="mc-opt"><input type="checkbox" value="'+esc(c)+'"'+(checked?' checked':'')+'> '+esc(c)+'</label>';
+      });
+      html += '</div>';
+      return html;
+    }
+    if(type==='grid'){
+      var rowVals = {};
+      (val||'').split(';').forEach(function(pair){
+        var idx = pair.indexOf(':');
+        if(idx>0) rowVals[pair.slice(0,idx).trim()] = pair.slice(idx+1).trim();
+      });
+      var html = '<input type="hidden" data-bonus="'+i+'" value="'+esc(val||'')+'">';
+      html += '<div class="table-scroll"><table class="grid-table" data-grid="'+i+'"><thead><tr><th></th>';
+      (q.gridCols||[]).forEach(function(c){ html += '<th>'+esc(c)+'</th>'; });
+      html += '</tr></thead><tbody>';
+      (q.gridRows||[]).forEach(function(r, ri){
+        html += '<tr><td class="grow-label">'+esc(r)+'</td>';
+        (q.gridCols||[]).forEach(function(c){
+          var checked = rowVals[r]===c;
+          html += '<td style="text-align:center;"><input type="radio" name="grid-'+i+'-'+ri+'" value="'+esc(c)+'"'+(checked?' checked':'')+'></td>';
+        });
+        html += '</tr>';
+      });
+      html += '</tbody></table></div>';
+      return html;
+    }
+    return '<input type="text" data-bonus="'+i+'" placeholder="Tvoj odgovor" value="'+esc(val||'')+'">';
+  }
+
+  function bindQuestionInputs(questions){
+    questions.forEach(function(q, i){
+      if(q.type==='multichoice'){
+        var wrap = $('.mc-options[data-mc="'+i+'"]');
+        if(!wrap) return;
+        var hidden = $('input[type=hidden][data-bonus="'+i+'"]');
+        $all('input[type=checkbox]', wrap).forEach(function(cb){
+          cb.addEventListener('change', function(){
+            var vals = $all('input[type=checkbox]:checked', wrap).map(function(c){ return c.value; });
+            hidden.value = vals.join(', ');
+          });
+        });
+      }
+      if(q.type==='grid'){
+        var table = $('.grid-table[data-grid="'+i+'"]');
+        if(!table) return;
+        var hidden = $('input[type=hidden][data-bonus="'+i+'"]');
+        function syncGrid(){
+          var pairs = [];
+          (q.gridRows||[]).forEach(function(r, ri){
+            var checked = table.querySelector('input[name="grid-'+i+'-'+ri+'"]:checked');
+            if(checked) pairs.push(r+': '+checked.value);
+          });
+          hidden.value = pairs.join('; ');
+        }
+        $all('input[type=radio]', table).forEach(function(r){ r.addEventListener('change', syncGrid); });
+      }
+    });
+  }
+
   function renderSubmitForm(round, existing){
     var isSpecial = round.kind==='special';
     var questions = isSpecial ? (round.questions||[]) : (round.bonusQuestions||[]);
@@ -841,7 +928,7 @@
     questions.forEach(function(q, i){
       html += '<div class="bonusq">';
       html += '<div class="qtext">'+esc(q.text)+'</div>';
-      html += '<input type="text" data-bonus="'+i+'" placeholder="Tvoj odgovor" value="'+esc(bonus[i]||'')+'">';
+      html += renderQuestionInput(q, i, bonus[i]||'');
       html += '</div>';
     });
 
@@ -860,6 +947,7 @@
         });
       });
     }
+    bindQuestionInputs(questions);
 
     $('#submitBtn').addEventListener('click', function(){
       if(!isSpecial && picks.some(function(p){ return !p; })){ $('#submitMsg').textContent = 'Izberi zmagovalca za vse tekme.'; return; }
@@ -1091,7 +1179,7 @@
     html += '</div>';
     html += '<label style="margin-top:14px;">Bonus vprašanja</label>';
     html += '<div id="newBonusQs">';
-    for(var b=0;b<3;b++){ html += bonusEditorRow(b, '', '0,3,5,7,10'); }
+    for(var b=0;b<3;b++){ html += bonusEditorRow(b, {options:[0,3,5,7,10]}, {matchupSource:'newMatchups'}); }
     html += '</div>';
     html += '<div class="row" style="margin-top:8px;"><button type="button" class="btn small" id="newBonusQs-add">+ Dodaj vprašanje</button><span class="small muted" id="newBonusQs-count"></span></div>';
     html += '</div>';
@@ -1099,7 +1187,7 @@
     html += '<div id="specialKindFields" style="display:none;">';
     html += '<label style="margin-top:14px;">Vprašanja (10–15)</label>';
     html += '<div id="newSpecialQs">';
-    for(var q=0;q<10;q++){ html += bonusEditorRow(q, '', '0,1,2,3,5'); }
+    for(var q=0;q<10;q++){ html += bonusEditorRow(q, {options:[0,1,2,3,5]}, {allowGrid:true}); }
     html += '</div>';
     html += '<div class="row" style="margin-top:8px;"><button type="button" class="btn small" id="newSpecialQs-add">+ Dodaj vprašanje</button><span class="small muted" id="newSpecialQs-count"></span></div>';
     html += '</div>';
@@ -1113,8 +1201,8 @@
     el.innerHTML = html;
     bindRoundActions();
     bindAiBox('newMatchups');
-    bindDynamicQuestions('newBonusQs', 3, 5);
-    bindDynamicQuestions('newSpecialQs', 10, 15);
+    bindDynamicQuestions('newBonusQs', 3, 5, {matchupSource:'newMatchups'});
+    bindDynamicQuestions('newSpecialQs', 10, 15, {allowGrid:true});
     $('#newRoundKind').addEventListener('change', function(){
       var k = this.value;
       var isMatchup = k==='matchup';
@@ -1137,14 +1225,53 @@
       '<select class="home-sel">'+'<option value="">— izberi ekipo —</option>'+opts(teamA)+'</select>' +
       '<select class="away-sel">'+'<option value="">— izberi ekipo —</option>'+opts(teamB)+'</select></div>';
   }
-  function bonusEditorRow(i, text, pts){
-    return '<div class="bonusq" data-bi="'+i+'">' +
-      '<div class="field"><label>Vprašanje '+(i+1)+'</label><input type="text" class="bq-text" value="'+esc(text)+'" placeholder="npr. Koliko točk bo dosegel Luka Dončić?"></div>' +
-      '<div class="field"><label>Možne točkovne vrednosti (ločene z vejico)</label><input type="text" class="bq-pts" value="'+esc(pts)+'"></div>' +
-      '<div class="row" style="justify-content:flex-end;"><button type="button" class="btn small danger bq-remove">Odstrani vprašanje</button></div>' +
-      '</div>';
+  var QUESTION_TYPES = [
+    ['text','Kratek odgovor'],
+    ['choice','Izbira (ena možnost)'],
+    ['multichoice','Izbira (več možnosti)'],
+    ['grid','Mreža (ekipa × faza)']
+  ];
+  function bonusEditorRow(i, q, opts){
+    q = q || {};
+    opts = opts || {};
+    var type = q.type || 'text';
+    var ptsStr = q.options!=null ? (Array.isArray(q.options)?q.options.join(','):q.options) : '0,3,5,7,10';
+    var choicesStr = (q.choices||[]).join(', ');
+    var gridRowsStr = (q.gridRows||[]).join(', ');
+    var gridColsStr = (q.gridCols||[]).join(', ');
+    var html = '<div class="bonusq" data-bi="'+i+'">';
+    html += '<div class="field"><label>Vprašanje '+(i+1)+'</label><input type="text" class="bq-text" value="'+esc(q.text||'')+'" placeholder="npr. Koliko točk bo dosegel Luka Dončić?"></div>';
+    html += '<div class="field"><label>Tip vprašanja</label><select class="bq-type">';
+    QUESTION_TYPES.forEach(function(t){
+      if(t[0]==='grid' && !opts.allowGrid) return;
+      html += '<option value="'+t[0]+'"'+(type===t[0]?' selected':'')+'>'+t[1]+'</option>';
+    });
+    html += '</select></div>';
+
+    html += '<div class="field bq-choices-field" style="'+((type==='choice'||type==='multichoice')?'':'display:none;')+'">';
+    html += '<label>Možni odgovori (ločeni z vejico)</label>';
+    html += '<input type="text" class="bq-choices" value="'+esc(choicesStr)+'" placeholder="npr. Da, Ne, Morda">';
+    html += '<div class="row" style="margin-top:6px;gap:6px;">';
+    html += '<button type="button" class="btn small bq-fill-teams">Vse ekipe (16)</button>';
+    if(opts.matchupSource) html += '<button type="button" class="btn small bq-fill-matchups">Matchupi kroga (8)</button>';
+    html += '<button type="button" class="btn small bq-fill-abcd">A, B, C, D</button>';
+    html += '</div></div>';
+
+    html += '<div class="field bq-grid-field" style="'+(type==='grid'?'':'display:none;')+'">';
+    html += '<label>Vrstice (npr. ekipe, ločene z vejico)</label>';
+    html += '<textarea class="bq-grid-rows" rows="2" placeholder="npr. Team A, Team B, …">'+esc(gridRowsStr)+'</textarea>';
+    html += '<div class="row" style="margin:6px 0;"><button type="button" class="btn small bq-fill-grid-teams">Vrstice = vse ekipe (16)</button></div>';
+    html += '<label>Stolpci / faze (ločeni z vejico, v vrstnem redu)</label>';
+    html += '<input type="text" class="bq-grid-cols" value="'+esc(gridColsStr)+'" placeholder="npr. Brez playoffa, Play-in round, Četrtfinale, Polfinale, Finale">';
+    html += '</div>';
+
+    html += '<div class="field"><label>Možne točkovne vrednosti (ločene z vejico)</label><input type="text" class="bq-pts" value="'+esc(ptsStr)+'"></div>';
+    html += '<div class="row" style="justify-content:flex-end;"><button type="button" class="btn small danger bq-remove">Odstrani vprašanje</button></div>';
+    html += '</div>';
+    return html;
   }
-  function bindDynamicQuestions(wrapId, minN, maxN){
+  function bindDynamicQuestions(wrapId, minN, maxN, opts){
+    opts = opts || {};
     var wrap = $('#'+wrapId);
     if(!wrap) return;
     function renumber(){
@@ -1161,14 +1288,47 @@
       var countEl = $('#'+wrapId+'-count');
       if(countEl) countEl.textContent = rows.length + ' / ' + maxN + ' (min. ' + minN + ')';
     }
-    function bindRemove(){
-      $all('.bq-remove', wrap).forEach(function(btn){
-        btn.onclick = function(){
-          if($all('.bonusq', wrap).length <= minN) return;
-          btn.closest('.bonusq').remove();
-          renumber();
-        };
-      });
+    function bindRow(row){
+      var removeBtn = row.querySelector('.bq-remove');
+      if(removeBtn) removeBtn.onclick = function(){
+        if($all('.bonusq', wrap).length <= minN) return;
+        row.remove();
+        renumber();
+      };
+      var typeSel = row.querySelector('.bq-type');
+      if(typeSel) typeSel.onchange = function(){
+        var t = typeSel.value;
+        var choicesField = row.querySelector('.bq-choices-field');
+        var gridField = row.querySelector('.bq-grid-field');
+        if(choicesField) choicesField.style.display = (t==='choice'||t==='multichoice') ? '' : 'none';
+        if(gridField) gridField.style.display = (t==='grid') ? '' : 'none';
+      };
+      var fillTeams = row.querySelector('.bq-fill-teams');
+      if(fillTeams) fillTeams.onclick = function(){
+        var inp = row.querySelector('.bq-choices');
+        if(inp) inp.value = TEAMS.join(', ');
+      };
+      var fillAbcd = row.querySelector('.bq-fill-abcd');
+      if(fillAbcd) fillAbcd.onclick = function(){
+        var inp = row.querySelector('.bq-choices');
+        if(inp) inp.value = 'Možnost A, Možnost B, Možnost C, Možnost D';
+      };
+      var fillMatchups = row.querySelector('.bq-fill-matchups');
+      if(fillMatchups) fillMatchups.onclick = function(){
+        var inp = row.querySelector('.bq-choices');
+        if(!inp || !opts.matchupSource) return;
+        var mRows = $all('.matchup', $('#'+opts.matchupSource));
+        var vals = mRows.map(function(mr){
+          var a = mr.querySelector('.home-sel').value, b = mr.querySelector('.away-sel').value;
+          return (a||'?')+' vs '+(b||'?');
+        });
+        inp.value = vals.join(', ');
+      };
+      var fillGridTeams = row.querySelector('.bq-fill-grid-teams');
+      if(fillGridTeams) fillGridTeams.onclick = function(){
+        var inp = row.querySelector('.bq-grid-rows');
+        if(inp) inp.value = TEAMS.join(', ');
+      };
     }
     var addBtn = $('#'+wrapId+'-add');
     if(addBtn){
@@ -1176,13 +1336,14 @@
         var n = $all('.bonusq', wrap).length;
         if(n >= maxN) return;
         var tmp = document.createElement('div');
-        tmp.innerHTML = bonusEditorRow(n, '', '');
-        wrap.appendChild(tmp.firstChild);
-        bindRemove();
+        tmp.innerHTML = bonusEditorRow(n, {options:[]}, opts);
+        var newRow = tmp.firstChild;
+        wrap.appendChild(newRow);
+        bindRow(newRow);
         renumber();
       });
     }
-    bindRemove();
+    $all('.bonusq', wrap).forEach(bindRow);
     renumber();
   }
   function specialTypeLabel(t){ return {seasonlong:'Season Long', xmas:'XMAS Special', allstar:'Allstar Special'}[t] || t; }
@@ -1277,9 +1438,32 @@
   function readBonusFromWrap(wrapId){
     return $all('.bonusq', $('#'+wrapId)).map(function(row){
       var text = $('.bq-text', row).value.trim();
+      var typeSel = $('.bq-type', row);
+      var type = typeSel ? typeSel.value : 'text';
       var ptsRaw = $('.bq-pts', row).value.trim();
       var opts = ptsRaw.split(',').map(function(s){ return parseFloat(s.trim()); }).filter(function(n){ return !isNaN(n); });
-      return { text: text, options: opts };
+      var q = { text: text, type: type, options: opts };
+      if(type==='choice' || type==='multichoice'){
+        var choicesInp = $('.bq-choices', row);
+        var choicesRaw = choicesInp ? choicesInp.value : '';
+        q.choices = choicesRaw.split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+      }
+      if(type==='grid'){
+        var rowsInp = $('.bq-grid-rows', row), colsInp = $('.bq-grid-cols', row);
+        var rowsRaw = rowsInp ? rowsInp.value : '';
+        var colsRaw = colsInp ? colsInp.value : '';
+        q.gridRows = rowsRaw.split(/[,\n]/).map(function(s){ return s.trim(); }).filter(Boolean);
+        q.gridCols = colsRaw.split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+      }
+      return q;
+    });
+  }
+  function questionsValid(qs){
+    return qs.every(function(q){
+      if(!q.text || q.options.length===0) return false;
+      if((q.type==='choice'||q.type==='multichoice') && (!q.choices || q.choices.length<2)) return false;
+      if(q.type==='grid' && (!q.gridRows || q.gridRows.length<1 || !q.gridCols || q.gridCols.length<1)) return false;
+      return true;
     });
   }
 
@@ -1295,7 +1479,7 @@
       var bonusQuestions = readBonusFromWrap('newBonusQs');
       if(matchups.some(function(m){ return !m.a || !m.b; })){ $('#createRoundMsg').textContent = 'Izpolni vseh 8 tekem.'; return; }
       if(bonusQuestions.length<3 || bonusQuestions.length>5){ $('#createRoundMsg').textContent = 'Bonus vprašanj mora biti med 3 in 5.'; return; }
-      if(bonusQuestions.some(function(q){ return !q.text || q.options.length===0; })){ $('#createRoundMsg').textContent = 'Izpolni vsa bonus vprašanja in vsaj eno točkovno vrednost.'; return; }
+      if(!questionsValid(bonusQuestions)){ $('#createRoundMsg').textContent = 'Izpolni vsa bonus vprašanja (besedilo, možnosti/vrstice glede na tip, in vsaj eno točkovno vrednost).'; return; }
       roundData = {
         kind: 'matchup', number: number, label: label, matchups: matchups, bonusQuestions: bonusQuestions,
         status: openNow ? 'open' : 'draft', winners: new Array(matchups.length).fill(null),
@@ -1305,7 +1489,7 @@
       var meta = SPECIAL_META[kind];
       var questions = readBonusFromWrap('newSpecialQs');
       if(questions.length<10 || questions.length>15){ $('#createRoundMsg').textContent = 'Vprašanj mora biti med 10 in 15.'; return; }
-      if(questions.some(function(q){ return !q.text || q.options.length===0; })){ $('#createRoundMsg').textContent = 'Izpolni vsa vprašanja in vsaj eno točkovno vrednost.'; return; }
+      if(!questionsValid(questions)){ $('#createRoundMsg').textContent = 'Izpolni vsa vprašanja (besedilo, možnosti/vrstice glede na tip, in vsaj eno točkovno vrednost).'; return; }
       roundData = {
         kind: 'special', specialType: kind, number: meta.number, label: label || meta.label,
         questions: questions, status: openNow ? 'open' : 'draft', createdAt: new Date().toISOString()
