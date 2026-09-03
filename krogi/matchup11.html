@@ -14,10 +14,8 @@
     </style>
  <script>
 document.addEventListener("DOMContentLoaded", function() {
-    let basePath = window.location.origin + window.location.pathname.split("/").slice(0, 2).join("/") + "/";
-    
     // Naloži navigacijo iz nav2.html
-    fetch(basePath + "nav2.html")
+    fetch("../nav2.html")
         .then(response => response.text())
         .then(data => {
             document.getElementById("nav2-placeholder").innerHTML = data;
@@ -41,31 +39,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     <main>
         <div class="row">
-            <div class="col-2 sidenav">
-                <h1>SEZONA 24/25</h1>
-                <ul class="meniseason2425">
-                    <li><a href="basic.html">Pravila in sistem tekmovanja</a> </li>
-                    <li><a href="matchup1.html">Matchup1 (Oct 22 - Oct 27)</a> </li>
-                    <li><a href="matchup2.html">Matchup2 (Oct 28 - Nov 3)</a></li>
-                    <li><a href="matchup3.html">Matchup3 (Nov 4 - Nov 10)</a></li>
-                    <li><a href="matchup4.html">Matchup4 (Nov 11 - Nov 17)</a></li>
-                    <li><a href="matchup5.html">Matchup5 (Nov 18 - Nov 24)</a></li>
-                    <li><a href="matchup6.html">Matchup6 (Nov 25 - Dec 1)</a></li>
-                    <li><a href="matchup7.html">Matchup7 (Dec 2 - Dec 8)</a></li>
-                    <li><a href="matchup8.html">Matchup8 (Dec 9 - Dec 15)</a></li>
-                    <li><a href="matchup9.html">Matchup9 (Dec 16 - Dec 22)</a></li>
-                    <li><a href="matchup10.html">Matchup10 (Dec 23 - Jan 29)</a></li>
-                    <li><a href="matchup11.html">Matchup11 (Dec 30 - Jan 5)</a></li>
-                    <li><a href="matchup12.html">Matchup12 (Jan 6 - Jan 12)</a></li>
-                    <li><a href="matchup13.html">Matchup13 (Jan 13 - Jan 19)</a></li>
-                    <li><a href="matchup14.html">Matchup14 (Jan 20 - Feb 26)</a></li>
-                    <li><a href="matchup15.html">Matchup15 (Jan 27 - Feb 2)</a></li>
-                    <li><a href="playin.html">Play-in (Feb 3 - Feb 23) </a></li>
-                    <li><a href="playoff1.html">Playoff 1 (Feb 24 - Mar 9)</a></li>
-                    <li><a href="playoff2.html">Playoff 2 (Mar 10 - Mar 23)</a></li>
-                    <li><a href="playoff3.html">Playoff 3 (Mar 24 - Apr 6)</a></li>
-                </ul>
-            </div>
+            <div id="sidenav-placeholder"></div>
 
             <div class="col-7 main">
                 <h1 style="text-align: center;"><span style="color:red; font-size: 20px;">2024/25</span> - Fantasy Koroška - <span style="color:red; font-size: 20px;">sezona 8</span> </h1>
@@ -172,5 +146,16 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 </script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Nalozi sidenav (datoteka v isti mapi)
+        fetch("sidenavKrogi.html")
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById("sidenav-placeholder").outerHTML = html;
+            })
+            .catch(err => console.error("Napaka pri nalaganju sidenav:", err));
+    });
+    </script>
 </body>
 </html>

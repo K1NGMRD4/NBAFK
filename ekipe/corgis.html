@@ -15,10 +15,8 @@
 
    <script>
 document.addEventListener("DOMContentLoaded", function() {
-    let basePath = window.location.origin + window.location.pathname.split("/").slice(0, 2).join("/") + "/";
-    
     // Naloži navigacijo iz nav2.html
-    fetch(basePath + "nav2.html")
+    fetch("../nav2.html")
         .then(response => response.text())
         .then(data => {
             document.getElementById("nav2-placeholder").innerHTML = data;
@@ -44,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function() {
             <div id="sidenav-placeholder"></div>
 
             <div class="col-7 main">
-                <h1 style="border: 2px solid#333; font-family: Dubai; font-size: 35px;"><span style="color: red; font-size: 35px;"> Aleks Jurhar &nbsp;&nbsp;&nbsp;</span> Carigrad Corgis  </h1>
+                <h1 style="border: 2px solid#333; font-family: Dubai; font-size: 35px;"><span style="color: red; font-size: 35px;"> Aleks Jurhar &nbsp;&nbsp;&nbsp;</span> Lagos Hedgehogs  </h1>
 
                 <img src="logos/corgis.png" style="height: 350px; width: 350px; display: inline-block">
                 <p style="display: inline-block; vertical-align: top;">

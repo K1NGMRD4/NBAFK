@@ -69,10 +69,8 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    let basePath = window.location.origin + window.location.pathname.split("/").slice(0, 2).join("/") + "/";
-    
     // Naloži navigacijo iz nav.html
-    fetch(basePath + "nav.html")
+    fetch("nav.html")
         .then(response => response.text())
         .then(data => {
             document.getElementById("nav-placeholder").innerHTML = data;

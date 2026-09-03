@@ -9,6 +9,6 @@
 *.exe
 
 # Ostalo
-NBAFK.git/
+NBAFK/
 cache.txt
 node_modules/
