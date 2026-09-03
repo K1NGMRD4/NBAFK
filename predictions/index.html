@@ -499,11 +499,19 @@
     var m = /\(([^)]*)\)\s*$/.exec(team||'');
     return m ? m[1] : '';
   }
-  // Polno ime managerja se poišče v roster (Admin > Igralci) po vzdevku, ki je zapisan v TEAMS v oklepaju.
+  // Nekateri imajo v Admin > Igralci drugačen vzdevek kot je zapisan pri imenu ekipe (v oklepaju v TEAMS).
+  // Če ujemanje po enakem nizu ne uspe, tukaj dodaj preslikavo: vzdevek-v-TEAMS -> pravi vzdevek v roster.
+  var MANAGER_NICKNAME_ALIASES = {
+    'Duka': 'Dule',
+    'Mrda': 'Jole'
+  };
+  // Polno ime managerja se poišče v roster (Admin > Igralci) po vzdevku, ki je zapisan v TEAMS v oklepaju
+  // (ali po njegovem aliasu iz MANAGER_NICKNAME_ALIASES, če se vzdevka razlikujeta).
   function teamManagerFullName(team){
     var nick = teamNicknameOf(team);
     if(!nick) return '';
-    var found = roster.filter(function(r){ return (r.nickname||'').trim().toLowerCase()===nick.trim().toLowerCase(); })[0];
+    var lookupNick = MANAGER_NICKNAME_ALIASES[nick] || nick;
+    var found = roster.filter(function(r){ return (r.nickname||'').trim().toLowerCase()===lookupNick.trim().toLowerCase(); })[0];
     return (found && found.name) ? found.name : nick;
   }
   // Za prikaz v seznamih možnih odgovorov (npr. "Vse ekipe") — polno ime managerja namesto vzdevka.
