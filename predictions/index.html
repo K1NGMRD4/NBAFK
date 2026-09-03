@@ -290,6 +290,7 @@
   :root[data-theme="dark"] .subnav button.active{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);}
 
   .round-item{border:1px solid var(--border);border-radius:var(--radius-m);padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  .round-item.editing{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);}
   .round-item .meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
   .round-item .rlabel{font-family:var(--font-display);font-weight:800;font-size:16px;}
   .round-item .actions{display:flex;gap:6px;flex-wrap:wrap;}
@@ -497,6 +498,7 @@
   try { submitSelectedUser = localStorage.getItem('nbaLastUser') || null; } catch(e){}
   var submitWatchedRoundId = null, submitUnsub = null;
   var gradingRoundId = null;
+  var editingRoundId = null;
   var gradingWinners = {};      // gameIdx -> team name
   var gradingBonusPts = {};     // userId -> [p0,p1,p2]
   var gradingSubs = [];
@@ -1139,17 +1141,21 @@
 
   function renderAdminRounds(){
     var el = $('#adminSubContent'); if(!el) return;
+    var editing = editingRoundId ? rounds.filter(function(r){ return r.id===editingRoundId; })[0] : null;
+    if(editingRoundId && !editing) editingRoundId = null; // was deleted elsewhere
+
     var html = '<div class="card"><h3>Obstoječi krogi</h3>';
     if(rounds.length===0){ html += '<p class="muted small">Še ni ustvarjenih krogov.</p>'; }
     var sorted = rounds.slice().sort(function(a,b){ return (b.number||0)-(a.number||0); });
     sorted.forEach(function(r){
       var isSpecial = r.kind==='special';
       var mainLabel = isSpecial ? (r.label || specialTypeLabel(r.specialType)) : ('Krog '+r.number);
-      html += '<div class="round-item"><div class="meta"><span class="rlabel">'+esc(mainLabel)+'</span>';
+      html += '<div class="round-item'+(r.id===editingRoundId?' editing':'')+'"><div class="meta"><span class="rlabel">'+esc(mainLabel)+'</span>';
       html += '<span class="badge '+r.status+'">'+statusLabel(r.status)+'</span>';
       if(isSpecial) html += '<span class="badge" style="background:var(--accent-soft);color:var(--accent-soft-ink);">Special</span>';
       if(!isSpecial && r.label) html += '<span class="small muted">'+esc(r.label)+'</span>';
       html += '</div><div class="actions">';
+      html += '<button class="btn small" data-act="edit" data-id="'+r.id+'">Uredi</button>';
       if(r.status==='draft') html += '<button class="btn small" data-act="open" data-id="'+r.id+'">Odpri za oddajo</button>';
       if(r.status==='open') html += '<button class="btn small" data-act="lock" data-id="'+r.id+'">Zakleni oddajo</button>';
       if(r.status==='locked') html += '<button class="btn small" data-act="reopen" data-id="'+r.id+'">Ponovno odpri</button>';
@@ -1159,43 +1165,66 @@
     });
     html += '</div>';
 
-    html += '<div class="card"><h3>Ustvari nov krog</h3>';
-    html += '<div class="field"><label>Tip kroga</label><select id="newRoundKind">';
-    html += '<option value="matchup">Matchup (redni krog)</option>';
-    html += '<option value="seasonlong">Special — Season Long</option>';
-    html += '<option value="xmas">Special — XMAS</option>';
-    html += '<option value="allstar">Special — Allstar</option>';
-    html += '</select></div>';
+    var editKind = editing ? editing.kind : null;
+    var isMatchupNow = editing ? (editKind==='matchup') : true;
+
+    html += '<div class="card"><h3>'+(editing?'Uredi krog':'Ustvari nov krog')+'</h3>';
+    if(editing){
+      html += '<p class="small muted" style="margin-bottom:10px;">Urejaš: <strong style="color:var(--ink);">'+esc(editKind==='special' ? (editing.label||specialTypeLabel(editing.specialType)) : ('Krog '+editing.number))+'</strong>'+
+        ' <button type="button" class="btn small ghost" id="cancelEditBtn" style="margin-left:8px;">Prekliči urejanje</button></p>';
+      html += '<p class="small muted" style="margin-bottom:10px;">Če je krog že odprt in so uporabniki že oddali napovedi, spreminjanje tekem/vprašanj lahko poruši njihove obstoječe odgovore — spremembe uporabi previdno.</p>';
+    } else {
+      html += '<div class="field"><label>Tip kroga</label><select id="newRoundKind">';
+      html += '<option value="matchup">Matchup (redni krog)</option>';
+      html += '<option value="seasonlong">Special — Season Long</option>';
+      html += '<option value="xmas">Special — XMAS</option>';
+      html += '<option value="allstar">Special — Allstar</option>';
+      html += '</select></div>';
+    }
     html += '<div class="grid-2">';
-    html += '<div class="field" id="newRoundNumberField"><label>Številka kroga</label><input type="number" id="newRoundNumber" value="'+nextRoundNumber()+'"></div>';
-    html += '<div class="field"><label id="newRoundLabelLabel">Opis (neobvezno)</label><input type="text" id="newRoundLabel" placeholder="npr. 1.–7. sep"></div>';
+    html += '<div class="field" id="newRoundNumberField" style="'+(isMatchupNow?'':'display:none;')+'"><label>Številka kroga</label><input type="number" id="newRoundNumber" value="'+(editing ? editing.number : nextRoundNumber())+'"></div>';
+    html += '<div class="field"><label id="newRoundLabelLabel">'+(isMatchupNow?'Opis (neobvezno)':'Naziv')+'</label><input type="text" id="newRoundLabel" placeholder="npr. 1.–7. sep" value="'+esc(editing ? (editing.label||'') : '')+'"></div>';
     html += '</div>';
 
-    html += '<div id="matchupKindFields">';
+    html += '<div id="matchupKindFields" style="'+(isMatchupNow?'':'display:none;')+'">';
     html += renderAiBox();
     html += '<label style="margin-top:6px;">8 tekem</label>';
     html += '<div id="newMatchups">';
-    for(var i=0;i<8;i++){ html += matchupEditorRow(i, '', ''); }
+    if(editing && editKind==='matchup'){
+      (editing.matchups||[]).forEach(function(m,i){ html += matchupEditorRow(i, m.a, m.b); });
+    } else {
+      for(var i=0;i<8;i++){ html += matchupEditorRow(i, '', ''); }
+    }
     html += '</div>';
     html += '<label style="margin-top:14px;">Bonus vprašanja</label>';
     html += '<div id="newBonusQs">';
-    for(var b=0;b<3;b++){ html += bonusEditorRow(b, {options:[0,3,5,7,10]}, {matchupSource:'newMatchups'}); }
+    if(editing && editKind==='matchup'){
+      (editing.bonusQuestions||[]).forEach(function(q,i){ html += bonusEditorRow(i, q, {matchupSource:'newMatchups'}); });
+    } else {
+      for(var b=0;b<3;b++){ html += bonusEditorRow(b, {options:[0,3,5,7,10]}, {matchupSource:'newMatchups'}); }
+    }
     html += '</div>';
     html += '<div class="row" style="margin-top:8px;"><button type="button" class="btn small" id="newBonusQs-add">+ Dodaj vprašanje</button><span class="small muted" id="newBonusQs-count"></span></div>';
     html += '</div>';
 
-    html += '<div id="specialKindFields" style="display:none;">';
+    html += '<div id="specialKindFields" style="'+(isMatchupNow?'display:none;':'')+'">';
     html += '<label style="margin-top:14px;">Vprašanja (10–15)</label>';
     html += '<div id="newSpecialQs">';
-    for(var q=0;q<10;q++){ html += bonusEditorRow(q, {options:[0,1,2,3,5]}, {allowGrid:true}); }
+    if(editing && editKind==='special'){
+      (editing.questions||[]).forEach(function(q,i){ html += bonusEditorRow(i, q, {allowGrid:true}); });
+    } else {
+      for(var q=0;q<10;q++){ html += bonusEditorRow(q, {options:[0,1,2,3,5]}, {allowGrid:true}); }
+    }
     html += '</div>';
     html += '<div class="row" style="margin-top:8px;"><button type="button" class="btn small" id="newSpecialQs-add">+ Dodaj vprašanje</button><span class="small muted" id="newSpecialQs-count"></span></div>';
     html += '</div>';
 
-    html += '<div class="row" style="margin-top:14px;">';
-    html += '<label class="row" style="font-weight:500;color:var(--ink);"><input type="checkbox" id="openImmediately" checked style="width:auto;margin-right:6px;">Takoj odpri za oddajo napovedi</label>';
-    html += '</div>';
-    html += '<div class="row" style="margin-top:12px;"><button class="btn primary" id="createRoundBtn">Ustvari krog</button><span class="small muted" id="createRoundMsg"></span></div>';
+    if(!editing){
+      html += '<div class="row" style="margin-top:14px;">';
+      html += '<label class="row" style="font-weight:500;color:var(--ink);"><input type="checkbox" id="openImmediately" checked style="width:auto;margin-right:6px;">Takoj odpri za oddajo napovedi</label>';
+      html += '</div>';
+    }
+    html += '<div class="row" style="margin-top:12px;"><button class="btn primary" id="createRoundBtn">'+(editing?'Shrani spremembe':'Ustvari krog')+'</button><span class="small muted" id="createRoundMsg"></span></div>';
     html += '</div>';
 
     el.innerHTML = html;
@@ -1203,17 +1232,22 @@
     bindAiBox('newMatchups');
     bindDynamicQuestions('newBonusQs', 3, 5, {matchupSource:'newMatchups'});
     bindDynamicQuestions('newSpecialQs', 10, 15, {allowGrid:true});
-    $('#newRoundKind').addEventListener('change', function(){
-      var k = this.value;
-      var isMatchup = k==='matchup';
-      $('#matchupKindFields').style.display = isMatchup ? '' : 'none';
-      $('#specialKindFields').style.display = isMatchup ? 'none' : '';
-      $('#newRoundNumberField').style.display = isMatchup ? '' : 'none';
-      $('#newRoundLabelLabel').textContent = isMatchup ? 'Opis (neobvezno)' : 'Naziv';
-      if(!isMatchup && !$('#newRoundLabel').value.trim()){
-        $('#newRoundLabel').value = SPECIAL_META[k] ? SPECIAL_META[k].label : '';
-      }
-    });
+    if(!editing){
+      $('#newRoundKind').addEventListener('change', function(){
+        var k = this.value;
+        var isMatchup = k==='matchup';
+        $('#matchupKindFields').style.display = isMatchup ? '' : 'none';
+        $('#specialKindFields').style.display = isMatchup ? 'none' : '';
+        $('#newRoundNumberField').style.display = isMatchup ? '' : 'none';
+        $('#newRoundLabelLabel').textContent = isMatchup ? 'Opis (neobvezno)' : 'Naziv';
+        if(!isMatchup && !$('#newRoundLabel').value.trim()){
+          $('#newRoundLabel').value = SPECIAL_META[k] ? SPECIAL_META[k].label : '';
+        }
+      });
+    } else {
+      var cancelBtn = $('#cancelEditBtn');
+      if(cancelBtn) cancelBtn.addEventListener('click', function(){ editingRoundId = null; renderAdminRounds(); });
+    }
     $('#createRoundBtn').addEventListener('click', submitNewRound);
   }
 
@@ -1468,39 +1502,50 @@
   }
 
   function submitNewRound(){
-    var kind = $('#newRoundKind') ? $('#newRoundKind').value : 'matchup';
+    var editing = editingRoundId ? rounds.filter(function(r){ return r.id===editingRoundId; })[0] : null;
+    var kind = editing ? editing.kind : ($('#newRoundKind') ? $('#newRoundKind').value : 'matchup');
     var label = $('#newRoundLabel').value.trim();
-    var openNow = $('#openImmediately').checked;
+    var openNow = editing ? null : $('#openImmediately').checked;
     var btn = $('#createRoundBtn');
-    var roundData;
+    var addData, updateData;
     if(kind==='matchup'){
-      var number = parseInt($('#newRoundNumber').value, 10) || nextRoundNumber();
+      var number = parseInt($('#newRoundNumber').value, 10) || (editing ? editing.number : nextRoundNumber());
       var matchups = readMatchupsFromWrap('newMatchups');
       var bonusQuestions = readBonusFromWrap('newBonusQs');
       if(matchups.some(function(m){ return !m.a || !m.b; })){ $('#createRoundMsg').textContent = 'Izpolni vseh 8 tekem.'; return; }
       if(bonusQuestions.length<3 || bonusQuestions.length>5){ $('#createRoundMsg').textContent = 'Bonus vprašanj mora biti med 3 in 5.'; return; }
       if(!questionsValid(bonusQuestions)){ $('#createRoundMsg').textContent = 'Izpolni vsa bonus vprašanja (besedilo, možnosti/vrstice glede na tip, in vsaj eno točkovno vrednost).'; return; }
-      roundData = {
-        kind: 'matchup', number: number, label: label, matchups: matchups, bonusQuestions: bonusQuestions,
-        status: openNow ? 'open' : 'draft', winners: new Array(matchups.length).fill(null),
-        lotteryAwarded: false, createdAt: new Date().toISOString()
-      };
+      if(editing){
+        updateData = { number: number, label: label, matchups: matchups, bonusQuestions: bonusQuestions };
+      } else {
+        addData = {
+          kind: 'matchup', number: number, label: label, matchups: matchups, bonusQuestions: bonusQuestions,
+          status: openNow ? 'open' : 'draft', winners: new Array(matchups.length).fill(null),
+          lotteryAwarded: false, createdAt: new Date().toISOString()
+        };
+      }
     } else {
       var meta = SPECIAL_META[kind];
       var questions = readBonusFromWrap('newSpecialQs');
       if(questions.length<10 || questions.length>15){ $('#createRoundMsg').textContent = 'Vprašanj mora biti med 10 in 15.'; return; }
       if(!questionsValid(questions)){ $('#createRoundMsg').textContent = 'Izpolni vsa vprašanja (besedilo, možnosti/vrstice glede na tip, in vsaj eno točkovno vrednost).'; return; }
-      roundData = {
-        kind: 'special', specialType: kind, number: meta.number, label: label || meta.label,
-        questions: questions, status: openNow ? 'open' : 'draft', createdAt: new Date().toISOString()
-      };
+      if(editing){
+        updateData = { label: label || meta.label, questions: questions };
+      } else {
+        addData = {
+          kind: 'special', specialType: kind, number: meta.number, label: label || meta.label,
+          questions: questions, status: openNow ? 'open' : 'draft', createdAt: new Date().toISOString()
+        };
+      }
     }
-    btn.disabled = true; btn.textContent = 'Ustvarjam …';
-    db.collection('rounds').add(roundData).then(function(){
-      toast((roundData.kind==='matchup' ? 'Krog '+roundData.number : roundData.label)+' ustvarjen.');
+    btn.disabled = true; btn.textContent = editing ? 'Shranjujem …' : 'Ustvarjam …';
+    var op = editing ? db.doc('rounds/'+editing.id).update(updateData) : db.collection('rounds').add(addData);
+    op.then(function(){
+      toast(editing ? 'Spremembe shranjene.' : ((addData.kind==='matchup' ? 'Krog '+addData.number : addData.label)+' ustvarjen.'));
+      if(editing) editingRoundId = null;
       renderAdminRounds();
     }).catch(function(e){
-      console.error(e); btn.disabled=false; btn.textContent='Ustvari krog';
+      console.error(e); btn.disabled=false; btn.textContent = editing ? 'Shrani spremembe' : 'Ustvari krog';
       $('#createRoundMsg').textContent = 'Napaka pri shranjevanju.';
     });
   }
@@ -1513,6 +1558,7 @@
         else if(act==='lock') db.doc('rounds/'+id).update({status:'locked'});
         else if(act==='reopen') db.doc('rounds/'+id).update({status:'open'});
         else if(act==='grade'){ adminSubTab='grading'; gradingRoundId=id; renderAdmin(); }
+        else if(act==='edit'){ editingRoundId=id; renderAdminRounds(); }
         else if(act==='del'){
           armConfirm(btn, 'Res izbriši?', function(){
             db.doc('rounds/'+id).delete().then(function(){ toast('Krog izbrisan.'); });
