@@ -416,23 +416,40 @@ table.h2hstatsbyseason {
 /* ------------------------- */
 
 /* Submenu */
-.dropdown-sub { 
-    position: relative; 
-} 
+.dropdown-sub {
+    position: relative;
+    /* Prepiše "nav ul li{display:flex;flex-direction:row}" - .dropdown-sub
+       naj bo navaden blok, da je pozicioniranje podmenija (top:0 spodaj)
+       zanesljivo vezano na TO vrstico in ne kaj drugega. */
+    display: block;
+}
 
 .dropdown-sub-content {
-    display: none;
+    display: block;
     position: absolute;
     left: 100%; top: 0;
     background-color: #333;
+    box-shadow: 0em 0.4em 0.8em rgba(0,0,0,0.2);
     min-width: 200px;
     z-index: 1;
     list-style: none;
     padding: 0.35em 0;
+
+    /* Enaka animacija+zakasnitev kot ostali dropdowni (glej spodaj),
+       da se ne zapre takoj, ko miška za trenutek zdrsne stran. */
+    opacity: 0;
+    transform: translateX(5px);
+    transition: opacity 0.15s ease 0.25s, transform 0.15s ease 0.25s, visibility 0s linear 0.25s;
+    visibility: hidden;
+    pointer-events: none;
 }
 
 .dropdown-sub:hover .dropdown-sub-content {
-    display: block;
+    opacity: 1;
+    transform: translateX(0);
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity 0.15s ease, transform 0.15s ease, visibility 0s linear;
 }
 
 /* Puščica desno pri Arhivu, da je jasno da gre naprej v podmeni */
@@ -472,10 +489,13 @@ table.h2hstatsbyseason {
     padding: 0.35em 0;
     margin: 0;
 
-    /* Animacija */
+    /* Animacija - zapiranje ima zakasnitev (glej li.dropdown:hover spodaj
+       za odpiranje brez zakasnitve), da meni ne izgine takoj, ko miška
+       za trenutek zdrsne stran, in je s tem manj občutljiv na hoverjanje. */
     opacity: 0;
     transform: translateY(5px);
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transition: opacity 0.15s ease 0.25s, transform 0.15s ease 0.25s, visibility 0s linear 0.25s;
+    visibility: hidden;
     pointer-events: none;
 }
 
@@ -492,10 +512,11 @@ table.h2hstatsbyseason {
     min-width: 220px;
     z-index: 1;
    
-    /* Animacija */
+    /* Animacija - zapiranje ima zakasnitev, glej opombo pri .dropdown-content */
     opacity: 0;
     transform: translateY(5px);
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transition: opacity 0.15s ease 0.25s, transform 0.15s ease 0.25s, visibility 0s linear 0.25s;
+    visibility: hidden;
     pointer-events: none;
 }
 
@@ -528,18 +549,23 @@ table.h2hstatsbyseason {
     transition: background-color 0.2s, color 0.2s;
 }
 
-/* PRIKAZ: ob hoverju nad celotnim li.dropdown */
+/* PRIKAZ: ob hoverju nad celotnim li.dropdown - odpiranje je brez
+   zakasnitve (transition brez delay prepiše zgornjo z zakasnitvijo). */
 li.dropdown:hover .dropdown-content {
     display: flex; /* ostane flex za enostolpčni dropdown */
     opacity: 1;
     transform: translateY(0);
+    visibility: visible;
     pointer-events: auto;
+    transition: opacity 0.15s ease, transform 0.15s ease, visibility 0s linear;
 }
 
 li.dropdown:hover .dropdown-columns {
     opacity: 1;
     transform: translateY(0);
+    visibility: visible;
     pointer-events: auto; /* omogoči klikanje */
+    transition: opacity 0.15s ease, transform 0.15s ease, visibility 0s linear;
 }
 
 
