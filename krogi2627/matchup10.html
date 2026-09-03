@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matchup 10</title>
+    <link rel="icon" type="image/x-icon" href="../logos/logoliga.png">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="spoilers.css">
+
+    <script>
+document.addEventListener("DOMContentLoaded", function() {{
+    // Nalozi navigacijo iz nav2.html
+    fetch("../nav2.html")
+        .then(response => response.text())
+        .then(data => {{
+            document.getElementById("nav2-placeholder").innerHTML = data;
+
+            // Po nalaganju navigacije doda funkcionalnost hamburger meniju
+            let hamburger = document.querySelector(".hamburger");
+            let navMenu = document.querySelector("nav ul");
+
+            if (hamburger && navMenu) {{
+                hamburger.addEventListener("click", function() {{
+                    navMenu.classList.toggle("show"); // Preklopi meni
+                }});
+            }}
+        }})
+        .catch(error => console.error("Napaka pri nalaganju navigacije:", error));
+}});
+    </script>
+</head>
+<body>
+    <div id="nav2-placeholder"></div>
+
+    <main>
+        <div class="row">
+            <!-- Leva stran -->
+           <div id="sidenav-placeholder"></div>
+
+            <!-- Glavna vsebina -->
+            <div class="col-7 main">
+                <h1 style="text-align: center;">
+                    <span style="color:red; font-size: 20px;">2026/27</span> - Fantasy Koroška -
+                    <span style="color:red; font-size: 20px;">sezona 10</span>
+                </h1>
+                <h1 style="color: green; font-weight: bold;">MATCHUP 10</h1>
+                <!-- TODO: ko bo znan razpored/rezultat, sem dodaj sliko: <img src="matchup10.PNG"> -->
+
+                <details>
+                    <summary>Recap: MATCHUP 10</summary>
+                    <p>
+                        Recap bo dodan po zaključku kroga.
+                    </p>
+                </details>
+
+                <details>
+                    <summary>Best memes</summary>
+                    <div class="slike-container">
+                        <!-- Memi bodo dodani sproti -->
+                    </div>
+                </details>
+            <br><br>
+                <!-- Komentarji -->
+                <div id="disqus_thread"></div>
+            </div>
+
+            <!-- Desna stran (lestvica) -->
+            <div class="col-3 lestvica">
+                <div class="iframelestvica">
+                    <iframe scrolling="no" src="../trenutnalestvica.html" class="trenutnalestvica"></iframe>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <nav>
+            <h3>
+                <a href="https://fantasy.espn.com/basketball/league?leagueId=32010985" target="_blank">
+                    <img src="../logos/espn.png" alt="logo" style="height:90px; width:180px;" />
+                </a>
+            </h3>
+            <ul>
+                <li><a href="../index.html">Domov</a></li>
+                <li><a href="../ekipe.html">Ekipe</a></li>
+                <li><a href="../sezona2425.html">Sezona 2024/25</a></li>
+                <li><a href="../zgodovina.html">Zgodovina</a></li>
+                <li><a href="../predictions.html">Predictions</a></li>
+            </ul>
+            <form class="donatebtn" action="https://www.paypal.com/donate" method="post" target="_blank">
+                <input type="hidden" name="business" value="jost.mrdavsic@gmail.com">
+                <input type="hidden" name="no_recurring" value="5">
+                <input type="hidden" name="item_name" value="NBA Fantasy Koroska">
+                <input type="hidden" name="item_number" value="LM, Content creation & WebPage design">
+                <input type="hidden" name="currency_code" value="EUR">
+                <input type="image" name="submit" src="../donate.png" alt="Donate">
+            </form>
+        </nav>
+        <p style="text-align:center; margin-top: 10px;">
+            <span style="font-weight: bold">&copy; NBA Fantasy Koroška &copy;</span><br /><br />
+            SEASON 10 <br />
+            <span style="font-size: 12px">since 2017</span>
+        </p>
+    </footer>
+
+    <script>
+
+    var disqus_config = function () {
+        // Replace PAGE_URL with your page's canonical URL variable
+        this.page.url = "https://k1ngmrd4.github.io/NBAFK/krogi2627/matchup10.html";
+
+        // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        this.page.identifier = 'matchup10-2627';
+    };
+
+    (function() {  // REQUIRED CONFIGURATION VARIABLE: EDIT THE SHORTNAME BELOW
+        var d = document, s = d.createElement('script');
+
+        // IMPORTANT: Replace EXAMPLE with your forum shortname!
+        s.src = 'https://https-k1ngmrd4-github-io-nbafk.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>
+    Please enable JavaScript to view the
+    <a href="https://disqus.com/?ref_noscript" rel="nofollow">
+        comments powered by Disqus.
+    </a>
+</noscript>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Nalozi sidenav (datoteka v isti mapi)
+        fetch("sidenavKrogi2627.html")
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById("sidenav-placeholder").outerHTML = html;
+            })
+            .catch(err => console.error("Napaka pri nalaganju sidenav:", err));
+    });
+    </script>
+</body>
+</html>
