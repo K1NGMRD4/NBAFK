@@ -1323,6 +1323,7 @@
       if(r.status==='draft') html += '<button class="btn small" data-act="open" data-id="'+r.id+'">Odpri za oddajo</button>';
       if(r.status==='open') html += '<button class="btn small" data-act="lock" data-id="'+r.id+'">Zakleni oddajo</button>';
       if(r.status==='locked') html += '<button class="btn small" data-act="reopen" data-id="'+r.id+'">Ponovno odpri</button>';
+      if(r.status==='graded') html += '<button class="btn small" data-act="unrate" data-id="'+r.id+'" title="Krog se vrne v status &quot;zaklenjen&quot;, vse izračunane točke za ta krog se počistijo (napovedi ostanejo).">Razveljavi oceno</button>';
       if(r.status!=='draft') html += '<button class="btn small" data-act="grade" data-id="'+r.id+'">Ocenjevanje</button>';
       html += '<button class="btn small danger" data-act="del" data-id="'+r.id+'">Izbriši</button>';
       html += '<button class="btn small ghost" data-act="seed" data-id="'+r.id+'" title="Ustvari izmišljene oddaje za vse igralce iz Admin > Igralci — za testiranje ocenjevanja, lestvice in zgodovine.">🧪 Testni podatki</button>';
@@ -1724,6 +1725,18 @@
         if(act==='open') db.doc('rounds/'+id).update({status:'open'});
         else if(act==='lock') db.doc('rounds/'+id).update({status:'locked'});
         else if(act==='reopen') db.doc('rounds/'+id).update({status:'open'});
+        else if(act==='unrate'){
+          armConfirm(btn, 'Razveljavi oceno?', function(){
+            var orig = btn.textContent; btn.disabled = true; btn.textContent = 'Razveljavljam …';
+            unrateRound(id).then(function(){
+              toast('Ocena razveljavljena — krog je spet zaklenjen.');
+            }).catch(function(e){
+              console.error(e); toast('Napaka: '+e.message, 6000);
+            }).then(function(){
+              btn.disabled = false; btn.textContent = orig;
+            });
+          });
+        }
         else if(act==='grade'){ adminSubTab='grading'; gradingRoundId=id; renderAdmin(); }
         else if(act==='edit'){ editingRoundId=id; renderAdminRounds(); }
         else if(act==='del'){
@@ -1811,6 +1824,26 @@
     return db.collection('rounds/'+roundId+'/submissions').get().then(function(snap){
       var dels = snap.docs.map(function(d){ return db.doc('rounds/'+roundId+'/submissions/'+d.id).delete(); });
       return Promise.all(dels).then(function(){ return dels.length; });
+    });
+  }
+  // Razveljavi oceno: krog nazaj v "zaklenjen" in počisti vse izračunane točke (napovedi same ostanejo nedotaknjene).
+  function unrateRound(roundId){
+    var round = rounds.filter(function(r){ return r.id===roundId; })[0];
+    if(!round) return Promise.reject(new Error('Krog ne obstaja.'));
+    var isSpecial = round.kind==='special';
+    return db.collection('rounds/'+roundId+'/submissions').get().then(function(snap){
+      var resets = snap.docs.map(function(d){
+        var data = isSpecial
+          ? { points: null, roundTotal: null }
+          : { matchPoints: null, bonusPoints: null, roundTotal: null };
+        return db.doc('rounds/'+roundId+'/submissions/'+d.id).update(data);
+      });
+      return Promise.all(resets);
+    }).then(function(){
+      var roundReset = isSpecial
+        ? { status: 'locked', gradedAt: null }
+        : { status: 'locked', winners: [], correctCounts: [], submissionCount: null, gradedAt: null, lotteryAwarded: false };
+      return db.doc('rounds/'+roundId).update(roundReset);
     });
   }
 
