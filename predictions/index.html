@@ -347,6 +347,7 @@
     <nav class="tabs top-inner" style="padding-bottom:0;">
       <button data-tab="board" class="active">Lestvica</button>
       <button data-tab="submit">Napovedi</button>
+      <button data-tab="history">Zgodovina</button>
       <button data-tab="admin">Admin</button>
     </nav>
   </header>
@@ -373,6 +374,17 @@
         </div>
       </div>
       <div id="submit-content"><div class="empty"><span class="icon">⏳</span>Nalagam …</div></div>
+    </section>
+
+    <!-- HISTORY -->
+    <section class="panel" id="panel-history">
+      <div class="section-head">
+        <div>
+          <h2>Zgodovina napovedi</h2>
+          <p>Poglej, kaj si napovedal v preteklih krogih in kako si bil ocenjen</p>
+        </div>
+      </div>
+      <div id="history-content"><div class="empty"><span class="icon">⏳</span>Nalagam …</div></div>
     </section>
 
     <!-- ADMIN -->
@@ -456,6 +468,10 @@
   var rounds = [];       // [{id,number,label,matchups,bonusQuestions,status,winners,lotteryAwarded,...}]
   var percentMap = {};   // userId -> value
   var leaderboardRows = null; // computed
+  var leaderboardGradedRounds = null; // computed
+  var boardViewMode = 'total'; // 'total' | 'perRound'
+  var historySelectedUser = null;
+  try { historySelectedUser = localStorage.getItem('nbaLastUser') || null; } catch(e){}
   var currentTab = 'board';
   var adminUnlocked = false;
   try { adminUnlocked = sessionStorage.getItem('nbaAdminUnlocked') === '1'; } catch(e){}
@@ -585,6 +601,7 @@
     $('#panel-'+tab).classList.add('active');
     if(tab==='board') renderLeaderboard();
     if(tab==='submit') renderSubmitTab();
+    if(tab==='history') renderHistoryTab();
     if(tab==='admin') renderAdmin();
   }
 
@@ -596,6 +613,7 @@
       roster = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); });
       if(currentTab==='board') renderLeaderboard();
       if(currentTab==='submit') renderSubmitTab();
+      if(currentTab==='history') renderHistoryTab();
       if(currentTab==='admin' && adminSubTab==='roster') renderAdminRoster();
       if(currentTab==='admin' && adminSubTab==='percent') renderAdminPercent();
     }, function(e){ console.warn('roster sub error', e); toast(dbErrorMsg(e), 7000); $('#board-content').innerHTML = emptyState('⚠️', dbErrorMsg(e)); });
@@ -605,6 +623,7 @@
       rounds = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); });
       if(currentTab==='board') renderLeaderboard();
       if(currentTab==='submit') renderSubmitTab();
+      if(currentTab==='history') renderHistoryTab();
       if(currentTab==='admin' && adminSubTab==='rounds') renderAdminRounds();
     }, function(e){ console.warn('rounds sub error', e); toast(dbErrorMsg(e), 7000); });
   }
@@ -622,7 +641,7 @@
   ============================================================ */
   var boardFetchToken = 0;
   function renderLeaderboard(){
-    var graded = rounds.filter(function(r){ return r.status==='graded'; }).sort(function(a,b){ return a.number-b.number; });
+    var graded = rounds.filter(function(r){ return r.status==='graded'; }).sort(function(a,b){ return (a.number||0)-(b.number||0); });
     if(roster.length===0){
       $('#board-content').innerHTML = emptyState('🏀', 'Liga še ni nastavljena — v zavihku Admin dodaj 16 igralcev in prvi krog.');
       $('#board-updated').textContent = '';
@@ -654,28 +673,47 @@
       rows.forEach(function(r){ r.pct = percentMap[r.id]||0; });
       rows.sort(function(a,b){ return b.total-a.total || b.pct-a.pct || a.name.localeCompare(b.name); });
       leaderboardRows = rows;
-
-      var html = '<div class="table-scroll"><table class="board"><thead><tr>';
-      html += '<th class="name-h">Igralec</th>';
-      graded.forEach(function(r){ html += '<th title="'+esc(r.label||'')+'">K'+r.number+'</th>'; });
-      html += '<th>Skupaj</th><th>% lote.</th></tr></thead><tbody>';
-      rows.forEach(function(r, i){
-        html += '<tr><td class="rank">'+(i+1)+'</td><td class="name">'+esc(r.name)+'</td>';
-        graded.forEach(function(rd){
-          var v = r.perRound[rd.id];
-          html += '<td class="pts">'+(v==null?'—':v)+'</td>';
-        });
-        html += '<td class="total">'+r.total+'</td>';
-        html += '<td class="pct">'+(r.pct>0 ? '<span class="pill">'+r.pct+'%</span>' : '<span class="muted">—</span>')+'</td>';
-        html += '</tr>';
-      });
-      // include roster members with zero rounds table row already covered above since seeded byUser
-      html += '</tbody></table></div>';
-      $('#board-content').innerHTML = html;
+      leaderboardGradedRounds = graded;
+      renderLeaderboardTable();
       $('#board-updated').textContent = graded.length + ' ocenjenih krogov';
     }).catch(function(e){
       console.error(e);
       $('#board-content').innerHTML = emptyState('⚠️', 'Napaka pri nalaganju lestvice.');
+    });
+  }
+
+  function renderLeaderboardTable(){
+    var graded = leaderboardGradedRounds || [];
+    var rows = leaderboardRows || [];
+    var html = '<div class="row" style="margin-bottom:10px;">';
+    html += '<button class="btn small'+(boardViewMode==='total'?' primary':'')+'" data-boardview="total">Skupno</button>';
+    html += '<button class="btn small'+(boardViewMode==='perRound'?' primary':'')+'" data-boardview="perRound">Po krogih</button>';
+    html += '</div>';
+    html += '<div class="table-scroll"><table class="board"><thead><tr>';
+    html += '<th class="name-h">Igralec</th>';
+    if(boardViewMode==='perRound'){
+      graded.forEach(function(r){
+        var lbl = r.kind==='special' ? specialShortLabel(r.specialType) : ('K'+r.number);
+        html += '<th title="'+esc(r.label||'')+'">'+esc(lbl)+'</th>';
+      });
+    }
+    html += '<th>Skupaj</th><th>% lote.</th></tr></thead><tbody>';
+    rows.forEach(function(r, i){
+      html += '<tr><td class="rank">'+(i+1)+'</td><td class="name">'+esc(r.name)+'</td>';
+      if(boardViewMode==='perRound'){
+        graded.forEach(function(rd){
+          var v = r.perRound[rd.id];
+          html += '<td class="pts">'+(v==null?'—':v)+'</td>';
+        });
+      }
+      html += '<td class="total">'+r.total+'</td>';
+      html += '<td class="pct">'+(r.pct>0 ? '<span class="pill">'+r.pct+'%</span>' : '<span class="muted">—</span>')+'</td>';
+      html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+    $('#board-content').innerHTML = html;
+    $all('[data-boardview]').forEach(function(btn){
+      btn.addEventListener('click', function(){ boardViewMode = btn.getAttribute('data-boardview'); renderLeaderboardTable(); });
     });
   }
 
@@ -705,7 +743,10 @@
     html += '</select></div>';
     if(openRounds.length>1){
       html += '<div class="field"><label>Krog</label><select id="submitRoundSelect">';
-      openRounds.forEach(function(r){ html += '<option value="'+esc(r.id)+'">Krog '+r.number+(r.label?' — '+esc(r.label):'')+'</option>'; });
+      openRounds.forEach(function(r){
+        var lbl = r.kind==='special' ? (r.label||specialTypeLabel(r.specialType)) : ('Krog '+r.number+(r.label?' — '+r.label:''));
+        html += '<option value="'+esc(r.id)+'">'+esc(lbl)+'</option>';
+      });
       html += '</select></div>';
     }
     html += '</div>';
@@ -767,26 +808,32 @@
   }
 
   function renderSubmitForm(round, existing){
-    var picks = existing ? existing.picks.slice() : new Array(8).fill(null);
-    var bonus = existing ? existing.bonusAnswers.slice() : new Array((round.bonusQuestions||[]).length).fill('');
+    var isSpecial = round.kind==='special';
+    var questions = isSpecial ? (round.questions||[]) : (round.bonusQuestions||[]);
+    var picks = isSpecial ? [] : (existing ? existing.picks.slice() : new Array((round.matchups||[]).length).fill(null));
+    var bonus = isSpecial
+      ? (existing ? (existing.answers||[]).slice() : new Array(questions.length).fill(''))
+      : (existing ? (existing.bonusAnswers||[]).slice() : new Array(questions.length).fill(''));
     var html = '<div class="card">';
     html += '<div class="row" style="justify-content:space-between;margin-bottom:8px;">';
-    html += '<h3>Krog '+round.number+(round.label?' — '+esc(round.label):'')+'</h3>';
+    html += '<h3>'+(isSpecial ? esc(round.label||specialTypeLabel(round.specialType)) : ('Krog '+round.number+(round.label?' — '+esc(round.label):'')))+'</h3>';
     html += '<span class="badge open">Odprto za oddajo</span>';
     html += '</div>';
     if(existing) html += '<p class="small muted">Napoved je že oddana — lahko jo urediš do zaklepa kroga.</p>';
 
-    html += '<div id="matchupsWrap">';
-    (round.matchups||[]).forEach(function(m, i){
-      html += '<div class="matchup" data-idx="'+i+'">';
-      html += '<span class="idx">'+(i+1)+'</span>';
-      html += '<button type="button" class="pickbtn'+(picks[i]===m.a?' selected':'')+'" data-team="'+esc(m.a)+'">'+teamLogoImg(m.a)+'<span>'+esc(m.a)+'</span></button>';
-      html += '<button type="button" class="pickbtn'+(picks[i]===m.b?' selected':'')+'" data-team="'+esc(m.b)+'">'+teamLogoImg(m.b)+'<span>'+esc(m.b)+'</span></button>';
+    if(!isSpecial){
+      html += '<div id="matchupsWrap">';
+      (round.matchups||[]).forEach(function(m, i){
+        html += '<div class="matchup" data-idx="'+i+'">';
+        html += '<span class="idx">'+(i+1)+'</span>';
+        html += '<button type="button" class="pickbtn'+(picks[i]===m.a?' selected':'')+'" data-team="'+esc(m.a)+'">'+teamLogoImg(m.a)+'<span>'+esc(m.a)+'</span></button>';
+        html += '<button type="button" class="pickbtn'+(picks[i]===m.b?' selected':'')+'" data-team="'+esc(m.b)+'">'+teamLogoImg(m.b)+'<span>'+esc(m.b)+'</span></button>';
+        html += '</div>';
+      });
       html += '</div>';
-    });
-    html += '</div>';
+    }
 
-    (round.bonusQuestions||[]).forEach(function(q, i){
+    questions.forEach(function(q, i){
       html += '<div class="bonusq">';
       html += '<div class="qtext">'+esc(q.text)+'</div>';
       html += '<input type="text" data-bonus="'+i+'" placeholder="Tvoj odgovor" value="'+esc(bonus[i]||'')+'">';
@@ -798,30 +845,39 @@
     html += '</div>';
     $('#submitFormArea').innerHTML = html;
 
-    $all('.pickbtn', $('#matchupsWrap')).forEach(function(btn){
-      btn.addEventListener('click', function(){
-        var row = btn.closest('.matchup');
-        $all('.pickbtn', row).forEach(function(b){ b.classList.remove('selected'); });
-        btn.classList.add('selected');
-        picks[+row.getAttribute('data-idx')] = btn.getAttribute('data-team');
+    if(!isSpecial){
+      $all('.pickbtn', $('#matchupsWrap')).forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var row = btn.closest('.matchup');
+          $all('.pickbtn', row).forEach(function(b){ b.classList.remove('selected'); });
+          btn.classList.add('selected');
+          picks[+row.getAttribute('data-idx')] = btn.getAttribute('data-team');
+        });
       });
-    });
+    }
 
     $('#submitBtn').addEventListener('click', function(){
-      if(picks.some(function(p){ return !p; })){ $('#submitMsg').textContent = 'Izberi zmagovalca za vse tekme.'; return; }
+      if(!isSpecial && picks.some(function(p){ return !p; })){ $('#submitMsg').textContent = 'Izberi zmagovalca za vse tekme.'; return; }
       var bonusVals = $all('[data-bonus]').map(function(el){ return el.value.trim(); });
-      if(bonusVals.some(function(v){ return !v; })){ $('#submitMsg').textContent = 'Odgovori na vsa bonus vprašanja.'; return; }
+      if(bonusVals.some(function(v){ return !v; })){ $('#submitMsg').textContent = (isSpecial?'Odgovori na vsa vprašanja.':'Odgovori na vsa bonus vprašanja.'); return; }
       var btn = $('#submitBtn'); btn.disabled = true; btn.textContent = 'Shranjujem …';
-      db.doc('rounds/'+round.id+'/submissions/'+submitSelectedUser).set({
+      var data = {
         userId: submitSelectedUser,
         name: rosterName(submitSelectedUser),
-        picks: picks,
-        bonusAnswers: bonusVals,
-        matchPoints: (existing && existing.matchPoints) || null,
-        bonusPoints: (existing && existing.bonusPoints) || null,
-        roundTotal: (existing && existing.roundTotal!=null) ? existing.roundTotal : null,
         submittedAt: new Date().toISOString()
-      }).then(function(){
+      };
+      if(isSpecial){
+        data.answers = bonusVals;
+        data.points = (existing && existing.points) || null;
+        data.roundTotal = (existing && existing.roundTotal!=null) ? existing.roundTotal : null;
+      } else {
+        data.picks = picks;
+        data.bonusAnswers = bonusVals;
+        data.matchPoints = (existing && existing.matchPoints) || null;
+        data.bonusPoints = (existing && existing.bonusPoints) || null;
+        data.roundTotal = (existing && existing.roundTotal!=null) ? existing.roundTotal : null;
+      }
+      db.doc('rounds/'+round.id+'/submissions/'+submitSelectedUser).set(data).then(function(){
         toast('Napoved oddana!');
         btn.disabled = false; btn.textContent = 'Posodobi napoved';
         $('#submitMsg').textContent = 'Shranjeno.';
@@ -830,6 +886,104 @@
         $('#submitMsg').textContent = 'Napaka pri shranjevanju, poskusi znova.';
       });
     });
+  }
+
+  /* ============================================================
+     ZGODOVINA (HISTORY)
+  ============================================================ */
+  function renderHistoryTab(){
+    if(roster.length===0){
+      $('#history-content').innerHTML = emptyState('🏀', 'Liga še ni nastavljena.');
+      return;
+    }
+    var html = '<div class="card"><div class="field"><label>Pokaži napovedi za …</label><select id="historyUserSelect"><option value="">— izberi ime —</option>';
+    roster.forEach(function(u){
+      html += '<option value="'+esc(u.id)+'"'+(historySelectedUser===u.id?' selected':'')+'>'+esc(u.nickname||u.name)+'</option>';
+    });
+    html += '</select></div></div><div id="historyList"></div>';
+    $('#history-content').innerHTML = html;
+    $('#historyUserSelect').addEventListener('change', function(){
+      historySelectedUser = this.value || null;
+      try { if(historySelectedUser) localStorage.setItem('nbaLastUser', historySelectedUser); } catch(e){}
+      loadHistoryList();
+    });
+    if(historySelectedUser) loadHistoryList();
+    else $('#historyList').innerHTML = emptyState('👋', 'Najprej izberi svoje ime zgoraj.');
+  }
+
+  function loadHistoryList(){
+    var listEl = $('#historyList');
+    if(!listEl) return;
+    var past = rounds.filter(function(r){ return r.status==='locked' || r.status==='graded'; })
+      .sort(function(a,b){ return (b.number||0)-(a.number||0); });
+    if(past.length===0){ listEl.innerHTML = emptyState('📋', 'Še ni preteklih krogov.'); return; }
+    var uid = historySelectedUser;
+    listEl.innerHTML = emptyState('⏳', 'Nalagam …');
+    Promise.all(past.map(function(r){
+      return db.doc('rounds/'+r.id+'/submissions/'+uid).get().then(function(snap){
+        return { round:r, sub: snap.exists ? snap.data() : null };
+      });
+    })).then(function(results){
+      if(uid !== historySelectedUser) return;
+      var html = results.map(function(res){ return renderHistoryRoundCard(res.round, res.sub); }).join('');
+      listEl.innerHTML = html || emptyState('📋', 'Ni podatkov.');
+    }).catch(function(e){ console.error(e); listEl.innerHTML = emptyState('⚠️', 'Napaka pri nalaganju.'); });
+  }
+
+  function renderHistoryRoundCard(round, sub){
+    var isSpecial = round.kind==='special';
+    var titleLabel = isSpecial ? (round.label || specialTypeLabel(round.specialType)) : ('Krog '+round.number+(round.label?' — '+round.label:''));
+    var html = '<div class="card"><div class="row" style="justify-content:space-between;">';
+    html += '<h3>'+esc(titleLabel)+'</h3>';
+    html += '<span class="badge '+round.status+'">'+statusLabel(round.status)+'</span>';
+    html += '</div>';
+    if(!sub){
+      html += '<p class="small muted" style="margin-top:8px;">Napoved ni bila oddana.</p></div>';
+      return html;
+    }
+    if(round.status!=='graded'){
+      html += '<p class="small muted" style="margin-top:8px;">Krog še ni ocenjen.</p></div>';
+      return html;
+    }
+    html += '<p class="small muted" style="margin-top:2px;">Skupaj: <strong class="mono" style="color:var(--ink);">'+(sub.roundTotal!=null?sub.roundTotal:'—')+'</strong></p>';
+
+    if(!isSpecial){
+      var N = round.submissionCount!=null ? round.submissionCount : null;
+      html += '<div style="margin-top:10px;">';
+      (round.matchups||[]).forEach(function(m, i){
+        var pick = sub.picks ? sub.picks[i] : null;
+        var winner = (round.winners||[])[i];
+        var correct = winner && pick===winner;
+        var pts = (sub.matchPoints||[])[i];
+        var cc = (round.correctCounts||[])[i];
+        html += '<div class="matchup" style="grid-template-columns:28px 1fr auto;">';
+        html += '<span class="idx">'+(i+1)+'</span>';
+        html += '<span>'+esc(m.a)+' vs '+esc(m.b)+' <span class="muted small">(zmagal: '+esc(winner||'—')+')</span></span>';
+        html += '<span class="row" style="gap:8px;">';
+        html += '<span class="badge '+(correct?'open':'draft')+'">'+esc(pick||'—')+'</span>';
+        html += '<span class="mono" style="font-weight:700;">'+(pts!=null?'+'+pts:'—')+'</span>';
+        html += '</span></div>';
+        if(cc!=null && N!=null && winner){
+          html += '<p class="small muted" style="margin:2px 0 8px;">'+cc+' od '+N+' je izbralo '+esc(winner)+' → ('+N+'+1) − '+cc+' = '+pts+' točk</p>';
+        }
+      });
+      html += '</div>';
+    }
+
+    var questions = isSpecial ? (round.questions||[]) : (round.bonusQuestions||[]);
+    var answers = isSpecial ? (sub.answers||[]) : (sub.bonusAnswers||[]);
+    var points = isSpecial ? (sub.points||[]) : (sub.bonusPoints||[]);
+    if(questions.length){
+      html += '<div style="margin-top:6px;">';
+      questions.forEach(function(q, i){
+        html += '<div class="bonusq"><div class="qtext">'+esc(q.text)+'</div>';
+        html += '<div class="row" style="justify-content:space-between;"><span class="muted small">Odgovor: '+esc((answers||[])[i]||'—')+'</span>';
+        html += '<span class="mono" style="font-weight:700;">'+((points||[])[i]!=null?'+'+points[i]:'—')+'</span></div></div>';
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+    return html;
   }
 
   /* ============================================================
@@ -880,19 +1034,28 @@
 
   /* ---------- Admin > Rounds ---------- */
   function nextRoundNumber(){
-    var max = 0; rounds.forEach(function(r){ if(r.number>max) max=r.number; });
+    var max = 0; rounds.forEach(function(r){ if(r.kind!=='special' && r.number>max) max=r.number; });
     return max+1;
   }
+
+  var SPECIAL_META = {
+    seasonlong: {number:9001, label:'Season Long'},
+    xmas: {number:9002, label:'XMAS Special'},
+    allstar: {number:9003, label:'Allstar Special'}
+  };
 
   function renderAdminRounds(){
     var el = $('#adminSubContent'); if(!el) return;
     var html = '<div class="card"><h3>Obstoječi krogi</h3>';
     if(rounds.length===0){ html += '<p class="muted small">Še ni ustvarjenih krogov.</p>'; }
-    var sorted = rounds.slice().sort(function(a,b){ return b.number-a.number; });
+    var sorted = rounds.slice().sort(function(a,b){ return (b.number||0)-(a.number||0); });
     sorted.forEach(function(r){
-      html += '<div class="round-item"><div class="meta"><span class="rlabel">Krog '+r.number+'</span>';
+      var isSpecial = r.kind==='special';
+      var mainLabel = isSpecial ? (r.label || specialTypeLabel(r.specialType)) : ('Krog '+r.number);
+      html += '<div class="round-item"><div class="meta"><span class="rlabel">'+esc(mainLabel)+'</span>';
       html += '<span class="badge '+r.status+'">'+statusLabel(r.status)+'</span>';
-      if(r.label) html += '<span class="small muted">'+esc(r.label)+'</span>';
+      if(isSpecial) html += '<span class="badge" style="background:var(--accent-soft);color:var(--accent-soft-ink);">Special</span>';
+      if(!isSpecial && r.label) html += '<span class="small muted">'+esc(r.label)+'</span>';
       html += '</div><div class="actions">';
       if(r.status==='draft') html += '<button class="btn small" data-act="open" data-id="'+r.id+'">Odpri za oddajo</button>';
       if(r.status==='open') html += '<button class="btn small" data-act="lock" data-id="'+r.id+'">Zakleni oddajo</button>';
@@ -904,11 +1067,19 @@
     html += '</div>';
 
     html += '<div class="card"><h3>Ustvari nov krog</h3>';
-    html += renderAiBox();
+    html += '<div class="field"><label>Tip kroga</label><select id="newRoundKind">';
+    html += '<option value="matchup">Matchup (redni krog)</option>';
+    html += '<option value="seasonlong">Special — Season Long</option>';
+    html += '<option value="xmas">Special — XMAS</option>';
+    html += '<option value="allstar">Special — Allstar</option>';
+    html += '</select></div>';
     html += '<div class="grid-2">';
-    html += '<div class="field"><label>Številka kroga</label><input type="number" id="newRoundNumber" value="'+nextRoundNumber()+'"></div>';
-    html += '<div class="field"><label>Opis (neobvezno)</label><input type="text" id="newRoundLabel" placeholder="npr. 1.–7. sep"></div>';
+    html += '<div class="field" id="newRoundNumberField"><label>Številka kroga</label><input type="number" id="newRoundNumber" value="'+nextRoundNumber()+'"></div>';
+    html += '<div class="field"><label id="newRoundLabelLabel">Opis (neobvezno)</label><input type="text" id="newRoundLabel" placeholder="npr. 1.–7. sep"></div>';
     html += '</div>';
+
+    html += '<div id="matchupKindFields">';
+    html += renderAiBox();
     html += '<label style="margin-top:6px;">8 tekem</label>';
     html += '<div id="newMatchups">';
     for(var i=0;i<8;i++){ html += matchupEditorRow(i, '', ''); }
@@ -917,6 +1088,17 @@
     html += '<div id="newBonusQs">';
     for(var b=0;b<3;b++){ html += bonusEditorRow(b, '', '0,3,5,7,10'); }
     html += '</div>';
+    html += '<div class="row" style="margin-top:8px;"><button type="button" class="btn small" id="newBonusQs-add">+ Dodaj vprašanje</button><span class="small muted" id="newBonusQs-count"></span></div>';
+    html += '</div>';
+
+    html += '<div id="specialKindFields" style="display:none;">';
+    html += '<label style="margin-top:14px;">Vprašanja (10–15)</label>';
+    html += '<div id="newSpecialQs">';
+    for(var q=0;q<10;q++){ html += bonusEditorRow(q, '', '0,1,2,3,5'); }
+    html += '</div>';
+    html += '<div class="row" style="margin-top:8px;"><button type="button" class="btn small" id="newSpecialQs-add">+ Dodaj vprašanje</button><span class="small muted" id="newSpecialQs-count"></span></div>';
+    html += '</div>';
+
     html += '<div class="row" style="margin-top:14px;">';
     html += '<label class="row" style="font-weight:500;color:var(--ink);"><input type="checkbox" id="openImmediately" checked style="width:auto;margin-right:6px;">Takoj odpri za oddajo napovedi</label>';
     html += '</div>';
@@ -926,6 +1108,19 @@
     el.innerHTML = html;
     bindRoundActions();
     bindAiBox('newMatchups');
+    bindDynamicQuestions('newBonusQs', 3, 5);
+    bindDynamicQuestions('newSpecialQs', 10, 15);
+    $('#newRoundKind').addEventListener('change', function(){
+      var k = this.value;
+      var isMatchup = k==='matchup';
+      $('#matchupKindFields').style.display = isMatchup ? '' : 'none';
+      $('#specialKindFields').style.display = isMatchup ? 'none' : '';
+      $('#newRoundNumberField').style.display = isMatchup ? '' : 'none';
+      $('#newRoundLabelLabel').textContent = isMatchup ? 'Opis (neobvezno)' : 'Naziv';
+      if(!isMatchup && !$('#newRoundLabel').value.trim()){
+        $('#newRoundLabel').value = SPECIAL_META[k] ? SPECIAL_META[k].label : '';
+      }
+    });
     $('#createRoundBtn').addEventListener('click', submitNewRound);
   }
 
@@ -941,8 +1136,52 @@
     return '<div class="bonusq" data-bi="'+i+'">' +
       '<div class="field"><label>Vprašanje '+(i+1)+'</label><input type="text" class="bq-text" value="'+esc(text)+'" placeholder="npr. Koliko točk bo dosegel Luka Dončić?"></div>' +
       '<div class="field"><label>Možne točkovne vrednosti (ločene z vejico)</label><input type="text" class="bq-pts" value="'+esc(pts)+'"></div>' +
+      '<div class="row" style="justify-content:flex-end;"><button type="button" class="btn small danger bq-remove">Odstrani vprašanje</button></div>' +
       '</div>';
   }
+  function bindDynamicQuestions(wrapId, minN, maxN){
+    var wrap = $('#'+wrapId);
+    if(!wrap) return;
+    function renumber(){
+      var rows = $all('.bonusq', wrap);
+      rows.forEach(function(row, i){
+        row.setAttribute('data-bi', i);
+        var lbl = row.querySelector('.field label');
+        if(lbl) lbl.textContent = 'Vprašanje ' + (i+1);
+        var rm = row.querySelector('.bq-remove');
+        if(rm) rm.style.display = (rows.length > minN) ? '' : 'none';
+      });
+      var addBtn = $('#'+wrapId+'-add');
+      if(addBtn) addBtn.disabled = rows.length >= maxN;
+      var countEl = $('#'+wrapId+'-count');
+      if(countEl) countEl.textContent = rows.length + ' / ' + maxN + ' (min. ' + minN + ')';
+    }
+    function bindRemove(){
+      $all('.bq-remove', wrap).forEach(function(btn){
+        btn.onclick = function(){
+          if($all('.bonusq', wrap).length <= minN) return;
+          btn.closest('.bonusq').remove();
+          renumber();
+        };
+      });
+    }
+    var addBtn = $('#'+wrapId+'-add');
+    if(addBtn){
+      addBtn.addEventListener('click', function(){
+        var n = $all('.bonusq', wrap).length;
+        if(n >= maxN) return;
+        var tmp = document.createElement('div');
+        tmp.innerHTML = bonusEditorRow(n, '', '');
+        wrap.appendChild(tmp.firstChild);
+        bindRemove();
+        renumber();
+      });
+    }
+    bindRemove();
+    renumber();
+  }
+  function specialTypeLabel(t){ return {seasonlong:'Season Long', xmas:'XMAS Special', allstar:'Allstar Special'}[t] || t; }
+  function specialShortLabel(t){ return {seasonlong:'Season', xmas:'XMAS', allstar:'Allstar'}[t] || t; }
 
   var AI_PROMPT_TEMPLATE = "Priložena je slika s tedenskim urnikom fantasy lige (screenshot aplikacije, spletne strani ali tabele). "+
     "Ekipe v tej ligi so IZKLJUČNO naslednje (uporabi dobesedno te nize, brez sprememb):\n" +
@@ -1040,20 +1279,36 @@
   }
 
   function submitNewRound(){
-    var number = parseInt($('#newRoundNumber').value, 10) || nextRoundNumber();
+    var kind = $('#newRoundKind') ? $('#newRoundKind').value : 'matchup';
     var label = $('#newRoundLabel').value.trim();
-    var matchups = readMatchupsFromWrap('newMatchups');
-    var bonusQuestions = readBonusFromWrap('newBonusQs');
-    if(matchups.some(function(m){ return !m.a || !m.b; })){ $('#createRoundMsg').textContent = 'Izpolni vseh 8 tekem.'; return; }
-    if(bonusQuestions.some(function(q){ return !q.text || q.options.length===0; })){ $('#createRoundMsg').textContent = 'Izpolni vsa bonus vprašanja in vsaj eno točkovno vrednost.'; return; }
     var openNow = $('#openImmediately').checked;
-    var btn = $('#createRoundBtn'); btn.disabled = true; btn.textContent = 'Ustvarjam …';
-    db.collection('rounds').add({
-      number: number, label: label, matchups: matchups, bonusQuestions: bonusQuestions,
-      status: openNow ? 'open' : 'draft', winners: new Array(8).fill(null),
-      lotteryAwarded: false, createdAt: new Date().toISOString()
-    }).then(function(){
-      toast('Krog '+number+' ustvarjen.');
+    var btn = $('#createRoundBtn');
+    var roundData;
+    if(kind==='matchup'){
+      var number = parseInt($('#newRoundNumber').value, 10) || nextRoundNumber();
+      var matchups = readMatchupsFromWrap('newMatchups');
+      var bonusQuestions = readBonusFromWrap('newBonusQs');
+      if(matchups.some(function(m){ return !m.a || !m.b; })){ $('#createRoundMsg').textContent = 'Izpolni vseh 8 tekem.'; return; }
+      if(bonusQuestions.length<3 || bonusQuestions.length>5){ $('#createRoundMsg').textContent = 'Bonus vprašanj mora biti med 3 in 5.'; return; }
+      if(bonusQuestions.some(function(q){ return !q.text || q.options.length===0; })){ $('#createRoundMsg').textContent = 'Izpolni vsa bonus vprašanja in vsaj eno točkovno vrednost.'; return; }
+      roundData = {
+        kind: 'matchup', number: number, label: label, matchups: matchups, bonusQuestions: bonusQuestions,
+        status: openNow ? 'open' : 'draft', winners: new Array(matchups.length).fill(null),
+        lotteryAwarded: false, createdAt: new Date().toISOString()
+      };
+    } else {
+      var meta = SPECIAL_META[kind];
+      var questions = readBonusFromWrap('newSpecialQs');
+      if(questions.length<10 || questions.length>15){ $('#createRoundMsg').textContent = 'Vprašanj mora biti med 10 in 15.'; return; }
+      if(questions.some(function(q){ return !q.text || q.options.length===0; })){ $('#createRoundMsg').textContent = 'Izpolni vsa vprašanja in vsaj eno točkovno vrednost.'; return; }
+      roundData = {
+        kind: 'special', specialType: kind, number: meta.number, label: label || meta.label,
+        questions: questions, status: openNow ? 'open' : 'draft', createdAt: new Date().toISOString()
+      };
+    }
+    btn.disabled = true; btn.textContent = 'Ustvarjam …';
+    db.collection('rounds').add(roundData).then(function(){
+      toast((roundData.kind==='matchup' ? 'Krog '+roundData.number : roundData.label)+' ustvarjen.');
       renderAdminRounds();
     }).catch(function(e){
       console.error(e); btn.disabled=false; btn.textContent='Ustvari krog';
@@ -1131,7 +1386,10 @@
     var gradable = rounds.filter(function(r){ return r.status!=='draft'; }).sort(function(a,b){ return b.number-a.number; });
     if(!gradingRoundId && gradable.length) gradingRoundId = gradable[0].id;
     var html = '<div class="card"><div class="field"><label>Izberi krog</label><select id="gradeRoundSelect">';
-    gradable.forEach(function(r){ html += '<option value="'+r.id+'"'+(r.id===gradingRoundId?' selected':'')+'>Krog '+r.number+' ('+statusLabel(r.status)+')</option>'; });
+    gradable.forEach(function(r){
+      var lbl = r.kind==='special' ? (r.label||specialTypeLabel(r.specialType)) : ('Krog '+r.number);
+      html += '<option value="'+r.id+'"'+(r.id===gradingRoundId?' selected':'')+'>'+esc(lbl)+' ('+statusLabel(r.status)+')</option>';
+    });
     html += '</select></div></div><div id="gradingArea"></div>';
     el.innerHTML = html;
     $('#gradeRoundSelect').addEventListener('change', function(){ gradingRoundId = this.value; loadGrading(); });
@@ -1147,32 +1405,45 @@
     ]).then(function(results){
       gradingSubs = results[0].docs.map(function(d){ return Object.assign({id:d.id}, d.data()); });
       gradingWinners = {}; (round.winners||[]).forEach(function(w,i){ if(w) gradingWinners[i]=w; });
+      var isSpecial = round.kind==='special';
+      var questions = isSpecial ? (round.questions||[]) : (round.bonusQuestions||[]);
+      var ptsField = isSpecial ? 'points' : 'bonusPoints';
       gradingBonusPts = {};
-      gradingSubs.forEach(function(s){ gradingBonusPts[s.userId] = (s.bonusPoints && s.bonusPoints.slice()) || new Array((round.bonusQuestions||[]).length).fill(null); });
+      gradingSubs.forEach(function(s){ gradingBonusPts[s.userId] = (s[ptsField] && s[ptsField].slice()) || new Array(questions.length).fill(null); });
       renderGradingUI(round);
     });
   }
 
   function renderGradingUI(round){
     var area = $('#gradingArea');
-    var html = '<div class="card"><h3>Krog '+round.number+' — zmagovalci</h3>';
-    html += '<p class="small muted">'+gradingSubs.length+' oddanih napovedi.</p>';
-    (round.matchups||[]).forEach(function(m, i){
-      html += '<div class="matchup" data-gi="'+i+'"><span class="idx">'+(i+1)+'</span>';
-      [m.a, m.b].forEach(function(team){
-        html += '<button type="button" class="pickbtn'+(gradingWinners[i]===team?' winner-marker':'')+'" data-team="'+esc(team)+'">'+teamLogoImg(team)+'<span>'+esc(team)+'</span></button>';
+    var isSpecial = round.kind==='special';
+    var titleLabel = isSpecial ? (round.label || specialTypeLabel(round.specialType)) : ('Krog '+round.number);
+    var html = '';
+
+    if(!isSpecial){
+      html += '<div class="card"><h3>'+esc(titleLabel)+' — zmagovalci</h3>';
+      html += '<p class="small muted">'+gradingSubs.length+' oddanih napovedi.</p>';
+      (round.matchups||[]).forEach(function(m, i){
+        html += '<div class="matchup" data-gi="'+i+'"><span class="idx">'+(i+1)+'</span>';
+        [m.a, m.b].forEach(function(team){
+          html += '<button type="button" class="pickbtn'+(gradingWinners[i]===team?' winner-marker':'')+'" data-team="'+esc(team)+'">'+teamLogoImg(team)+'<span>'+esc(team)+'</span></button>';
+        });
+        html += '</div>';
       });
       html += '</div>';
-    });
-    html += '</div>';
+    } else {
+      html += '<div class="card"><h3>'+esc(titleLabel)+'</h3><p class="small muted">'+gradingSubs.length+' oddanih napovedi.</p></div>';
+    }
 
-    if((round.bonusQuestions||[]).length){
-      html += '<div class="card"><h3>Bonus vprašanja — oceni odgovore</h3>';
-      round.bonusQuestions.forEach(function(q, qi){
+    var questions = isSpecial ? (round.questions||[]) : (round.bonusQuestions||[]);
+    var answersField = isSpecial ? 'answers' : 'bonusAnswers';
+    if(questions.length){
+      html += '<div class="card"><h3>'+(isSpecial?'Vprašanja':'Bonus vprašanja')+' — oceni odgovore</h3>';
+      questions.forEach(function(q, qi){
         html += '<div class="bonusq"><div class="qtext">'+(qi+1)+'. '+esc(q.text)+'</div>';
         html += '<table class="grade-table"><thead><tr><th>Igralec</th><th>Odgovor</th><th>Točke</th></tr></thead><tbody>';
         gradingSubs.forEach(function(s){
-          html += '<tr><td>'+esc(rosterName(s.userId))+'</td><td class="ans">'+esc((s.bonusAnswers||[])[qi]||'—')+'</td><td>';
+          html += '<tr><td>'+esc(rosterName(s.userId))+'</td><td class="ans">'+esc((s[answersField]||[])[qi]||'—')+'</td><td>';
           html += '<div class="points-row" data-bonus-grade data-user="'+s.userId+'" data-q="'+qi+'">';
           (q.options||[]).forEach(function(pt){
             var sel = gradingBonusPts[s.userId] && gradingBonusPts[s.userId][qi]===pt;
@@ -1190,14 +1461,16 @@
 
     area.innerHTML = html;
 
-    $all('.matchup[data-gi] .pickbtn').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        var row = btn.closest('.matchup'); var gi = row.getAttribute('data-gi');
-        $all('.pickbtn', row).forEach(function(b){ b.classList.remove('winner-marker'); });
-        btn.classList.add('winner-marker');
-        gradingWinners[gi] = btn.getAttribute('data-team');
+    if(!isSpecial){
+      $all('.matchup[data-gi] .pickbtn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var row = btn.closest('.matchup'); var gi = row.getAttribute('data-gi');
+          $all('.pickbtn', row).forEach(function(b){ b.classList.remove('winner-marker'); });
+          btn.classList.add('winner-marker');
+          gradingWinners[gi] = btn.getAttribute('data-team');
+        });
       });
-    });
+    }
     $all('[data-bonus-grade]').forEach(function(wrap){
       $all('.ptbtn', wrap).forEach(function(btn){
         btn.addEventListener('click', function(){
@@ -1213,6 +1486,37 @@
   }
 
   function saveGrading(round){
+    var isSpecial = round.kind==='special';
+    var btn = $('#saveGradingBtn');
+
+    if(isSpecial){
+      var scoredSp = gradingSubs.map(function(s){
+        var points = (gradingBonusPts[s.userId]||[]).map(function(p){ return typeof p==='number' ? p : 0; });
+        var total = points.reduce(function(a,b){ return a+b; }, 0);
+        return { sub:s, points:points, roundTotal: total };
+      });
+      btn.disabled = true; btn.textContent = 'Shranjujem …';
+      var writesSp = scoredSp.map(function(sc){
+        return db.doc('rounds/'+round.id+'/submissions/'+sc.sub.userId).update({ points: sc.points, roundTotal: sc.roundTotal });
+      });
+      Promise.all(writesSp).then(function(){
+        return db.doc('rounds/'+round.id).update({ status: 'graded', gradedAt: new Date().toISOString() });
+      }).then(function(){
+        toast((round.label||specialTypeLabel(round.specialType))+' ocenjen!');
+        btn.disabled=false; btn.textContent='Izračunaj in shrani rezultate';
+        var prevSp = '<table class="grade-table" style="margin-top:12px;"><thead><tr><th>Igralec</th><th>Skupaj</th></tr></thead><tbody>';
+        scoredSp.sort(function(a,b){ return b.roundTotal-a.roundTotal; }).forEach(function(sc){
+          prevSp += '<tr><td>'+esc(rosterName(sc.sub.userId))+'</td><td class="mono" style="font-weight:700;">'+sc.roundTotal+'</td></tr>';
+        });
+        prevSp += '</tbody></table>';
+        $('#gradePreview').innerHTML = prevSp;
+      }).catch(function(e){
+        console.error(e); btn.disabled=false; btn.textContent='Izračunaj in shrani rezultate';
+        $('#gradeMsg').textContent = 'Napaka pri shranjevanju.';
+      });
+      return;
+    }
+
     var winners = [];
     for(var i=0;i<(round.matchups||[]).length;i++){
       if(!gradingWinners[i]){ $('#gradeMsg').textContent = 'Izberi zmagovalca za vse tekme.'; return; }
@@ -1230,14 +1534,14 @@
       return { sub:s, matchPoints:matchPoints, bonusPoints:bonusPoints, roundTotal: matchSum+bonusSum };
     });
 
-    var btn = $('#saveGradingBtn'); btn.disabled = true; btn.textContent = 'Shranjujem …';
+    btn.disabled = true; btn.textContent = 'Shranjujem …';
     var writes = scored.map(function(sc){
       return db.doc('rounds/'+round.id+'/submissions/'+sc.sub.userId).update({
         matchPoints: sc.matchPoints, bonusPoints: sc.bonusPoints, roundTotal: sc.roundTotal
       });
     });
     Promise.all(writes).then(function(){
-      return db.doc('rounds/'+round.id).update({ winners: winners, status: 'graded', gradedAt: new Date().toISOString() });
+      return db.doc('rounds/'+round.id).update({ winners: winners, status: 'graded', gradedAt: new Date().toISOString(), correctCounts: correctCounts, submissionCount: N });
     }).then(function(){
       if(!round.lotteryAwarded && scored.length){
         var ranked = scored.slice().sort(function(a,b){ return b.roundTotal-a.roundTotal || (a.sub.submittedAt||'').localeCompare(b.sub.submittedAt||''); });
