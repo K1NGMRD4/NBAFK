@@ -766,18 +766,32 @@
       });
     })).then(function(results){
       if(token !== boardFetchToken) return;
+      function blankRow(id, name){
+        return {id:id, name:name, krogiTotal:0, seasonlong:0, xmas:0, allstar:0, perRound:{}};
+      }
       var byUser = {};
-      roster.forEach(function(u){ byUser[u.id] = {id:u.id, name:(u.nickname||u.name), total:0, perRound:{}}; });
+      roster.forEach(function(u){ byUser[u.id] = blankRow(u.id, u.nickname||u.name); });
       results.forEach(function(res){
+        var r = res.round;
+        var isSpecial = r.kind==='special';
         res.subs.forEach(function(s){
-          if(!byUser[s.userId]) byUser[s.userId] = {id:s.userId, name:s.name||rosterName(s.userId), total:0, perRound:{}};
+          if(!byUser[s.userId]) byUser[s.userId] = blankRow(s.userId, s.name||rosterName(s.userId));
           var pts = typeof s.roundTotal==='number' ? s.roundTotal : 0;
-          byUser[s.userId].perRound[res.round.id] = pts;
-          byUser[s.userId].total += pts;
+          byUser[s.userId].perRound[r.id] = pts;
+          if(isSpecial){
+            if(r.specialType==='seasonlong') byUser[s.userId].seasonlong += pts;
+            else if(r.specialType==='xmas') byUser[s.userId].xmas += pts;
+            else if(r.specialType==='allstar') byUser[s.userId].allstar += pts;
+          } else {
+            byUser[s.userId].krogiTotal += pts;
+          }
         });
       });
       var rows = Object.keys(byUser).map(function(k){ return byUser[k]; });
-      rows.forEach(function(r){ r.pct = percentMap[r.id]||0; });
+      rows.forEach(function(r){
+        r.total = r.krogiTotal + r.seasonlong + r.xmas + r.allstar;
+        r.pct = percentMap[r.id]||0;
+      });
       rows.sort(function(a,b){ return b.total-a.total || b.pct-a.pct || a.name.localeCompare(b.name); });
       leaderboardRows = rows;
       leaderboardGradedRounds = graded;
@@ -791,7 +805,9 @@
 
   function renderLeaderboardTable(){
     var graded = leaderboardGradedRounds || [];
+    var matchupRounds = graded.filter(function(r){ return r.kind!=='special'; }).sort(function(a,b){ return (a.number||0)-(b.number||0); });
     var rows = leaderboardRows || [];
+    var pctCell = function(r){ return '<td class="pct">'+(r.pct>0 ? '<span class="pill">'+r.pct+'%</span>' : '<span class="muted">—</span>')+'</td>'; };
     var html = '<div class="row" style="margin-bottom:10px;">';
     html += '<button class="btn small'+(boardViewMode==='total'?' primary':'')+'" data-boardview="total">Skupno</button>';
     html += '<button class="btn small'+(boardViewMode==='perRound'?' primary':'')+'" data-boardview="perRound">Po krogih</button>';
@@ -799,22 +815,31 @@
     html += '<div class="table-scroll"><table class="board"><thead><tr>';
     html += '<th class="name-h">Igralec</th>';
     if(boardViewMode==='perRound'){
-      graded.forEach(function(r){
-        var lbl = r.kind==='special' ? specialShortLabel(r.specialType) : ('K'+r.number);
-        html += '<th title="'+esc(r.label||'')+'">'+esc(lbl)+'</th>';
+      matchupRounds.forEach(function(r){
+        html += '<th title="'+esc(r.label||'')+'">K'+r.number+'</th>';
       });
+      html += '<th>SKUPAJ</th><th>FRP%</th>';
+    } else {
+      html += '<th>SeasonLong</th><th>XMAS</th><th>AllStar</th><th>KrogiSkupaj</th><th>Skupaj</th><th>FRP%</th>';
     }
-    html += '<th>Skupaj</th><th>% lote.</th></tr></thead><tbody>';
+    html += '</tr></thead><tbody>';
     rows.forEach(function(r, i){
       html += '<tr><td class="rank">'+(i+1)+'</td><td class="name">'+esc(r.name)+'</td>';
       if(boardViewMode==='perRound'){
-        graded.forEach(function(rd){
+        matchupRounds.forEach(function(rd){
           var v = r.perRound[rd.id];
           html += '<td class="pts">'+(v==null?'—':v)+'</td>';
         });
+        html += '<td class="total">'+r.krogiTotal+'</td>';
+        html += pctCell(r);
+      } else {
+        html += '<td class="pts">'+r.seasonlong+'</td>';
+        html += '<td class="pts">'+r.xmas+'</td>';
+        html += '<td class="pts">'+r.allstar+'</td>';
+        html += '<td class="pts">'+r.krogiTotal+'</td>';
+        html += '<td class="total">'+r.total+'</td>';
+        html += pctCell(r);
       }
-      html += '<td class="total">'+r.total+'</td>';
-      html += '<td class="pct">'+(r.pct>0 ? '<span class="pill">'+r.pct+'%</span>' : '<span class="muted">—</span>')+'</td>';
       html += '</tr>';
     });
     html += '</tbody></table></div>';
@@ -1150,7 +1175,7 @@
         html += '<span class="mono" style="font-weight:700;">'+(pts!=null?'+'+pts:'—')+'</span>';
         html += '</span></div>';
         if(cc!=null && N!=null && winner && correct){
-          html += '<p class="small muted" style="margin:2px 0 8px;">'+cc+' od '+N+' je izbralo '+esc(winner)+' → '+N+' / '+cc+' = '+pts+' točk</p>';
+          html += '<p class="small muted" style="margin:2px 0 8px;">'+cc+' od '+N+' je izbralo '+esc(winner)+' → ('+(N-cc)+' / '+cc+') + 1 = '+pts+' točk</p>';
         }
       });
       html += '</div>';
@@ -1935,12 +1960,12 @@
       return gradingSubs.filter(function(s){ return s.picks && s.picks[i]===w; }).length;
     });
     var scored = gradingSubs.map(function(s){
-      // Protiutež: skupni "nagradni sklad" tekme je N (vseh oddanih napovedi), enakomerno razdeljen med tiste,
-      // ki so pravilno izbrali zmagovalca — torej N / (št. pravilnih), zaokroženo na 2 decimalki.
+      // Protiutež: (št. napovedanih porazov / št. napovedanih zmag) + 1, zaokroženo na 2 decimalki.
       var matchPoints = winners.map(function(w,i){
         if(!(s.picks && s.picks[i]===w)) return 0;
-        var cc = correctCounts[i];
-        return cc>0 ? Math.round((N/cc)*100)/100 : 0;
+        var wins = correctCounts[i];
+        var losses = N - wins;
+        return wins>0 ? Math.round(((losses/wins)+1)*100)/100 : 0;
       });
       var bonusPoints = (gradingBonusPts[s.userId]||[]).map(function(p){ return typeof p==='number' ? p : 0; });
       var matchSum = matchPoints.reduce(function(a,b){ return a+b; },0);
