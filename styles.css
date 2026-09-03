@@ -431,8 +431,17 @@ table.h2hstatsbyseason {
     padding: 0; 
 } 
 
-.dropdown-sub:hover .dropdown-sub-content { 
-    display: block; 
+.dropdown-sub:hover .dropdown-sub-content {
+    display: block;
+}
+
+/* Puščica desno pri Arhivu, da je jasno da gre naprej v podmeni */
+.dropdown-sub > a::after {
+    content: "\25B8";
+    display: inline-block;
+    margin-left: 8px;
+    font-size: 0.8em;
+    opacity: 0.8;
 }
 
 /* Osnovni dropdown gumb */
@@ -496,6 +505,7 @@ table.h2hstatsbyseason {
     padding: 0.45em 1em;
     font-weight: 500;
     white-space: nowrap;
+    font-size: 0.85em;
 }
 
 /* Hover efekti za linke */
@@ -593,6 +603,22 @@ li.dropdown:hover .dropdown-columns {
     .nav-predictions {
         position: absolute;
         right: 2%;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    /* Ekipe/Sezona/Zgodovina/Arhiv - poravnano na sredino cele strani.
+       #nav-menu se razširi čez celotno širino headerja (od roba do roba),
+       znotraj njega pa justify-content:center poskrbi za resnično sredinsko
+       poravnavo. Ker Predictions (.nav-predictions) računa svoj "right: 2%"
+       glede na ta isti, čez celo širino razpeti okvir #nav-menu, ostane
+       Predictions še naprej pravilno pripet skrajno desno. Ime lige (h3)
+       ostane levo, ker je zdaj edini element, ki v flex vrstici "nav"
+       dejansko zaseda prostor. */
+    #nav-menu {
+        position: absolute;
+        left: 0;
+        width: 100%;
         top: 50%;
         transform: translateY(-50%);
     }
