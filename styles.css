@@ -607,6 +607,12 @@ li.dropdown:hover .dropdown-columns {
         transform: translateY(-50%);
     }
 
+    /* Sidrna točka za #nav-menu spodaj - brez tega bi se "top: 50%" računal
+       glede na celo stran namesto glede na navbar (od tod navpični zamik). */
+    header nav {
+        position: relative;
+    }
+
     /* Ekipe/Sezona/Zgodovina/Arhiv - poravnano na sredino cele strani.
        #nav-menu se razširi čez celotno širino headerja (od roba do roba),
        znotraj njega pa justify-content:center poskrbi za resnično sredinsko
@@ -614,7 +620,8 @@ li.dropdown:hover .dropdown-columns {
        glede na ta isti, čez celo širino razpeti okvir #nav-menu, ostane
        Predictions še naprej pravilno pripet skrajno desno. Ime lige (h3)
        ostane levo, ker je zdaj edini element, ki v flex vrstici "nav"
-       dejansko zaseda prostor. */
+       dejansko zaseda prostor. top/transform sta zdaj glede na navbar
+       (header nav), ne glede na celo stran. */
     #nav-menu {
         position: absolute;
         left: 0;
