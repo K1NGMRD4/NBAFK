@@ -159,6 +159,19 @@
   .muted{color:var(--ink-dim);}
   .small{font-size:12.5px;}
 
+  /* ---------- Zgodovina: krogi kot spoilerji ---------- */
+  .history-round summary{
+    list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  }
+  .history-round summary::-webkit-details-marker{display:none;}
+  .history-round summary::marker{content:'';}
+  .history-round .hrs-title{font-weight:700;font-size:15.5px;color:var(--ink);}
+  .history-round .hrs-meta{display:flex;align-items:center;gap:10px;flex:none;}
+  .history-round .hrs-total{font-weight:700;color:var(--ink-dim);font-size:13px;}
+  .history-round .chev{display:inline-block;transition:transform .15s ease;color:var(--ink-faint);font-size:11px;}
+  .history-round[open] summary{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+  .history-round[open] .chev{transform:rotate(90deg);}
+
   .badge{
     display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:99px;
     font-size:11px;font-weight:700;letter-spacing:0.03em;text-transform:uppercase;
@@ -259,7 +272,7 @@
   .bonusq{padding:12px 0;border-top:1px dashed var(--border);}
   .bonusq:first-child{border-top:none;}
   .bonusq .qtext{font-weight:700;margin-bottom:6px;}
-  .points-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
+  .points-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;max-width:240px;}
   .ptbtn{
     border:1.5px solid var(--border-strong);background:var(--surface);border-radius:99px;
     padding:5px 13px;font-family:var(--font-mono);font-weight:700;font-size:13px;cursor:pointer;color:var(--ink);
@@ -1103,19 +1116,22 @@
   function renderHistoryRoundCard(round, sub){
     var isSpecial = round.kind==='special';
     var titleLabel = isSpecial ? (round.label || specialTypeLabel(round.specialType)) : ('Krog '+round.number+(round.label?' — '+round.label:''));
-    var html = '<div class="card"><div class="row" style="justify-content:space-between;">';
-    html += '<h3>'+esc(titleLabel)+'</h3>';
+    var totalStr = (sub && round.status==='graded' && sub.roundTotal!=null) ? ('+'+sub.roundTotal) : '—';
+    var html = '<details class="card history-round"><summary>';
+    html += '<span class="hrs-title">'+esc(titleLabel)+'</span>';
+    html += '<span class="hrs-meta">';
+    html += '<span class="mono hrs-total">'+totalStr+'</span>';
     html += '<span class="badge '+round.status+'">'+statusLabel(round.status)+'</span>';
-    html += '</div>';
+    html += '<span class="chev">▸</span>';
+    html += '</span></summary><div class="history-round-body">';
     if(!sub){
-      html += '<p class="small muted" style="margin-top:8px;">Napoved ni bila oddana.</p></div>';
+      html += '<p class="small muted" style="margin-top:8px;">Napoved ni bila oddana.</p></div></details>';
       return html;
     }
     if(round.status!=='graded'){
-      html += '<p class="small muted" style="margin-top:8px;">Krog še ni ocenjen.</p></div>';
+      html += '<p class="small muted" style="margin-top:8px;">Krog še ni ocenjen.</p></div></details>';
       return html;
     }
-    html += '<p class="small muted" style="margin-top:2px;">Skupaj: <strong class="mono" style="color:var(--ink);">'+(sub.roundTotal!=null?sub.roundTotal:'—')+'</strong></p>';
 
     if(!isSpecial){
       var N = round.submissionCount!=null ? round.submissionCount : null;
@@ -1133,8 +1149,8 @@
         html += '<span class="badge '+(correct?'open':'draft')+'">'+esc(pick||'—')+'</span>';
         html += '<span class="mono" style="font-weight:700;">'+(pts!=null?'+'+pts:'—')+'</span>';
         html += '</span></div>';
-        if(cc!=null && N!=null && winner){
-          html += '<p class="small muted" style="margin:2px 0 8px;">'+cc+' od '+N+' je izbralo '+esc(winner)+' → ('+N+'+1) − '+cc+' = '+pts+' točk</p>';
+        if(cc!=null && N!=null && winner && correct){
+          html += '<p class="small muted" style="margin:2px 0 8px;">'+cc+' od '+N+' je izbralo '+esc(winner)+' → '+N+' / '+cc+' = '+pts+' točk</p>';
         }
       });
       html += '</div>';
@@ -1152,7 +1168,7 @@
       });
       html += '</div>';
     }
-    html += '</div>';
+    html += '</div></details>';
     return html;
   }
 
@@ -1919,7 +1935,13 @@
       return gradingSubs.filter(function(s){ return s.picks && s.picks[i]===w; }).length;
     });
     var scored = gradingSubs.map(function(s){
-      var matchPoints = winners.map(function(w,i){ return (s.picks && s.picks[i]===w) ? (N+1-correctCounts[i]) : 0; });
+      // Protiutež: skupni "nagradni sklad" tekme je N (vseh oddanih napovedi), enakomerno razdeljen med tiste,
+      // ki so pravilno izbrali zmagovalca — torej N / (št. pravilnih), zaokroženo na 2 decimalki.
+      var matchPoints = winners.map(function(w,i){
+        if(!(s.picks && s.picks[i]===w)) return 0;
+        var cc = correctCounts[i];
+        return cc>0 ? Math.round((N/cc)*100)/100 : 0;
+      });
       var bonusPoints = (gradingBonusPts[s.userId]||[]).map(function(p){ return typeof p==='number' ? p : 0; });
       var matchSum = matchPoints.reduce(function(a,b){ return a+b; },0);
       var bonusSum = bonusPoints.reduce(function(a,b){ return a+b; },0);
