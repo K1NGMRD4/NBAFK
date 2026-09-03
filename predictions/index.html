@@ -223,6 +223,10 @@
     border-right:1px solid var(--border);
   }
   table.board thead th.name-h{text-align:left;position:sticky;left:0;z-index:2;border-right:1px solid var(--border);}
+  table.board thead th.rank-h{width:34px;}
+  table.board thead th.sortable{cursor:pointer;user-select:none;}
+  table.board thead th.sortable:hover{color:var(--ink);}
+  table.board .sort-ind{font-size:10px;color:var(--accent);}
   table.board tr:nth-child(1) td.rank{color:var(--gold);}
   table.board td.pts{font-family:var(--font-mono);font-variant-numeric:tabular-nums;color:var(--ink-dim);font-size:13.5px;}
   table.board td.total{font-family:var(--font-mono);font-weight:700;font-size:15px;background:var(--accent-soft);color:var(--accent-soft-ink);}
@@ -576,6 +580,8 @@
   var leaderboardRows = null; // computed
   var leaderboardGradedRounds = null; // computed
   var boardViewMode = 'total'; // 'total' | 'perRound'
+  var boardSortKey = 'total'; // 'name' | 'total' | 'krogiTotal' | 'seasonlong' | 'xmas' | 'allstar' | 'pct' | 'round:<id>'
+  var boardSortDir = 'desc'; // 'asc' | 'desc'
   var historySelectedUser = null;
   try { historySelectedUser = localStorage.getItem('nbaLastUser') || null; } catch(e){}
   var currentTab = 'board';
@@ -803,24 +809,54 @@
     });
   }
 
+  // Vrednost izbranega stolpca za dano vrstico (uporablja se za sortiranje po kliku na glavo stolpca).
+  function boardSortValue(r, key){
+    if(key==='name') return (r.name||'').toLowerCase();
+    if(key.indexOf('round:')===0){
+      var v = r.perRound[key.slice(6)];
+      return v==null ? -1 : v; // brez oddane napovedi razvrstimo na dno
+    }
+    var v2 = r[key];
+    return typeof v2==='number' ? v2 : -1;
+  }
+  function sortIndicator(key){
+    if(boardSortKey!==key) return '';
+    return ' <span class="sort-ind">'+(boardSortDir==='asc'?'▲':'▼')+'</span>';
+  }
+
   function renderLeaderboardTable(){
     var graded = leaderboardGradedRounds || [];
     var matchupRounds = graded.filter(function(r){ return r.kind!=='special'; }).sort(function(a,b){ return (a.number||0)-(b.number||0); });
-    var rows = leaderboardRows || [];
+    var rows = (leaderboardRows || []).slice();
+    rows.sort(function(a,b){
+      var va = boardSortValue(a, boardSortKey), vb = boardSortValue(b, boardSortKey);
+      var cmp = va<vb ? -1 : (va>vb ? 1 : 0);
+      if(cmp===0) cmp = a.name.localeCompare(b.name);
+      return boardSortDir==='asc' ? cmp : -cmp;
+    });
     var pctCell = function(r){ return '<td class="pct">'+(r.pct>0 ? '<span class="pill">'+r.pct+'%</span>' : '<span class="muted">—</span>')+'</td>'; };
     var html = '<div class="row" style="margin-bottom:10px;">';
     html += '<button class="btn small'+(boardViewMode==='total'?' primary':'')+'" data-boardview="total">Skupno</button>';
     html += '<button class="btn small'+(boardViewMode==='perRound'?' primary':'')+'" data-boardview="perRound">Po krogih</button>';
     html += '</div>';
+    html += '<p class="small muted" style="margin:-4px 0 10px;">Klikni glavo stolpca za razvrščanje po njem.</p>';
     html += '<div class="table-scroll"><table class="board"><thead><tr>';
-    html += '<th class="name-h">Igralec</th>';
+    html += '<th class="rank-h">#</th>';
+    html += '<th class="name-h sortable" data-sortkey="name">Igralec'+sortIndicator('name')+'</th>';
     if(boardViewMode==='perRound'){
       matchupRounds.forEach(function(r){
-        html += '<th title="'+esc(r.label||'')+'">K'+r.number+'</th>';
+        var key = 'round:'+r.id;
+        html += '<th class="sortable" data-sortkey="'+esc(key)+'" title="'+esc(r.label||'')+'">K'+r.number+sortIndicator(key)+'</th>';
       });
-      html += '<th>SKUPAJ</th><th>FRP%</th>';
+      html += '<th class="sortable" data-sortkey="krogiTotal">SKUPAJ'+sortIndicator('krogiTotal')+'</th>';
+      html += '<th class="sortable" data-sortkey="pct">FRP%'+sortIndicator('pct')+'</th>';
     } else {
-      html += '<th>SeasonLong</th><th>XMAS</th><th>AllStar</th><th>KrogiSkupaj</th><th>Skupaj</th><th>FRP%</th>';
+      html += '<th class="sortable" data-sortkey="seasonlong">SeasonLong'+sortIndicator('seasonlong')+'</th>';
+      html += '<th class="sortable" data-sortkey="xmas">XMAS'+sortIndicator('xmas')+'</th>';
+      html += '<th class="sortable" data-sortkey="allstar">AllStar'+sortIndicator('allstar')+'</th>';
+      html += '<th class="sortable" data-sortkey="krogiTotal">KrogiSkupaj'+sortIndicator('krogiTotal')+'</th>';
+      html += '<th class="sortable" data-sortkey="total">Skupaj'+sortIndicator('total')+'</th>';
+      html += '<th class="sortable" data-sortkey="pct">FRP%'+sortIndicator('pct')+'</th>';
     }
     html += '</tr></thead><tbody>';
     rows.forEach(function(r, i){
@@ -845,7 +881,19 @@
     html += '</tbody></table></div>';
     $('#board-content').innerHTML = html;
     $all('[data-boardview]').forEach(function(btn){
-      btn.addEventListener('click', function(){ boardViewMode = btn.getAttribute('data-boardview'); renderLeaderboardTable(); });
+      btn.addEventListener('click', function(){
+        boardViewMode = btn.getAttribute('data-boardview');
+        boardSortKey = 'total'; boardSortDir = 'desc';
+        renderLeaderboardTable();
+      });
+    });
+    $all('th.sortable').forEach(function(th){
+      th.addEventListener('click', function(){
+        var key = th.getAttribute('data-sortkey');
+        if(boardSortKey===key) boardSortDir = (boardSortDir==='asc'?'desc':'asc');
+        else { boardSortKey = key; boardSortDir = (key==='name'?'asc':'desc'); }
+        renderLeaderboardTable();
+      });
     });
   }
 
