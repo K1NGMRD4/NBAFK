@@ -101,6 +101,15 @@ body {
     color: white;
 }
 
+/* Drugi ("dvojni") hamburger za sidenav (glej @media max-width:768px za
+   dejansko prikazovanje) - privzeto (na vseh širinah) skrit, da se po
+   nesreči ne prikaže tudi na desktopu. */
+.sidenav-toggle-checkbox,
+.sidenav-toggle,
+.sidenav-backdrop {
+    display: none;
+}
+
 /*OSNOVNE LASTNOSTI TABEL (TRENUTNA LESTVICA)*/
 table, th, td {
     border: 0.5px solid black;
@@ -217,6 +226,19 @@ nav ul li a:hover {
     overflow-x: auto;
 }
 
+@media screen and (min-width: 769px) {
+    /* Lestvica naj se ne razteza na višino najvišjega stolpca (main
+       content) - to je prej pustilo ogromen prazen prostor, kadar je
+       bila glavna vsebina krajša od iframa. Namesto tega lestvica
+       "lebdi" (sticky) ob strani, medtem ko scrollaš glavno vsebino. */
+    .col-3.lestvica {
+        align-self: flex-start;
+        position: -webkit-sticky;
+        position: sticky;
+        top: 12px;
+    }
+}
+
 
 /*STYLE ZA SLIKE V SUBPAGIH PREDICTIONS - MATCHUPS*/
 /*SLIKA ODDANIH PREDICTIONOV*/
@@ -322,6 +344,15 @@ p {
     height: auto;
 }
 
+/* Na širokih (laptop/4K) zaslonih je besedilo raztegnjeno na
+   1500-2200px eno vrstico, kar je zelo neprijetno za branje. Omeji
+   širino odstavkov na berljivo mero, ostane pa poravnano levo znotraj
+   stolpca (ne centrirano na sredino stolpca). */
+.col-7.main p,
+.col-7.main li {
+    max-width: 900px;
+}
+
 .iframelestvica,
 .iframelestvicapredictions { 
     overflow: auto; 
@@ -333,14 +364,14 @@ iframe.trenutnalestvicapredictions {
     border: none;
     margin: 0;
     width: 100%;
-    /* Prej fiksnih 200vh je na marsikateri strani obrezalo vsebino
-       (scrolling="no" na iframu pomeni, da se, če je vsebina višja od
-       tega, ne prikaže scrollbar - vsebina se preprosto obreže).
-       max() vzame VEČJO od dveh vrednosti, torej je zagotovljen dovolj
-       velik prostor tako na majhnih mobilnih zaslonih (kjer je "vh"
-       majhen) kot na velikih namiznih (kjer bi lahko vsebina presegla
-       200vh, npr. ob koncu sezone z bracketom + polno lestvico). */
-    height: max(250vh, 2600px);
+    /* Prejšnjih 2600px je bilo bistveno več, kot vsebina dejansko
+       potrebuje (izmerjeno ~1900-2200px na telefonu/laptopu/4K), zato je
+       pod krajšo glavno vsebino nastal ogromen prazen prostor. Ta
+       vrednost ima še vedno lep zalogaj rezerve za prihodnje sezone
+       (več krogov/playoff bracket), .col-3.lestvica pa je zdaj "sticky"
+       namesto da bi na silo raztegoval ostala dva stolpca nase (glej
+       zgoraj). */
+    height: max(100vh, 2300px);
     /* Varnostna mreža: če vsebina kljub temu kdaj preseže to višino,
        naj se prikaže scrollbar namesto tihega obreza. */
     overflow-y: auto;
@@ -449,6 +480,7 @@ table.h2hstatsbyseason {
     left: 100%; top: 0;
     background-color: #333;
     box-shadow: 0em 0.4em 0.8em rgba(0,0,0,0.2);
+    border-radius: 8px;
     min-width: 200px;
     z-index: 1;
     list-style: none;
@@ -503,6 +535,7 @@ table.h2hstatsbyseason {
     left: 0;
     background-color: #333;
     box-shadow: 0em 0.4em 0.8em rgba(0,0,0,0.2);
+    border-radius: 0 0 10px 10px;
     z-index: 1;
     list-style: none;
     padding: 0.35em 0;
@@ -529,8 +562,10 @@ table.h2hstatsbyseason {
     background-color: #333;
     padding: 0.5em;
     min-width: 220px;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0em 0.4em 0.8em rgba(0,0,0,0.2);
     z-index: 1;
-   
+
     /* Animacija - zapiranje ima zakasnitev, glej opombo pri .dropdown-content */
     opacity: 0;
     transform: translateY(5px);
@@ -656,10 +691,35 @@ li.dropdown:hover .dropdown-columns {
         transform: translateY(-50%);
     }
 
+    /* Predictions kot poudarjen "gumb", ne navaden meni link - zdaj je
+       daleč najpomembnejša stvar na strani. */
+    .nav-predictions .dropbtn {
+        background: linear-gradient(135deg, #1b7b23, #2fa83c);
+        border-radius: 999px;
+        padding: 0.5em 1.25em;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    }
+
+    .nav-predictions .dropbtn:hover {
+        background: linear-gradient(135deg, #2fa83c, #3fc94f);
+        color: white;
+    }
+
     /* Sidrna točka za #nav-menu spodaj - brez tega bi se "top: 50%" računal
        glede na celo stran namesto glede na navbar (od tod navpični zamik). */
     header nav {
         position: relative;
+        /* Na zelo širokih (4K+) zaslonih se je meni prej raztegnil čez
+           celo širino, zaradi česar je med sredinsko poravnanim menijem
+           (Ekipe/Sezona/Zgodovina/Arhiv) in skrajno desno Predictions
+           nastala ogromna prazna vrzel. Z max-width + centriranjem
+           navigacija ostane kompaktna in berljiva ne glede na širino
+           zaslona. */
+        max-width: 1500px;
+        margin: 0 auto;
+        width: 100%;
     }
 
     /* Ekipe/Sezona/Zgodovina/Arhiv - poravnano na sredino cele strani.
@@ -718,8 +778,11 @@ li.dropdown:hover .dropdown-columns {
     }
 
 
-    /* Navigacija */
-    nav ul {
+    /* Navigacija - namensko vezano na #nav-menu (ne splošni "nav ul"),
+       ker isti "nav" razred uporablja tudi footer za svoj seznam
+       povezav - s splošnim selektorjem bi se ta pravila po nesreči
+       uporabila tudi tam. */
+    #nav-menu {
         display: none;
         flex-direction: column;
         background-color: #333;
@@ -732,7 +795,7 @@ li.dropdown:hover .dropdown-columns {
         transition: max-height 0.3s ease-out;
     }
 
-    nav ul.show {
+    #nav-menu.show {
         display: flex;
         flex-direction: column;
         position: absolute;
@@ -744,7 +807,7 @@ li.dropdown:hover .dropdown-columns {
         z-index: 100;
     }
 
-    nav ul.show li.dropdown .dropdown-content {
+    #nav-menu.show li.dropdown .dropdown-content {
         position: relative; /* da ne bo več absolutno */
         top: 0;
         left: 0;
@@ -754,8 +817,32 @@ li.dropdown:hover .dropdown-columns {
         flex-direction: column;
     }
 
-    nav ul.show li.dropdown .dropdown-sub-content {
+    #nav-menu.show li.dropdown .dropdown-sub-content {
         margin-left: 10px; /* še globlje podmeni enako */
+    }
+
+    /* PREDICTIONS - v mobilnem meniju je zdaj daleč najpomembnejša
+       stvar na strani, zato gre na sam vrh seznama in dobi jasno
+       vizualno izstopajoč "gumb" videz namesto navadne vrstice. */
+    #nav-menu .nav-predictions {
+        order: -1;
+        border-bottom: 2px solid rgba(255,255,255,0.15);
+        margin-bottom: 0.25em;
+    }
+
+    #nav-menu .nav-predictions .dropbtn {
+        justify-content: center;
+        background: linear-gradient(135deg, #1b7b23, #2fa83c);
+        color: white;
+        font-weight: 700;
+        font-size: 1.05em;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 0.9em 1.25em;
+    }
+
+    #nav-menu .nav-predictions .dropbtn::before {
+        content: "🏀 ";
     }
 
 
@@ -776,17 +863,64 @@ li.dropdown:hover .dropdown-columns {
         margin: 0;
     }
 
-    footer {
-        display: none;
+    /* Footer je bil prej na mobilnem popolnoma skrit (izgubljen ESPN
+       link, donate gumb, spodnja navigacija). Zdaj ostane viden, le v
+       kompaktnejši, mobilno-prijazni postavitvi (glej pravila spodaj). */
+    footer nav.header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 1em 0;
+    }
+
+    footer nav.header ul {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.15em;
+        padding: 0;
+        margin: 0.5em 0;
+    }
+
+    footer nav.header ul li {
+        padding: 0.2em 0;
+    }
+
+    footer form.donatebtn {
+        margin: 0.5em auto 0;
+    }
+
+    footer form.donatebtn input {
+        height: 3.5em;
+        width: 7em;
     }
 
     .row {
         flex-direction: column;
     }
 
+    /* Stranski meni (sidenav) se je prej izrisal NAD glavno vsebino,
+       kar je delovalo, kot da stran začne s seznamom povezav namesto z
+       vsebino. Zdaj gre v stran - v izvlečni predalček, ki ga odpre
+       drugi ("☰ Vsebina strani") gumb v navbaru. Deluje na katerikoli
+       strani, tudi če je sidenav vsebina dodana kasneje prek fetch() -
+       glej #sidenav-toggle-checkbox spodaj. */
     .col-2.sidenav {
-        width: 100%;
-        margin-bottom: 10px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 82%;
+        max-width: 320px;
+        height: 100vh;
+        margin: 0;
+        overflow-y: auto;
+        z-index: 401;
+        box-shadow: 3px 0 20px rgba(0,0,0,0.45);
+        transform: translateX(-105%);
+        transition: transform 0.3s ease;
+    }
+
+    body:has(#sidenav-toggle-checkbox:checked) .col-2.sidenav {
+        transform: translateX(0);
     }
 
     .col-7.main {
@@ -813,8 +947,50 @@ li.dropdown:hover .dropdown-columns {
      iframe.trenutnalestvica,
     iframe.trenutnalestvicapredictions {
         width: 100%;
-        height: max(250vh, 2600px);
+        /* Višina se podeduje iz splošnega pravila zgoraj (height: max(100vh, 2300px)) -
+           prej je bila tu podvojena, večja vrednost (2600px), kar je
+           ustvarilo isti "prazen prostor" bug tudi na mobilnem. */
         overflow-y: auto;
+    }
+
+    /* Drugi ("dvojni") hamburger gumb - odpre stranski meni (sidenav)
+       trenutne strani v predalčku. Prikaže se samo, če stran sploh
+       vsebuje .col-2.sidenav (npr. predictions/index.html ga nima).
+       Privzeto skrit (glej pravilo čisto na vrhu datoteke) - tu se samo
+       na mobilnem, in samo če sidenav obstaja, spet prikaže. */
+    body:has(.col-2.sidenav) .sidenav-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35em;
+        position: absolute;
+        right: 0.75em;
+        top: 0.75em;
+        font-size: 0.85em;
+        font-weight: 600;
+        color: white;
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.3);
+        border-radius: 999px;
+        padding: 0.4em 0.85em;
+        cursor: pointer;
+        z-index: 200;
+        user-select: none;
+    }
+
+    body:has(#sidenav-toggle-checkbox:checked) .sidenav-toggle {
+        background: rgba(255,255,255,0.25);
+    }
+
+    body:has(#sidenav-toggle-checkbox:checked) .sidenav-backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 400;
+    }
+
+    body:has(#sidenav-toggle-checkbox:checked) {
+        overflow: hidden;
     }
 
         /* Mobile: force dropdown to flex column */
@@ -833,8 +1009,5 @@ li.dropdown:hover .dropdown-columns {
     .dropdown-columns a {
         padding: 0.75em 1em !important;
     }
-}
-
-
 }
 

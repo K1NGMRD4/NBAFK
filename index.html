@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             // Po nalaganju navigacije doda funkcionalnost hamburger meniju
             let hamburger = document.querySelector(".hamburger");
-            let navMenu = document.querySelector("nav ul");
+            let navMenu = document.getElementById("nav-menu");
 
             if (hamburger && navMenu) {
                 hamburger.addEventListener("click", function() {
@@ -158,10 +158,11 @@ document.addEventListener("DOMContentLoaded", function() {
             <h3><a href="https://fantasy.espn.com/basketball/league?leagueId=32010985" target="_blank"><img src="logos/espn.png" alt="logo" style="height:90px; width:180px;" /></a>  </h3>
             <ul>
                 <li><a href="index.html">Domov</a></li>
-                <li><a href="ekipe.html">Ekipe</a>
-                <li><a href="sezona2425.html">Sezona 2024/25</a></li>
+                <li><a href="ekipe.html">Ekipe</a></li>
+                <li><a href="sezona2627.html">Sezona 2026/27</a></li>
                 <li><a href="zgodovina.html">Zgodovina</a></li>
-                <li><a href="predictions.html">Predictions</a></li>
+                <li><a href="arhiv.html">Arhiv</a></li>
+                <li><a href="predictions/index.html">Predictions</a></li>
             </ul>
             <form class="donatebtn" action="https://www.paypal.com/donate" method="post" target="_blank">
                 <!-- Identify your business so that you can collect the payments. -->
@@ -177,20 +178,9 @@ document.addEventListener("DOMContentLoaded", function() {
         </nav>
         <p style="text-align:center; margin-top: 10px;"> <span style="font-weight: bold">&copy; NBA Fantasy Koroška &copy;</span><br /><br /> SEASON 9 <br /> <span style="font-size: 12px">since 2017</span></p>
     </footer>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    var hamburgerMenu = document.getElementById("hamburger-menu");
-    var navMenu = document.getElementById("nav-menu");
-
-    if (hamburgerMenu && navMenu) {
-        hamburgerMenu.addEventListener("click", function() {
-            navMenu.classList.toggle("show");
-        });
-    } else {
-        console.error("Elementi hamburger menija ali navigacijskega menija niso najdeni.");
-    }
-});
-</script>
+    <!-- Opomba: klik na hamburger je ožičen zgoraj (v <head> skriptu, ki
+         najprej fetcha nav.html) - tu je bil prej še en, podvojen skript
+         z istim namenom, ki je bil odveč. -->
 
 </body>
 </html>

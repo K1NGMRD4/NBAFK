@@ -10,7 +10,16 @@
         &#9776;
     </div>
     <a href="index.html" class="home-icon">🏠</a>
-    
+
+    <!-- Drugi ("dvojni") hamburger za mobilne naprave: odpre lokalni
+         stranski meni (sidenav) trenutne strani v predalčku. Deluje
+         brez JavaScripta (checkbox+CSS :has()), zato zanesljivo deluje
+         tudi, če je sidenav na stran dodan kasneje prek fetch(). Sam se
+         prikaže samo, kadar stran dejansko vsebuje .col-2.sidenav. -->
+    <input type="checkbox" id="sidenav-toggle-checkbox" class="sidenav-toggle-checkbox">
+    <label for="sidenav-toggle-checkbox" class="sidenav-toggle" id="sidenav-toggle">📄 Vsebina</label>
+    <label for="sidenav-toggle-checkbox" class="sidenav-backdrop" aria-hidden="true"></label>
+
     <ul id="nav-menu">
         <li class="dropdown">
             <a href="ekipe.html" class="dropbtn">Ekipe <span style="font-size: 15px">&#9660;</span></a>
