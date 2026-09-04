@@ -1277,12 +1277,12 @@
     else renderHistoryPerUserView();
   }
 
-  /* ---------- Zgodovina > Po krogih (pregled tekem s tortnimi diagrami, viden takoj ko se začne oddajanje) ---------- */
+  /* ---------- Zgodovina > Po krogih (pregled tekem s tortnimi diagrami, viden šele ko admin zaklene krog za oddajanje) ---------- */
   function renderHistoryPerRoundView(){
     var el = $('#historyViewBody'); if(!el) return;
-    var visible = rounds.filter(function(r){ return r.status==='open' || r.status==='locked' || r.status==='graded'; })
+    var visible = rounds.filter(function(r){ return r.status==='locked' || r.status==='graded'; })
       .sort(function(a,b){ return (b.number||0)-(a.number||0); });
-    if(visible.length===0){ el.innerHTML = emptyState('📋', 'Še ni odprtih krogov.'); return; }
+    if(visible.length===0){ el.innerHTML = emptyState('📋', 'Pregled po krogih bo viden, ko admin zaklene prvi krog za oddajanje.'); return; }
     el.innerHTML = emptyState('⏳', 'Nalagam …');
     var token = ++historyPerRoundToken;
     Promise.all(visible.map(function(r){
