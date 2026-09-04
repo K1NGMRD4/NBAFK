@@ -582,8 +582,7 @@
   ============================================================ */
   var db = null;
   var roster = [];       // [{id,name,nickname,order}]
-  var rounds = [];       // [{id,number,label,matchups,bonusQuestions,status,winners,lotteryAwarded,...}]
-  var percentMap = {};   // userId -> value
+  var rounds = [];       // [{id,number,label,matchups,bonusQuestions,status,winners,...}]
   var pctTableMap = {};  // userId -> {colKey:number} — ročna "% tabela", urejena v Admin > % Tabela
   var leaderboardRows = null; // computed
   var leaderboardGradedRounds = null; // computed
@@ -729,7 +728,6 @@
 
     subscribeRoster();
     subscribeRounds();
-    subscribePercent();
     subscribePctTable();
   }
 
@@ -763,7 +761,6 @@
       if(currentTab==='submit') renderSubmitTab();
       if(currentTab==='history') renderHistoryTab();
       if(currentTab==='admin' && adminSubTab==='roster') renderAdminRoster();
-      if(currentTab==='admin' && adminSubTab==='percent') renderAdminPercent();
     }, function(e){ console.warn('roster sub error', e); toast(dbErrorMsg(e), 7000); $('#board-content').innerHTML = emptyState('⚠️', dbErrorMsg(e)); });
   }
   function subscribeRounds(){
@@ -775,19 +772,11 @@
       if(currentTab==='admin' && adminSubTab==='rounds') renderAdminRounds();
     }, function(e){ console.warn('rounds sub error', e); toast(dbErrorMsg(e), 7000); });
   }
-  function subscribePercent(){
-    db.collection('percent').onSnapshot(function(snap){
-      percentMap = {};
-      snap.docs.forEach(function(d){ percentMap[d.id] = (d.data().value)||0; });
-      if(currentTab==='board') renderLeaderboard();
-      if(currentTab==='admin' && adminSubTab==='percent') renderAdminPercent();
-    }, function(e){ console.warn('percent sub error', e); toast(dbErrorMsg(e), 7000); });
-  }
   function subscribePctTable(){
     db.collection('pcttable').onSnapshot(function(snap){
       pctTableMap = {};
       snap.docs.forEach(function(d){ pctTableMap[d.id] = d.data()||{}; });
-      if(currentTab==='board' && boardViewMode==='pct') renderLeaderboardTable();
+      if(currentTab==='board') renderLeaderboard();
       if(currentTab==='admin' && adminSubTab==='pcttable') renderAdminPctTable();
     }, function(e){ console.warn('pcttable sub error', e); toast(dbErrorMsg(e), 7000); });
   }
@@ -834,7 +823,7 @@
       var rows = Object.keys(byUser).map(function(k){ return byUser[k]; });
       rows.forEach(function(r){
         r.total = r.krogiTotal + r.seasonlong + r.xmas + r.allstar;
-        r.pct = percentMap[r.id]||0;
+        r.pct = pctRowTotal(pctTableMap[r.id]);
       });
       rows.sort(function(a,b){ return b.total-a.total || b.pct-a.pct || a.name.localeCompare(b.name); });
       leaderboardRows = rows;
@@ -892,14 +881,14 @@
         html += '<th class="sortable" data-sortkey="'+esc(key)+'" title="'+esc(r.label||'')+'">K'+r.number+sortIndicator(key)+'</th>';
       });
       html += '<th class="sortable" data-sortkey="krogiTotal">SKUPAJ'+sortIndicator('krogiTotal')+'</th>';
-      html += '<th class="sortable" data-sortkey="pct">FRP%'+sortIndicator('pct')+'</th>';
+      html += '<th class="sortable" data-sortkey="pct" title="Iz Admin &gt; % Tabela">FRP%'+sortIndicator('pct')+'</th>';
     } else {
       html += '<th class="sortable" data-sortkey="seasonlong">SeasonLong'+sortIndicator('seasonlong')+'</th>';
       html += '<th class="sortable" data-sortkey="xmas">XMAS'+sortIndicator('xmas')+'</th>';
       html += '<th class="sortable" data-sortkey="allstar">AllStar'+sortIndicator('allstar')+'</th>';
       html += '<th class="sortable" data-sortkey="krogiTotal">KrogiSkupaj'+sortIndicator('krogiTotal')+'</th>';
       html += '<th class="sortable" data-sortkey="total">Skupaj'+sortIndicator('total')+'</th>';
-      html += '<th class="sortable" data-sortkey="pct">FRP%'+sortIndicator('pct')+'</th>';
+      html += '<th class="sortable" data-sortkey="pct" title="Iz Admin &gt; % Tabela">FRP%'+sortIndicator('pct')+'</th>';
     }
     html += '</tr></thead><tbody>';
     if(rows.length===0){
@@ -1365,7 +1354,7 @@
     var html = '<div class="section-head"><div><h2>Admin</h2><p>Krogi, igralci, ocenjevanje in % lestvica</p></div>';
     html += '<button class="btn ghost small" id="lockOutBtn">Zakleni admin</button></div>';
     html += '<div class="subnav">';
-    [['rounds','Krogi'],['roster','Igralci'],['grading','Ocenjevanje'],['percent','Loterija %'],['pcttable','% Tabela']].forEach(function(t){
+    [['rounds','Krogi'],['roster','Igralci'],['grading','Ocenjevanje'],['pcttable','% Tabela']].forEach(function(t){
       html += '<button data-sub="'+t[0]+'" class="'+(adminSubTab===t[0]?'active':'')+'">'+t[1]+'</button>';
     });
     html += '</div><div id="adminSubContent"></div>';
@@ -1380,7 +1369,6 @@
     if(adminSubTab==='rounds') renderAdminRounds();
     if(adminSubTab==='roster') renderAdminRoster();
     if(adminSubTab==='grading') renderAdminGrading();
-    if(adminSubTab==='percent') renderAdminPercent();
     if(adminSubTab==='pcttable') renderAdminPctTable();
   }
 
@@ -1802,7 +1790,7 @@
         addData = {
           kind: 'matchup', number: number, label: label, matchups: matchups, bonusQuestions: bonusQuestions,
           status: openNow ? 'open' : 'draft', winners: new Array(matchups.length).fill(null),
-          lotteryAwarded: false, createdAt: new Date().toISOString()
+          createdAt: new Date().toISOString()
         };
       }
     } else {
@@ -1955,7 +1943,7 @@
     }).then(function(){
       var roundReset = isSpecial
         ? { status: 'locked', gradedAt: null }
-        : { status: 'locked', winners: [], correctCounts: [], submissionCount: null, gradedAt: null, lotteryAwarded: false };
+        : { status: 'locked', winners: [], correctCounts: [], submissionCount: null, gradedAt: null };
       return db.doc('rounds/'+roundId).update(roundReset);
     });
   }
@@ -2176,19 +2164,6 @@
     Promise.all(writes).then(function(){
       return db.doc('rounds/'+round.id).update({ winners: winners, status: 'graded', gradedAt: new Date().toISOString(), correctCounts: correctCounts, submissionCount: N });
     }).then(function(){
-      if(!round.lotteryAwarded && scored.length){
-        var ranked = scored.slice().sort(function(a,b){ return b.roundTotal-a.roundTotal || (a.sub.submittedAt||'').localeCompare(b.sub.submittedAt||''); });
-        var top = ranked.slice(0, Math.min(2, ranked.length));
-        var pctWrites = top.map(function(sc){
-          var uidv = sc.sub.userId;
-          return db.doc('percent/'+uidv).get().then(function(snap){
-            var cur = snap.exists ? (snap.data().value||0) : 0;
-            return db.doc('percent/'+uidv).set({ value: cur+1 });
-          });
-        });
-        return Promise.all(pctWrites).then(function(){ return db.doc('rounds/'+round.id).update({lotteryAwarded:true}); });
-      }
-    }).then(function(){
       toast('Krog '+round.number+' ocenjen!');
       btn.disabled=false; btn.textContent='Izračunaj in shrani rezultate';
       var prev = '<table class="grade-table" style="margin-top:12px;"><thead><tr><th>Igralec</th><th>Tekme</th><th>Bonus</th><th>Skupaj</th></tr></thead><tbody>';
@@ -2204,29 +2179,6 @@
   }
 
   /* ---------- Admin > Percent ---------- */
-  function renderAdminPercent(){
-    var el = $('#adminSubContent'); if(!el) return;
-    var total = 0;
-    var html = '<div class="card"><h3>Loterija — % za 1. pick naslednje sezone</h3>';
-    html += '<p class="small muted">Zmagovalec in drugouvrščeni vsakega ocenjenega kroga samodejno dobita +1 %. Vrednosti lahko kadarkoli ročno popraviš.</p>';
-    var rows = roster.slice().sort(function(a,b){ return (percentMap[b.id]||0)-(percentMap[a.id]||0); });
-    rows.forEach(function(u){
-      var v = percentMap[u.id]||0; total += v;
-      html += '<div class="pct-row" data-id="'+u.id+'"><span>'+esc(u.nickname||u.name)+'</span>';
-      html += '<input type="number" step="0.5" class="pct-input" value="'+v+'">';
-      html += '<button class="btn small" data-pact="save">Shrani</button></div>';
-    });
-    html += '<p class="small muted" style="margin-top:10px;">Skupaj razdeljeno: '+total+' %</p></div>';
-    el.innerHTML = html;
-    $all('[data-pact="save"]').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        var row = btn.closest('.pct-row'); var id = row.getAttribute('data-id');
-        var val = parseFloat($('.pct-input', row).value) || 0;
-        db.doc('percent/'+id).set({value: val}).then(function(){ toast('Shranjeno.'); });
-      });
-    });
-  }
-
   /* ---------- Admin > % Tabela (ročna 30-stolpčna tabela, prikazana na Lestvica > %) ---------- */
   function renderAdminPctTable(){
     var el = $('#adminSubContent'); if(!el) return;
