@@ -50,6 +50,61 @@ div.slikePRD {
     color: #ff3b3b;
 }
 
+/* "SEASON BANNER" - modernejša zamenjava za prejšnji navaden h1 z dvema
+   surovima rdečima span ("since 2017 - NBA Fantasy Koroška - season 10"
+   ipd.). Uporabljen na vrhu glavne vsebine skoraj vseh strani po celi
+   spletni strani - pove čisto isto informacijo (obdobje/sezona, ime
+   lige, številka sezone), le v bolj urejeni, sodobni obliki: rdeč čip za
+   številko sezone namesto surovega rdečega besedila, pika kot tanka
+   ločnica med deli namesto golih pomišljajev. */
+.season-banner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55em;
+    margin: 0.4em 0 1em;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.season-tag {
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.3px;
+    color: #b81c1c;
+}
+
+.season-banner-league {
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: #222;
+}
+
+.season-dot {
+    color: #bbb;
+    font-size: 0.75rem;
+}
+
+.season-chip {
+    display: inline-block;
+    background: linear-gradient(135deg, #b81c1c, #e23b3b);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    padding: 0.3em 0.85em;
+    border-radius: 999px;
+    box-shadow: 0 2px 6px rgba(184,28,28,0.35);
+}
+
+@media (max-width: 500px) {
+    .season-banner {
+        gap: 0.4em;
+        font-size: 0.95em;
+    }
+}
+
 header {
     display: flex;              /* Flexbox layout */
     justify-content: space-between; /* Razporedi elemente enakomerno med seboj */
