@@ -28,20 +28,36 @@ figure.spodnja {
     width: 70%;
 }
 
+/* Prej so bile kartice ekip razdeljene v 4 ločene ".team-row" vrstice s
+   trdo kodiranimi skupinami (5+5+3+3), vsaka svoj lasten flex vsebnik.
+   Na vmesnih/mobilnih širinah (kjer je hkrati veljala tudi @media
+   max-width:900px pravilo "2 v vrsto") to ni delovalo logično: kartice
+   so imele fiksno "width:180px" (ki je v flexu prevladala nad
+   "flex-basis"), zato so vrstice pogosto pustile velik neuporabljen
+   prazen prostor ob straneh namesto da bi se kartice smiselno
+   prerazporedile glede na dejansko širino zaslona - "vrstice" so bile
+   umetne, ne dejansko odvisne od širine.
+
+   Zdaj je ".ekipeespnlinks" sam en samcat flex vsebnik za VSEH 16 kartic
+   (glej spodaj v HTML - vmesne ".team-row" ovojnice so odstranjene), ki
+   se prosto "pretaka" (wrap) - brskalnik sam izračuna, koliko kartic je
+   smiselno v vsako vrstico glede na dejansko razpoložljivo širino, na
+   VSAKI širini zaslona, brez togih "2 v vrsto"/"1 v vrsto" pravil. */
 .ekipeespnlinks {
-    text-align: center;  /* centrira vse vrstice */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1em;
     max-width: 100%;
     margin: 0 auto;
 }
 
-.team-row {
-    display: flex;
-    justify-content: center;  /* centrira kartice v vrstici */
-    margin-bottom: 0.5em;
-}
-
 .team-card {
-    width: 180px;
+    /* "flex-basis: 150px" - kartica želi biti vsaj 150px, a se lahko
+       skrči/razteza (grow/shrink) glede na prostor v vrstici; "max-width"
+       prepreči, da bi ob malo kartic v vrstici postale pretirano velike. */
+    flex: 1 1 150px;
+    max-width: 200px;
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.15);
@@ -67,24 +83,6 @@ figure.spodnja {
     font-size: 14px;
     font-weight: bold;
     line-height: 1.4;
-}
-
-/* Responsive */
-@media (max-width: 900px) {
-    .team-row {
-        flex-wrap: wrap;
-    }
-    .team-card {
-        flex: 1 1 40%; /* 2 v vrsto */
-        max-width: 180px;
-    }
-}
-
-@media (max-width: 500px) {
-    .team-card {
-        flex: 1 1 100%; /* 1 v vrsto */
-        max-width: 180px;
-    }
 }
 
     </style>
@@ -143,7 +141,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 <h1 style="text-align:center">Seznam sodelujočih ekip - sezona 2025/26</h1>
                 <div class="ekipeespnlinks" style="text-align:center;">
-                    <div class="team-row">
                         <figure class="team-card">
                             <a href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=7" target="_blank">
                                 <img src="logos/alpacas.png" alt="Caracas Alpacas" />
@@ -190,8 +187,6 @@ document.addEventListener("DOMContentLoaded", function() {
                             Carigrad Corgis
                         </figcaption>
                     </figure>
-                    </div>
-                    <div class="team-row">
                     <figure class="team-card">
                         <a href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=6" target="_blank">
                             <img src="logos/cows.png" alt="New Delhi Holy Cows" />
@@ -241,8 +236,6 @@ document.addEventListener("DOMContentLoaded", function() {
                             Gorske Koze
                         </figcaption>
                     </figure>
-                    </div>
-                    <div class="team-row">
                     <figure class="team-card">
                         <a href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=17" target="_blank">
                             <img src="logos/lions.jpg" alt="Green Hill Lions" />
@@ -272,8 +265,6 @@ document.addEventListener("DOMContentLoaded", function() {
                             Trbonje Sloths
                         </figcaption>
                     </figure>
-                    </div>
-                    <div class="team-row">
                         <figure class="team-card">
                             <a href="https://fantasy.espn.com/basketball/team?leagueId=32010985&teamId=16" target="_blank">
                                 <img src="logos/tarantulas.png" alt="Tokyo Tarantulas" />
@@ -303,8 +294,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 Veseli Vesoljčki
                             </figcaption>
                         </figure>
-                    </div>
-                </div>           
+                </div>
              <p>
                     Klik na logotip ekipe vas odpelje na pripadajočo ESPN stran ekipe. Za stran z intervjujem in osnovnimi podatki izberite stranski ali dropdown meni. <br>
              </p>  

@@ -99,6 +99,43 @@
             padding: 2px 6px;
             border-radius: 20px;
           }
+
+          /* Na mobilnem je bila "grid-template-columns: repeat(3, 1fr)"
+             (fiksno 3 stolpce, ne glede na širino zaslona) prava vsaka
+             kartica ozka le kakšnih 100-110px - imena igralcev (npr.
+             "Gašper Herkovič") so bila zato obrezana z "..." (glej
+             ".player-name" zgoraj: white-space:nowrap + text-overflow:
+             ellipsis), naslov sezone in medalje pa nagneteni skupaj.
+             Rezultat: na telefonu skoraj ni bilo razvidno, kaj piše. Tu
+             za ožje zaslone zmanjšamo število stolpcev in dovolimo
+             imenom, da se prelomijo v novo vrstico namesto da se
+             obrežejo. */
+          @media (max-width: 700px) {
+            .grid {
+              grid-template-columns: repeat(2, 1fr);
+            }
+          }
+
+          @media (max-width: 460px) {
+            .grid {
+              grid-template-columns: 1fr;
+            }
+          }
+
+          @media (max-width: 700px) {
+            .player-name {
+              white-space: normal;
+              overflow: visible;
+              text-overflow: unset;
+              font-size: 0.95rem;
+            }
+            .card {
+              padding: 0.85rem 0.9rem;
+            }
+            .entry {
+              align-items: flex-start;
+            }
+          }
         </style>
     <script>
     document.addEventListener("DOMContentLoaded", function() {
