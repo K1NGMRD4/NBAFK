@@ -491,7 +491,12 @@ table.h2hstatsbyseason {
     box-shadow: 0em 0.4em 0.8em rgba(0,0,0,0.2);
     border-radius: 8px;
     min-width: 200px;
-    z-index: 1;
+    /* Povečan z-index (prej 1) - na desktopu se je odprt dropdown včasih
+       izrisal ZA lepljivo (position:sticky) lestvico ob strani, ker je bila
+       ta pri "sticky" stanju v nekaterih brskalnikih vseeno postavljena nad
+       njim. Visok z-index na dropdownu in ustrezen na "header nav" spodaj
+       to zanesljivo prepreči. */
+    z-index: 500;
     list-style: none;
     padding: 0.35em 0;
 
@@ -541,7 +546,7 @@ table.h2hstatsbyseason {
     background-color: #333;
     box-shadow: 0em 0.4em 0.8em rgba(0,0,0,0.2);
     border-radius: 0 0 10px 10px;
-    z-index: 1;
+    z-index: 500; /* glej opombo pri .dropdown-sub-content zgoraj */
     list-style: none;
     padding: 0.35em 0;
     margin: 0;
@@ -569,7 +574,7 @@ table.h2hstatsbyseason {
     min-width: 220px;
     border-radius: 0 0 10px 10px;
     box-shadow: 0em 0.4em 0.8em rgba(0,0,0,0.2);
-    z-index: 1;
+    z-index: 500; /* glej opombo pri .dropdown-sub-content zgoraj */
 
     /* Animacija - zapiranje ima zakasnitev, glej opombo pri .dropdown-content */
     opacity: 0;
@@ -590,6 +595,18 @@ table.h2hstatsbyseason {
     font-weight: 500;
     white-space: nowrap;
     font-size: 0.85em;
+}
+
+/* ".dropdown-content a" zgoraj je selektor za VSE <a> potomce, kar po
+   nesreči ujame tudi naslov gnezdenega Arhiv podmenija ("Sezona 2025/26",
+   "Predictions 2025/26" ...) - ta <a> je namreč neposredno znotraj
+   .dropdown-content (ne šele znotraj .dropdown-sub-content, kjer so
+   dejanski krogi), zato je postal "display:flex" (blok) in se je puščica
+   zraven njim posledično prisilno prestavila v svojo lastno vrstico POD
+   napis. Tu mu vrnemo inline-block, da spet sedi v isti vrstici kot
+   .dd-arrow zraven njega. */
+li.dropdown-sub > a {
+    display: inline-block;
 }
 
 /* Hover efekti za linke */
@@ -656,7 +673,7 @@ li.dropdown:hover .dropdown-columns {
         background-color: #333;
         padding: 0.5em;
         min-width: 220px;
-        z-index: 1;
+        z-index: 500; /* glej opombo pri .dropdown-sub-content zgoraj */
     }
 
     .dropdown-columns.dropdown-columns--small {
@@ -686,6 +703,23 @@ li.dropdown:hover .dropdown-columns {
         background-color: rgba(255,255,255,0.05);
         border-radius: 4px;
         transition: background-color 0.2s, color 0.2s;
+    }
+
+    /* Puščice ob Ekipe/Sezona/Zgodovina/Arhiv (in ▸ pri gnezdenih Arhiv
+       postavkah) so bile prej del navadnega besedila v gumbu; zdaj so
+       samostojen .dd-arrow element (potreben na mobilnem za ločen
+       klik-cilj), ki pa je privzeto (glej vrh datoteke) skrit na VSEH
+       širinah. Tu ga za namizne zaslone spet prikažemo - le kot čisto
+       vizualni kazalnik (na desktopu se dropdown odpre na hover, ne na
+       klik), zato ni klikljiv. */
+    .dd-arrow {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7em;
+        margin-left: 0.4em;
+        pointer-events: none;
+        cursor: default;
     }
 
     /* PREDICTIONS - stalno viden poudarjen gumb, skrajno desno, ostale
@@ -730,6 +764,12 @@ li.dropdown:hover .dropdown-columns {
         max-width: 1500px;
         margin: 0 auto;
         width: 100%;
+        /* Vzpostavi lasten "stacking context" za cel navbar, da odprt
+           dropdown (visok z-index znotraj njega, glej .dropdown-content
+           ipd.) zanesljivo pristane NAD lepljivo (position:sticky) lestvico
+           ob strani in ostalo vsebino v <main>, ne glede na vrstni red v
+           HTML-ju. */
+        z-index: 300;
     }
 
     /* Ekipe/Sezona/Zgodovina/Arhiv - poravnano na sredino cele strani.
@@ -903,10 +943,22 @@ li.dropdown:hover .dropdown-columns {
         transition: none;
         pointer-events: auto;
         box-shadow: none;
+        /* Prej je bil odprt podmeni vizualno skoraj neločljiv od glavnega
+           menija (isto ozadje #333) - rahlo temnejše ozadje + zelena
+           ločevalna črta na levi takoj pokažeta, kaj je "vsebina znotraj",
+           ne glede na to, kako globoko je gnezdeno. */
+        background-color: #262626;
+        border-left: 3px solid rgba(47, 168, 60, 0.55);
+        border-radius: 0;
     }
 
     #nav-menu.show li.dropdown .dropdown-sub-content {
         margin-left: 10px; /* še globlje podmeni enako */
+        /* Drugi nivo gnezdenja (npr. Arhiv > Sezona 2025/26 > krogi) - še
+           eno stopnjo temnejše in z drugačno barvo črte, da je jasno
+           razvidna globina gnezdenja tudi vizualno, ne le z zamikom. */
+        background-color: #1b1b1b;
+        border-left: 3px solid rgba(255, 59, 59, 0.55);
     }
 
     /* Ločen tap-target: <a> vodi na podstran, .dd-arrow (klik) odpre/zapre
@@ -917,12 +969,19 @@ li.dropdown:hover .dropdown-columns {
     }
 
     #nav-menu.show .dd-arrow {
-        display: flex;
+        /* "inline-flex" (ne "flex"): znotraj li.dropdown (flex-row) ni
+           razlike, ker flex postavitev itak določi starš. Znotraj
+           li.dropdown-sub pa je starš "display:block" (glej definicijo
+           .dropdown-sub), zato bi navaden "flex" puščico kot blok element
+           potisnil v svojo vrstico POD napis namesto zraven njega - "Sezona
+           2025/26" in njena puščica sta bili zato navidez "zamaknjeni". */
+        display: inline-flex;
         align-items: center;
         justify-content: center;
         min-width: 2.75em;
         cursor: pointer;
         transition: transform 0.2s ease;
+        vertical-align: middle;
     }
 
     .dd-toggle-checkbox:checked ~ .dd-arrow:not(.dd-arrow-sub) {
