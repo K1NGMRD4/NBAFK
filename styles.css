@@ -849,6 +849,38 @@ li.dropdown:hover .dropdown-columns {
         overflow-y: auto;
     }
 
+    /* Znan flexbox "gotcha": flex elementi (tu: <li>) imajo privzeto
+       min-height:auto, kar pomeni, da se v flex-direction:column vsebniku
+       z overflow-y:auto NE morejo skrčiti pod svojo "naravno" vsebinsko
+       višino - ko je en <li> (npr. Ekipe, ko se odpre s 16 ekipami) nenadoma
+       MNOGO višji od ostalih, brskalnik napačno preračuna postavitev vseh
+       elementov v stolpcu in prav ta <li> potisne v NEGATIVNO pozicijo
+       (izgleda, kot da se je meni "razpotegnil" navzgor izven zaslona in je
+       vrh vsebine - tudi gumb, na katerega si ravnokar kliknil/-a -
+       nenadoma neviden). "min-height: 0" na vsakem <li> to popravi. */
+    #nav-menu.show > li {
+        min-height: 0;
+    }
+
+    /* "nav ul li{display:flex;flex-direction:row}" (glej zgoraj) je namenoma
+       ohranjen za li.dropdown (Ekipe/Sezona/Zgodovina/Arhiv), da gumb in
+       njegova puščica (.dd-arrow) ostaneta v isti vrstici. Težava: ko je
+       .dropdown-content/.dropdown-columns spodaj spremenjen v "position:
+       relative" (namesto absolute), postane TRETJI element v isti vrstici -
+       flexbox ga potisne DESNO od puščice namesto pod celotno vrstico, kar
+       ga porine čez rob zaslona (in izgleda, kot da se je podmeni "razpotegnil
+       čez pol zaslona navzven"). Rešitev: flex-wrap na li.dropdown +
+       "polna vrstica" (flex-basis: 100%) na podmeniju, da se prisili prelom
+       v novo vrstico POD gumbom/puščico. */
+    #nav-menu.show li.dropdown {
+        flex-wrap: wrap;
+    }
+
+    #nav-menu.show li.dropdown > .dropdown-content,
+    #nav-menu.show li.dropdown > .dropdown-columns {
+        flex: 0 0 calc(100% - 10px);
+    }
+
     /* Podmeniji (Ekipe/Sezona/Zgodovina/Arhiv in gnezdeni Arhiv pod-meniji)
        so na mobilnem privzeto skriti in se odprejo šele s klikom na
        puščico (.dd-arrow) - glej .dd-toggle-checkbox spodaj. Prej so bili
@@ -1035,9 +1067,15 @@ li.dropdown:hover .dropdown-columns {
         align-items: center;
         justify-content: center;
         gap: 0.2em;
+        /* position:fixed - lepljeno/prilepljeno na zaslon (ne na dokument),
+           zato ostane na isti navpični sredini zaslona VES ČAS scrollanja,
+           ne glede na to, kako dolga je stran (position:absolute bi se
+           namreč "sredinilo" glede na CELOTNO višino strani, kar bi na
+           dolgih straneh pomenilo, da je treba scrollati navzdol, da ga
+           sploh najdeš - natanko to je bila težava). */
         position: fixed;
         left: 0;
-        top: 45%;
+        top: 50%;
         transform: translateY(-50%);
         color: white;
         background: linear-gradient(135deg, #b81c1c, #e23b3b);
