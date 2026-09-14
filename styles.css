@@ -816,12 +816,35 @@ li.dropdown:hover .dropdown-columns {
         color: white;
     }
 
-        .home-icon {
-        display: block;
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
+    /* Hamburger / hišica / Predictions so zdaj vsi navadni ("in-flow")
+       elementi iste flex vrstice (glej "nav" pravilo na vrhu datoteke -
+       display:flex;flex-direction:row) namesto absolutno pozicioniranih
+       elementov glede na cel header. Prej je "position:absolute" hišico
+       centriralo glede na CEL header (torej sredino cele strani, ne
+       glede na hamburger/Predictions ob straneh) in je Predictions gumb
+       (ker ni bil upoštevan pri računanju višine headerja) po višini
+       "štrlel" ven iz navbara. "nav { width: 100% }" spodaj poskrbi, da
+       ta vrstica dejansko zavzame celo širino headerja (drugače bi se
+       zaradi "align-items:flex-start" na headerju skrčila na širino
+       svoje vsebine). */
+    nav {
+        width: 100%;
+    }
+
+    .home-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: static;
+        transform: none;
+        /* "flex: 1" hišico razširi čez ves prostor, ki ostane med
+           hamburgerjem (levo) in Predictions žogo (desno), "justify-
+           content:center" pa njeno vsebino (ikono) postavi na sredino
+           TEGA prostora - torej resnično na sredino med njima, ne na
+           sredino cele strani. */
+        flex: 1 1 auto;
         font-size: 30px;
+        line-height: 1;
         color: white;
         text-decoration: none;
         z-index: 200;
@@ -831,25 +854,31 @@ li.dropdown:hover .dropdown-columns {
        "☰ Vsebina strani" (desno zgoraj v headerju) - zdaj je to daleč
        najpomembnejša povezava, zato mora biti takoj vidna, ne skrita v
        hamburger meniju. Drugi ("dvojni") hamburger za vsebino strani se
-       je zato preselil na rob zaslona - glej .sidenav-toggle spodaj. */
+       je zato preselil na rob zaslona - glej .sidenav-toggle spodaj.
+       Napis "Predictions" na mobilnem odstranjen (glej .nav-predictions-
+       label spodaj) - premalo prostora, samo žoga je dovolj jasen znak,
+       gumb pa je zdaj okrogla ikona, poravnana skrajno desno. */
     .nav-predictions-btn {
-        position: absolute;
-        right: 0.75em;
-        top: 0.75em;
+        position: static;
+        flex-shrink: 0;
         display: inline-flex;
         align-items: center;
-        gap: 0.3em;
+        justify-content: center;
         text-decoration: none;
         color: white;
         background: linear-gradient(135deg, #1b7b23, #2fa83c);
-        border-radius: 999px;
-        padding: 0.5em 0.9em;
-        font-weight: 700;
-        font-size: 0.8em;
-        letter-spacing: 0.3px;
+        border-radius: 50%;
+        width: 2.5em;
+        height: 2.5em;
+        font-size: 1.05em;
         box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         z-index: 200;
-        white-space: nowrap;
+    }
+
+    /* Besedilo "Predictions" ostane v HTML-ju (za desktop, glej dropdown/
+       aria-label spodaj), na mobilnem pa je skrito - vidna je samo žoga. */
+    .nav-predictions-label {
+        display: none;
     }
 
 
