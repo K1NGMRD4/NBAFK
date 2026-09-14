@@ -853,6 +853,23 @@ li.dropdown:hover .dropdown-columns {
         color: #ff3b3b;
     }
 
+    /* ".dropbtn" ima privzeto (glej ".dropdown .dropbtn" na vrhu datoteke)
+       svoje lastno polno sivo ozadje (#333). Prej se je to ozadje v
+       prozorno spremenilo SAMO, če je bil hover neposredno na napisu
+       (".dropdown .dropbtn:hover" spodaj) - če je miška hoverala samo
+       puščico zraven (kjer zaradi "pointer-events:none" hover dejansko
+       sproži samo "li.dropdown:hover", ne pa tudi hover na sami
+       ".dropbtn"), je sivo ozadje gumba ostalo in je prekrilo svetlo
+       prosojno ozadje celotne vrstice (glej "li.dropdown:hover" zgoraj) -
+       zato je bil kvadratek videti neenoten, napis pa temnejši (na
+       sivi namesto prozorni podlagi). Tu ozadje gumba počistimo že ob
+       hoverju kjerkoli v CELI vrstici, ne le neposredno na napisu, da je
+       rezultat vedno enak ne glede na to, ali miška hoveramo napis ali
+       puščico. */
+    li.dropdown:hover > .dropbtn {
+        background-color: transparent;
+    }
+
     /* PREDICTIONS - stalno viden poudarjen gumb, skrajno desno, ostale
        kategorije ostanejo centrirane. Zdaj samostojen <a> neposredno v
        navbaru (ne več znotraj #nav-menu), da je viden ne glede na to,
