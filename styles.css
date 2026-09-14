@@ -664,6 +664,50 @@ li.dropdown:hover .dropdown-columns {
 /* DESKTOP ENHANCEMENTS >=769px */
 /* ------------------------- */
 @media screen and (min-width: 769px) {
+    /* Gnezdeni Arhiv podmeniji (npr. "Sezona 2025/26", "Predictions
+       2025/26" ...) - na desktopu je bil .dropdown-sub "display:block"
+       (potrebno za mobilni postavitev spodaj), zaradi česar sta napis
+       (inline-block, širok toliko kot besedilo) in puščica (inline-flex
+       takoj za njim) plavala v navadnem "inline" toku. Posledica: puščica
+       ni bila poravnana na en skupen desni rob, temveč se je premikala
+       levo/desno glede na dolžino napisa (kratka "Sezona 2025/26" vs.
+       dolga "Predictions 2025/26") - vrstice so bile videti neporavnane,
+       "razmetane". Tu vrstico spremenimo v flex (samo na desktopu), da
+       je napis vedno pri levem robu, puščica pa vedno pri istem desnem
+       robu, navpično lepo centrirana - ne glede na dolžino besedila.
+       ".dropdown-sub-content" (odprt podmeni desno) ostane position:
+       absolute, zato ga flex tu ne moti. */
+    .dropdown-sub {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5em;
+        padding-right: 0.75em;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+    }
+
+    /* Enako kot pri glavnih (Ekipe/Sezona/Zgodovina/Arhiv) postavkah -
+       hover kjerkoli v vrstici (na napisu ALI puščici) poudari OBOJE
+       skupaj, ne vsakega posebej. */
+    .dropdown-sub:hover {
+        background-color: rgba(255,255,255,0.05);
+    }
+
+    .dropdown-sub:hover > a,
+    .dropdown-sub:hover > .dd-arrow-sub {
+        color: #ff3b3b;
+    }
+
+    /* Prepreči podvojeno (manjše, neporavnano) ozadje samo na napisu -
+       zdaj ga prikazuje že celotna vrstica (".dropdown-sub:hover"
+       zgoraj). Namensko ozko ciljano ("> a", ne splošni ".dropdown-sub-
+       content a:hover") - navadni listi brez puščice (npr. "Krog 1")
+       obdržijo svoj običajen posamični hover. */
+    .dropdown-sub > a:hover {
+        background-color: transparent;
+    }
+
     /* 2-column dropdown */
     .dropdown-columns {
         display: grid;
