@@ -11,6 +11,14 @@
             margin: 0;
             padding: 0;
         }
+        /* Stran uporablja lasten "p { margin: 0 }", ki povozi splošni
+           "p { margin-left: 5%; margin-right: 5% }" iz styles.css - zato je
+           besedilo tu teklo skoraj do samega roba stranskega menija in
+           lestvice. Tu dodamo levi/desni odmik nazaj, a samo za to stran. */
+        .col-7.main {
+            padding-left: 1.5em;
+            padding-right: 1.5em;
+        }
     </style>
 
 </head>

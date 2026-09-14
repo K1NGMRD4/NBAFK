@@ -201,11 +201,14 @@ table.tabeleuvrstitev {
 
 /* EKIPE - LOGO EKIPE (glej ekipe/*.html) - prej trdo 350x350px preko
    inline "style", zato ni bilo mogoče prilagoditi velikosti za mobilne
-   zaslone niti dodati razmika do besedila/tabele zraven. */
+   zaslone niti dodati razmika do besedila/tabele zraven. Nekateri logotipi
+   niso kvadratni (npr. pokončni), zato "object-fit: cover" del slike (vrh
+   in dno) obreže, da zapolni kvadratni okvir - "contain" namesto tega
+   pomanjša celo sliko tako, da je vedno v celoti vidna znotraj okvira. */
 .team-logo {
     width: 220px;
     height: 220px;
-    object-fit: cover;
+    object-fit: contain;
     display: inline-block;
     vertical-align: top;
     border-radius: 10px;
