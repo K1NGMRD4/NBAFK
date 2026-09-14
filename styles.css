@@ -1247,10 +1247,23 @@ li.dropdown:hover .dropdown-columns {
            ne glede na to, kako dolga je stran (position:absolute bi se
            namreč "sredinilo" glede na CELOTNO višino strani, kar bi na
            dolgih straneh pomenilo, da je treba scrollati navzdol, da ga
-           sploh najdeš - natanko to je bila težava). */
+           sploh najdeš - natanko to je bila težava).
+
+           "top: 50%" se na mobilnih brskalnikih (predvsem Safari na
+           iPhonu) računa glede na t.i. "layout viewport" - torej glede
+           na višino zaslona BREZ naslovne vrstice/orodne vrstice, ki pa
+           se ob nalaganju strani še ne skrije. Rezultat: trak je videti
+           precej NIŽJE od dejanske vizualne sredine zaslona, ker je bil
+           izračunan glede na (višji) navidezni "layout" prostor. "dvh"
+           enota ("dynamic viewport height") je narejena natanko za ta
+           primer - vedno se računa glede na TRENUTNO dejansko vidno
+           višino zaslona, ne glede na to, ali je orodna vrstica brskalnika
+           prikazana ali skrita. Prva vrstica ("50%") ostane kot varnostna
+           rezerva za redke brskalnike, ki "dvh" še ne poznajo. */
         position: fixed;
         left: 0;
         top: 50%;
+        top: 50dvh;
         transform: translateY(-50%);
         color: white;
         background: linear-gradient(135deg, #b81c1c, #e23b3b);
