@@ -697,12 +697,16 @@ li.dropdown:hover .dropdown-columns {
         transition: background-color 0.2s, color 0.2s;
     }
 
-    /* Hover efekt za gumb dropdown */
+    /* Hover efekt za gumb dropdown - samo sprememba barve besedila.
+       Ozadje/zaobljenost sta zdaj na CELOTNEM li.dropdown (glej
+       "li.dropdown:hover" spodaj), da napis IN puščica hoverata SKUPAJ
+       kot ena sama enota namesto vsak zase (na mobilnem, kjer to pravilo
+       ni prepisano, ostane nespremenjeno - glej osnovno ".dropdown
+       .dropbtn:hover" na vrhu datoteke). */
     .dropdown .dropbtn:hover {
         color: #ff3b3b;
-        background-color: rgba(255,255,255,0.05);
-        border-radius: 4px;
-        transition: background-color 0.2s, color 0.2s;
+        background-color: transparent;
+        transition: color 0.2s;
     }
 
     /* Puščice ob Ekipe/Sezona/Zgodovina/Arhiv (in ▸ pri gnezdenih Arhiv
@@ -711,15 +715,43 @@ li.dropdown:hover .dropdown-columns {
        klik-cilj), ki pa je privzeto (glej vrh datoteke) skrit na VSEH
        širinah. Tu ga za namizne zaslone spet prikažemo - le kot čisto
        vizualni kazalnik (na desktopu se dropdown odpre na hover, ne na
-       klik), zato ni klikljiv. */
+       klik), zato ni klikljiv. Razmak do napisa (margin-left) je
+       zmanjšan, skupaj z manjšim "padding-right" na .dropbtn spodaj, da
+       napis in puščica delujeta kot ena strnjena enota. */
     .dd-arrow {
         display: inline-flex;
         align-items: center;
         justify-content: center;
         font-size: 0.7em;
-        margin-left: 0.4em;
+        margin-left: 0.15em;
         pointer-events: none;
         cursor: default;
+    }
+
+    /* Manjši desni padding samo za dropdown gumbe (Ekipe/Sezona/
+       Zgodovina/Arhiv) - splošni "nav a" ima večji padding (1.25em),
+       namenjen navadnim linkom brez puščice zraven; tu bi ustvaril
+       prevelik razmak do .dd-arrow. */
+    .dropdown > .dropbtn {
+        padding-right: 0.4em;
+    }
+
+    /* Napis in puščica kot ena hover enota: hover kjerkoli znotraj
+       li.dropdown (na napisu, puščici ali vmesnem majhnem prostoru med
+       njima) poudari OBA hkrati z istim ozadjem/barvo, namesto da bi
+       vsak reagiral neodvisno. */
+    li.dropdown {
+        border-radius: 4px;
+        transition: background-color 0.2s;
+    }
+
+    li.dropdown:hover {
+        background-color: rgba(255,255,255,0.05);
+    }
+
+    li.dropdown:hover > .dropbtn,
+    li.dropdown:hover > .dd-arrow {
+        color: #ff3b3b;
     }
 
     /* PREDICTIONS - stalno viden poudarjen gumb, skrajno desno, ostale
@@ -862,23 +894,34 @@ li.dropdown:hover .dropdown-columns {
         position: static;
         flex-shrink: 0;
         display: inline-flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
+        gap: 0.1em;
         text-decoration: none;
         color: white;
         background: linear-gradient(135deg, #1b7b23, #2fa83c);
-        border-radius: 50%;
-        width: 2.5em;
-        height: 2.5em;
+        border-radius: 14px;
+        padding: 0.35em 0.55em 0.3em;
         font-size: 1.05em;
+        line-height: 1;
         box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         z-index: 200;
     }
 
-    /* Besedilo "Predictions" ostane v HTML-ju (za desktop, glej dropdown/
-       aria-label spodaj), na mobilnem pa je skrito - vidna je samo žoga. */
+    /* Čisto majhen napis "predictions" pod žogo - belе črke, znotraj
+       zelene značke/navbara (ne pod njim). Prej je bilo besedilo na
+       mobilnem povsem skrito (samo žoga) - zdaj ostane vidno, le zelo
+       drobno, da žoga ostane glavni, dominanten element. */
     .nav-predictions-label {
-        display: none;
+        display: block;
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+        text-transform: lowercase;
+        color: white;
+        line-height: 1;
+        white-space: nowrap;
     }
 
 
