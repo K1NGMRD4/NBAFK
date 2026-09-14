@@ -881,6 +881,21 @@ li.dropdown:hover .dropdown-columns {
         color: #ff3b3b;
     }
 
+    /* ".dropbtn" ima svoje lastno polno sivo ozadje (#333, glej ".dropdown
+       .dropbtn" na vrhu datoteke). Puščica (.dd-arrow) ima "pointer-events:
+       none", zato se hover ob njej dejansko registrira na nadrejenem
+       "li.dropdown", NE na sosednjem ".dropbtn" - spodnje ".dropdown
+       .dropbtn:hover" pravilo (ki zahteva hover NEPOSREDNO na gumbu) se ob
+       hoverju čez puščico sploh ne sproži, zato sivo ozadje gumba ostane,
+       svetlejše ozadje cele vrstice (glej "li.dropdown:hover" zgoraj) pa
+       sveti samo okoli njega - videti je kot dva različna, neenotna
+       kvadratka. Tu ozadje gumba namesto tega počistimo na podlagi hoverja
+       NADREJENE vrstice, kar velja enako za hover na napisu in na puščici,
+       da je rezultat vedno identičen. */
+    li.dropdown:hover > .dropbtn {
+        background-color: transparent;
+    }
+
     /* PREDICTIONS - stalno viden poudarjen gumb, skrajno desno, ostale
        kategorije ostanejo centrirane. Zdaj samostojen <a> neposredno v
        navbaru (ne več znotraj #nav-menu), da je viden ne glede na to,
