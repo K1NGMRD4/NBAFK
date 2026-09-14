@@ -110,6 +110,15 @@ body {
     display: none;
 }
 
+/* Checkboxi in puščice za klik-odpiranje/zapiranje mobilnih podmenijev
+   (glej @media max-width:768px) - privzeto skriti, da se na desktopu (kjer
+   se dropdowni odpirajo na hover, glej li.dropdown:hover) ne prikažejo kot
+   dodaten "▼"/"▸" znak in prazen checkbox poleg vsakega gumba. */
+.dd-toggle-checkbox,
+.dd-arrow {
+    display: none;
+}
+
 /*OSNOVNE LASTNOSTI TABEL (TRENUTNA LESTVICA)*/
 table, th, td {
     border: 0.5px solid black;
@@ -503,14 +512,10 @@ table.h2hstatsbyseason {
     transition: opacity 0.15s ease, transform 0.15s ease, visibility 0s linear;
 }
 
-/* Puščica desno pri Arhivu, da je jasno da gre naprej v podmeni */
-.dropdown-sub > a::after {
-    content: "\25B8";
-    display: inline-block;
-    margin-left: 8px;
-    font-size: 0.8em;
-    opacity: 0.8;
-}
+/* Puščica desno pri Arhivu, da je jasno da gre naprej v podmeni - zdaj
+   je to samostojen .dd-arrow.dd-arrow-sub element (glej definicijo
+   nižje), ne več ::after na linku, ker mora biti na mobilnem klikljiv
+   ločeno od samega linka. */
 
 /* Osnovni dropdown gumb */
 .dropdown {
@@ -683,32 +688,37 @@ li.dropdown:hover .dropdown-columns {
         transition: background-color 0.2s, color 0.2s;
     }
 
-    /* PREDICTIONS - lociran skrajno desno, ostale kategorije ostanejo centrirane */
-    .nav-predictions {
+    /* PREDICTIONS - stalno viden poudarjen gumb, skrajno desno, ostale
+       kategorije ostanejo centrirane. Zdaj samostojen <a> neposredno v
+       navbaru (ne več znotraj #nav-menu), da je viden ne glede na to,
+       ali je hamburger meni odprt ali zaprt. */
+    .nav-predictions-btn {
         position: absolute;
         right: 2%;
         top: 50%;
         transform: translateY(-50%);
-    }
-
-    /* Predictions kot poudarjen "gumb", ne navaden meni link - zdaj je
-       daleč najpomembnejša stvar na strani. */
-    .nav-predictions .dropbtn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35em;
+        text-decoration: none;
+        color: white;
         background: linear-gradient(135deg, #1b7b23, #2fa83c);
         border-radius: 999px;
         padding: 0.5em 1.25em;
         font-weight: 700;
         letter-spacing: 0.5px;
+        font-family: "Segoe UI", "Inter", Arial, sans-serif;
         box-shadow: 0 2px 8px rgba(0,0,0,0.25);
     }
 
-    .nav-predictions .dropbtn:hover {
+    .nav-predictions-btn:hover {
         background: linear-gradient(135deg, #2fa83c, #3fc94f);
         color: white;
     }
 
-    /* Sidrna točka za #nav-menu spodaj - brez tega bi se "top: 50%" računal
-       glede na celo stran namesto glede na navbar (od tod navpični zamik). */
+    /* Sidrna točka za #nav-menu in .nav-predictions-btn spodaj - brez tega
+       bi se "top: 50%" računal glede na celo stran namesto glede na
+       navbar (od tod navpični zamik). */
     header nav {
         position: relative;
         /* Na zelo širokih (4K+) zaslonih se je meni prej raztegnil čez
@@ -725,12 +735,12 @@ li.dropdown:hover .dropdown-columns {
     /* Ekipe/Sezona/Zgodovina/Arhiv - poravnano na sredino cele strani.
        #nav-menu se razširi čez celotno širino headerja (od roba do roba),
        znotraj njega pa justify-content:center poskrbi za resnično sredinsko
-       poravnavo. Ker Predictions (.nav-predictions) računa svoj "right: 2%"
-       glede na ta isti, čez celo širino razpeti okvir #nav-menu, ostane
-       Predictions še naprej pravilno pripet skrajno desno. Ime lige (h3)
-       ostane levo, ker je zdaj edini element, ki v flex vrstici "nav"
-       dejansko zaseda prostor. top/transform sta zdaj glede na navbar
-       (header nav), ne glede na celo stran. */
+       poravnavo. Predictions (.nav-predictions-btn) je zdaj samostojen
+       element neposredno v "header nav" in svoj "right: 2%" računa glede
+       na isti okvir, zato ostane pravilno pripet skrajno desno. Ime lige
+       (h3) ostane levo, ker je zdaj edini element, ki v flex vrstici
+       "nav" dejansko zaseda prostor. top/transform sta zdaj glede na
+       navbar (header nav), ne glede na celo stran. */
     #nav-menu {
         position: absolute;
         left: 0;
@@ -777,6 +787,31 @@ li.dropdown:hover .dropdown-columns {
         z-index: 200;
     }
 
+    /* PREDICTIONS na mobilnem prevzame mesto, kjer je bil prej gumb
+       "☰ Vsebina strani" (desno zgoraj v headerju) - zdaj je to daleč
+       najpomembnejša povezava, zato mora biti takoj vidna, ne skrita v
+       hamburger meniju. Drugi ("dvojni") hamburger za vsebino strani se
+       je zato preselil na rob zaslona - glej .sidenav-toggle spodaj. */
+    .nav-predictions-btn {
+        position: absolute;
+        right: 0.75em;
+        top: 0.75em;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3em;
+        text-decoration: none;
+        color: white;
+        background: linear-gradient(135deg, #1b7b23, #2fa83c);
+        border-radius: 999px;
+        padding: 0.5em 0.9em;
+        font-weight: 700;
+        font-size: 0.8em;
+        letter-spacing: 0.3px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        z-index: 200;
+        white-space: nowrap;
+    }
+
 
     /* Navigacija - namensko vezano na #nav-menu (ne splošni "nav ul"),
        ker isti "nav" razred uporablja tudi footer za svoj seznam
@@ -799,50 +834,81 @@ li.dropdown:hover .dropdown-columns {
         display: flex;
         flex-direction: column;
         position: absolute;
-        top: 3.5em; /* višina headerja, prilagodi po potrebi */
+        /* Prej fiksnih "3.5em" se ni vedno ujemalo z dejansko višino
+           headerja (npr. ko smo dodali nove gumbe vanj), zato je nastal
+           bel prostor med headerjem in odprtim menijem. "top: 100%" se
+           vedno prilagodi dejanski višini headerja (glej header{position:
+           relative} spodaj), ne glede na to, kaj vse je v njem. */
+        top: 100%;
         left: 0;     /* povsem levo */
         width: 75%;  /* ali 100% če želiš, da pokrije cel zaslon */
         margin: 0;
         padding: 0;
         z-index: 100;
+        max-height: calc(100vh - 3.5em);
+        overflow-y: auto;
     }
 
-    #nav-menu.show li.dropdown .dropdown-content {
+    /* Podmeniji (Ekipe/Sezona/Zgodovina/Arhiv in gnezdeni Arhiv pod-meniji)
+       so na mobilnem privzeto skriti in se odprejo šele s klikom na
+       puščico (.dd-arrow) - glej .dd-toggle-checkbox spodaj. Prej so bili
+       VSI naenkrat odprti takoj, ko se je odprl glavni hamburger meni, kar
+       je ustvarjalo dolg, nepregleden seznam in je bilo lahko po nesreči
+       kliknjeno skozi na podstran (še posebej pri dvojno gnezdenem Arhivu). */
+    #nav-menu.show li.dropdown .dropdown-content,
+    #nav-menu.show li.dropdown .dropdown-columns,
+    #nav-menu.show li.dropdown .dropdown-sub-content {
         position: relative; /* da ne bo več absolutno */
         top: 0;
         left: 0;
         margin-left: 10px; /* zamik desno */
         min-width: calc(100% - 10px); /* da se ne razleze čez */
-        display: flex;
+        display: none;
         flex-direction: column;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        transition: none;
+        pointer-events: auto;
+        box-shadow: none;
     }
 
     #nav-menu.show li.dropdown .dropdown-sub-content {
         margin-left: 10px; /* še globlje podmeni enako */
     }
 
-    /* PREDICTIONS - v mobilnem meniju je zdaj daleč najpomembnejša
-       stvar na strani, zato gre na sam vrh seznama in dobi jasno
-       vizualno izstopajoč "gumb" videz namesto navadne vrstice. */
-    #nav-menu .nav-predictions {
-        order: -1;
-        border-bottom: 2px solid rgba(255,255,255,0.15);
-        margin-bottom: 0.25em;
+    /* Ločen tap-target: <a> vodi na podstran, .dd-arrow (klik) odpre/zapre
+       podmeni - da klik na besedilo ne odpre po nesreči podmenija in
+       obratno (glej dd-toggle-checkbox spodaj za dejansko preklapljanje). */
+    .dd-toggle-checkbox {
+        display: none;
     }
 
-    #nav-menu .nav-predictions .dropbtn {
+    #nav-menu.show .dd-arrow {
+        display: flex;
+        align-items: center;
         justify-content: center;
-        background: linear-gradient(135deg, #1b7b23, #2fa83c);
-        color: white;
-        font-weight: 700;
-        font-size: 1.05em;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        padding: 0.9em 1.25em;
+        min-width: 2.75em;
+        cursor: pointer;
+        transition: transform 0.2s ease;
     }
 
-    #nav-menu .nav-predictions .dropbtn::before {
-        content: "🏀 ";
+    .dd-toggle-checkbox:checked ~ .dd-arrow:not(.dd-arrow-sub) {
+        transform: rotate(180deg);
+    }
+
+    .dd-arrow.dd-arrow-sub {
+        min-width: 2.25em;
+    }
+
+    .dd-toggle-checkbox:checked ~ .dd-arrow.dd-arrow-sub {
+        transform: rotate(90deg);
+    }
+
+    .dd-toggle-checkbox:checked ~ .dropdown-content,
+    .dd-toggle-checkbox:checked ~ .dropdown-columns,
+    .dd-toggle-checkbox:checked ~ .dropdown-sub-content {
+        display: flex !important;
     }
 
 
@@ -957,28 +1023,45 @@ li.dropdown:hover .dropdown-columns {
        trenutne strani v predalčku. Prikaže se samo, če stran sploh
        vsebuje .col-2.sidenav (npr. predictions/index.html ga nima).
        Privzeto skrit (glej pravilo čisto na vrhu datoteke) - tu se samo
-       na mobilnem, in samo če sidenav obstaja, spet prikaže. */
+       na mobilnem, in samo če sidenav obstaja, spet prikaže.
+       Namenoma NE piše "Vsebina" - to mesto v headerju je zdaj
+       namenjeno gumbu Predictions. Namesto tega je majhen trak, ki
+       "štrli" iz levega roba zaslona, v drugačni (rdečkasti) barvi kot
+       zeleni Predictions in temni navbar, s puščico, da je jasno, da gre
+       za ločen, dodaten ("drugi") meni z več vsebine. */
     body:has(.col-2.sidenav) .sidenav-toggle {
-        display: inline-flex;
+        display: flex;
+        flex-direction: column;
         align-items: center;
-        gap: 0.35em;
-        position: absolute;
-        right: 0.75em;
-        top: 0.75em;
-        font-size: 0.85em;
-        font-weight: 600;
+        justify-content: center;
+        gap: 0.2em;
+        position: fixed;
+        left: 0;
+        top: 45%;
+        transform: translateY(-50%);
         color: white;
-        background: rgba(255,255,255,0.1);
-        border: 1px solid rgba(255,255,255,0.3);
-        border-radius: 999px;
-        padding: 0.4em 0.85em;
+        background: linear-gradient(135deg, #b81c1c, #e23b3b);
+        border-radius: 0 10px 10px 0;
+        padding: 0.6em 0.4em;
+        line-height: 1;
         cursor: pointer;
-        z-index: 200;
+        z-index: 150;
         user-select: none;
+        box-shadow: 2px 2px 10px rgba(0,0,0,0.4);
     }
 
-    body:has(#sidenav-toggle-checkbox:checked) .sidenav-toggle {
-        background: rgba(255,255,255,0.25);
+    .sidenav-toggle-bars {
+        font-size: 1.2em;
+    }
+
+    .sidenav-toggle-arrow {
+        font-size: 0.75em;
+        transition: transform 0.3s ease;
+    }
+
+    /* Ko je predalček odprt, puščica pokaže nazaj (levo) - "zapri". */
+    body:has(#sidenav-toggle-checkbox:checked) .sidenav-toggle-arrow {
+        transform: rotate(180deg);
     }
 
     body:has(#sidenav-toggle-checkbox:checked) .sidenav-backdrop {
@@ -993,15 +1076,21 @@ li.dropdown:hover .dropdown-columns {
         overflow: hidden;
     }
 
-        /* Mobile: force dropdown to flex column */
+        /* Mobile: ko je .dropdown-columns prikazan (glej
+           .dd-toggle-checkbox:checked ~ .dropdown-columns zgoraj), naj bo
+           enostolpčen kot ostali podmeniji - ne 2-stolpčna namizna mreža.
+           Prej je bilo tu "display:flex !important" BREZ pogoja na
+           checkbox, kar je prepisalo zgornji "display:none" privzeti
+           skrit stan (isti specifičnost + !important, ta pravila pa v
+           datoteki pridejo za njim) - zato se Ekipe/Sezona/Zgodovina
+           podmeniji sploh niso dali zapreti. Zdaj samo postavitev, brez
+           prisilnega "display". */
     .dropdown-columns {
-        display: flex !important;
         flex-direction: column !important;
         grid-template-rows: none !important;
         grid-auto-flow: unset !important;
         gap: 0 !important;
-        left: 75px;
-        min-width: 100% !important;
+        min-width: calc(100% - 10px) !important;
         padding: 0.5em 0 !important;
     }
     
