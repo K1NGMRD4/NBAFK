@@ -183,8 +183,33 @@ table, th, td {
     padding: 0.25em;
 }
 /*TABELE UVRSTITEV - ZNOTRAJ STRANI POSAMEZNE EKIPE*/
+/* Prej je imela ta tabela "float: right" kar neposredno v HTML (inline
+   style), popolnoma brez razmika do robov - na desktopu se je zato
+   prilepila naravnost na notranji rob rdeče obrobljenega naslova, na
+   mobilnem pa (kjer je float ostal aktiven kljub enostolpčni postavitvi)
+   naravnost na sam rob zaslona, poleg tega pa je silila besedilo, da se
+   je stiskalo tesno okoli nje. Te lastnosti (float/display/
+   vertical-align) so zdaj tu namesto v HTML, da jih lahko za mobilne
+   zaslone spodaj preglasimo. */
 table.tabeleuvrstitev {
+    display: inline-block;
+    vertical-align: top;
+    float: right;
+    margin: 0 0 1.5em 1.5em;
     padding: 0;
+}
+
+/* EKIPE - LOGO EKIPE (glej ekipe/*.html) - prej trdo 350x350px preko
+   inline "style", zato ni bilo mogoče prilagoditi velikosti za mobilne
+   zaslone niti dodati razmika do besedila/tabele zraven. */
+.team-logo {
+    width: 220px;
+    height: 220px;
+    object-fit: cover;
+    display: inline-block;
+    vertical-align: top;
+    border-radius: 10px;
+    margin: 0 1.5em 1em 0;
 }
 
 table.tockovanjepredictions {
@@ -853,23 +878,6 @@ li.dropdown:hover .dropdown-columns {
         color: #ff3b3b;
     }
 
-    /* ".dropbtn" ima privzeto (glej ".dropdown .dropbtn" na vrhu datoteke)
-       svoje lastno polno sivo ozadje (#333). Prej se je to ozadje v
-       prozorno spremenilo SAMO, če je bil hover neposredno na napisu
-       (".dropdown .dropbtn:hover" spodaj) - če je miška hoverala samo
-       puščico zraven (kjer zaradi "pointer-events:none" hover dejansko
-       sproži samo "li.dropdown:hover", ne pa tudi hover na sami
-       ".dropbtn"), je sivo ozadje gumba ostalo in je prekrilo svetlo
-       prosojno ozadje celotne vrstice (glej "li.dropdown:hover" zgoraj) -
-       zato je bil kvadratek videti neenoten, napis pa temnejši (na
-       sivi namesto prozorni podlagi). Tu ozadje gumba počistimo že ob
-       hoverju kjerkoli v CELI vrstici, ne le neposredno na napisu, da je
-       rezultat vedno enak ne glede na to, ali miška hoveramo napis ali
-       puščico. */
-    li.dropdown:hover > .dropbtn {
-        background-color: transparent;
-    }
-
     /* PREDICTIONS - stalno viden poudarjen gumb, skrajno desno, ostale
        kategorije ostanejo centrirane. Zdaj samostojen <a> neposredno v
        navbaru (ne več znotraj #nav-menu), da je viden ne glede na to,
@@ -955,6 +963,24 @@ li.dropdown:hover .dropdown-columns {
 
 @media screen and (max-width: 768px) {
 
+    /* EKIPE - logo in tabela uvrstitev (glej definiciji zgoraj) - na
+       mobilnem naj se logo prikaže manjši in na sredini nad besedilom,
+       tabela pa naj izgubi "float", da se lepo, na sredini, z lastnim
+       razmikom od besedila nad in pod njo, prikaže kot svoj blok -
+       namesto da bi se prilepila na rob zaslona ali stiskala besedilo
+       okoli sebe. */
+    .team-logo {
+        display: block;
+        width: 160px;
+        height: 160px;
+        margin: 0 auto 1em;
+    }
+
+    table.tabeleuvrstitev {
+        float: none;
+        display: table;
+        margin: 1em auto 1.5em;
+    }
 
     /* Hamburger meni */
     .hamburger {
