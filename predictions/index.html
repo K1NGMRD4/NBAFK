@@ -620,16 +620,18 @@
     {key:'gajbarja', label:'Gajbarja'},
     {key:'pin2', label:'P-IN'}
   ];
+  // "Krogi tabela" uporablja iste stolpce kot % tabela (PCT_COLUMNS), RAZEN "START" -
+  // ta stolpec je bil na uporabnikovo željo odstranjen samo iz "Krogi Tabela" (Lestvica >
+  // Po krogih + Admin > Krogi Tabela), % Tabela pa ga obdrži.
+  var KROGI_COLUMNS = PCT_COLUMNS.filter(function(c){ return c.key!=='start'; });
   function pctRowTotal(data){
     var sum = 0;
     PCT_COLUMNS.forEach(function(c){ var v = data && data[c.key]; if(typeof v==='number') sum += v; });
     return sum;
   }
-  // "Krogi tabela" uporablja iste stolpce (PCT_COLUMNS) kot % tabela, samo da vrednosti
-  // pomenijo pridobljene TOČKE namesto %.
   function krogiRowTotal(data){
     var sum = 0;
-    PCT_COLUMNS.forEach(function(c){ var v = data && data[c.key]; if(typeof v==='number') sum += v; });
+    KROGI_COLUMNS.forEach(function(c){ var v = data && data[c.key]; if(typeof v==='number') sum += v; });
     return sum;
   }
   var historySelectedUser = null;
@@ -1013,16 +1015,16 @@
       if(cmp===0) cmp = a.name.localeCompare(b.name);
       return krogiSortDir==='asc' ? cmp : -cmp;
     });
-    var colTotals = {}; PCT_COLUMNS.forEach(function(c){ colTotals[c.key]=0; });
+    var colTotals = {}; KROGI_COLUMNS.forEach(function(c){ colTotals[c.key]=0; });
     var grandTotal = 0;
     rows.forEach(function(r){
       grandTotal += r.total;
-      PCT_COLUMNS.forEach(function(c){ var v=r.data[c.key]; if(typeof v==='number') colTotals[c.key]+=v; });
+      KROGI_COLUMNS.forEach(function(c){ var v=r.data[c.key]; if(typeof v==='number') colTotals[c.key]+=v; });
     });
     var html = '<div class="table-scroll"><table class="board"><thead><tr>';
     html += '<th class="name-h sortable" data-krogisort="name">Igralec'+krogiSortIndicator('name')+'</th>';
     html += '<th class="sortable" data-krogisort="total">SKUPAJ'+krogiSortIndicator('total')+'</th>';
-    PCT_COLUMNS.forEach(function(c){
+    KROGI_COLUMNS.forEach(function(c){
       html += '<th class="sortable" data-krogisort="'+esc(c.key)+'">'+esc(c.label)+krogiSortIndicator(c.key)+'</th>';
     });
     html += '</tr></thead><tbody>';
@@ -1031,7 +1033,7 @@
     }
     rows.forEach(function(r){
       html += '<tr><td class="name">'+esc(r.name)+'</td><td class="total">'+r.total+'</td>';
-      PCT_COLUMNS.forEach(function(c){
+      KROGI_COLUMNS.forEach(function(c){
         var v = r.data[c.key];
         html += '<td class="pts">'+(typeof v==='number' ? v : '<span class="muted">-</span>')+'</td>';
       });
@@ -1039,7 +1041,7 @@
     });
     if(rows.length){
       html += '<tr class="pct-totals-row"><td class="name">SKUPAJ</td><td class="total">'+grandTotal+'</td>';
-      PCT_COLUMNS.forEach(function(c){ html += '<td class="pts">'+colTotals[c.key]+'</td>'; });
+      KROGI_COLUMNS.forEach(function(c){ html += '<td class="pts">'+colTotals[c.key]+'</td>'; });
       html += '</tr>';
     }
     html += '</tbody></table></div>';
@@ -2425,28 +2427,28 @@
       var data = krogiTableMap[u.id] || {};
       return { id:u.id, name:(u.nickname||u.name), data:data, total: krogiRowTotal(data) };
     });
-    var colTotals = {}; PCT_COLUMNS.forEach(function(c){ colTotals[c.key]=0; });
+    var colTotals = {}; KROGI_COLUMNS.forEach(function(c){ colTotals[c.key]=0; });
     var grandTotal = 0;
     rows.forEach(function(r){
       grandTotal += r.total;
-      PCT_COLUMNS.forEach(function(c){ var v=r.data[c.key]; if(typeof v==='number') colTotals[c.key]+=v; });
+      KROGI_COLUMNS.forEach(function(c){ var v=r.data[c.key]; if(typeof v==='number') colTotals[c.key]+=v; });
     });
     var html = '<div class="card"><h3>Krogi Tabela</h3>';
-    html += '<p class="small muted">Vrednosti se shranijo samodejno, ko zapustiš polje (ali pritisneš Enter). Prazno polje pomeni "-" (ni podatka). Isti stolpci kot % Tabela, a tu vnašaš pridobljene TOČKE. Prikaz je viden na zavihku Lestvica &gt; Po krogih.</p>';
+    html += '<p class="small muted">Vrednosti se shranijo samodejno, ko zapustiš polje (ali pritisneš Enter). Prazno polje pomeni "-" (ni podatka). Isti stolpci kot % Tabela (razen START), a tu vnašaš pridobljene TOČKE. Prikaz je viden na zavihku Lestvica &gt; Po krogih.</p>';
     html += '<div class="table-scroll"><table class="board"><thead><tr>';
     html += '<th class="name-h">Igralec</th><th>SKUPAJ</th>';
-    PCT_COLUMNS.forEach(function(c){ html += '<th>'+esc(c.label)+'</th>'; });
+    KROGI_COLUMNS.forEach(function(c){ html += '<th>'+esc(c.label)+'</th>'; });
     html += '</tr></thead><tbody>';
     rows.forEach(function(r){
       html += '<tr data-uid="'+r.id+'"><td class="name">'+esc(r.name)+'</td><td class="total">'+r.total+'</td>';
-      PCT_COLUMNS.forEach(function(c){
+      KROGI_COLUMNS.forEach(function(c){
         var v = r.data[c.key];
         html += '<td class="pts"><input type="number" step="0.5" class="krogi-cell" data-uid="'+r.id+'" data-col="'+esc(c.key)+'" value="'+(typeof v==='number'?v:'')+'"></td>';
       });
       html += '</tr>';
     });
     html += '<tr class="pct-totals-row"><td class="name">SKUPAJ</td><td class="total">'+grandTotal+'</td>';
-    PCT_COLUMNS.forEach(function(c){ html += '<td class="pts">'+colTotals[c.key]+'</td>'; });
+    KROGI_COLUMNS.forEach(function(c){ html += '<td class="pts">'+colTotals[c.key]+'</td>'; });
     html += '</tr>';
     html += '</tbody></table></div></div>';
     el.innerHTML = html;
