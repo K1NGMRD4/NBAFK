@@ -896,15 +896,19 @@ li.dropdown:hover .dropdown-columns {
         background-color: transparent;
     }
 
-    /* PREDICTIONS - stalno viden poudarjen gumb, skrajno desno, ostale
-       kategorije ostanejo centrirane. Zdaj samostojen <a> neposredno v
-       navbaru (ne več znotraj #nav-menu), da je viden ne glede na to,
-       ali je hamburger meni odprt ali zaprt. */
+    /* PREDICTIONS - stalno viden poudarjen gumb, ostale kategorije ostanejo
+       centrirane. Zdaj samostojen <a> neposredno v navbaru (ne več znotraj
+       #nav-menu), da je viden ne glede na to, ali je hamburger meni odprt
+       ali zaprt. Prej "right: 2%" (pripeto na rob navbara) - ker pa
+       ".col-3.lestvica" (25%) ni enako široka kot ".col-2.sidenav" (16.66%),
+       rob navbara ni isto kot sredina lestvice spodaj. Namesto tega gumb
+       centriramo na 87.5% širine vrstice - točno na sredino lestvice
+       (lestvica sega od 75% do 100% širine vrstice, sredina = 75+12.5=87.5%). */
     .nav-predictions-btn {
         position: absolute;
-        right: 2%;
+        left: 87.5%;
         top: 50%;
-        transform: translateY(-50%);
+        transform: translate(-50%, -50%);
         display: inline-flex;
         align-items: center;
         gap: 0.35em;
@@ -924,11 +928,17 @@ li.dropdown:hover .dropdown-columns {
         color: white;
     }
 
-    /* Sidrna točka za #nav-menu in .nav-predictions-btn spodaj - brez tega
-       bi se "top: 50%" računal glede na celo stran namesto glede na
-       navbar (od tod navpični zamik). */
+    /* Sidrna točka za h3 (ime lige), #nav-menu in .nav-predictions-btn spodaj -
+       brez tega bi se "top: 50%"/"left: X%" računala glede na celo stran
+       namesto glede na navbar (od tod navpični zamik). "min-height" je tu
+       zato, ker so ZDAJ VSI TRIJE (h3, #nav-menu, .nav-predictions-btn)
+       "position: absolute" - brez enega "navadnega" elementa v pretoku bi
+       navbar sicer izgubil višino (skrčil bi se samo na padding od
+       "header"). Vrednost ustreza dejanski višini imena lige (h3), da se
+       navbar vizualno ne spremeni. */
     header nav {
         position: relative;
+        min-height: 89px;
         /* Na zelo širokih (4K+) zaslonih se je meni prej raztegnil čez
            celo širino, zaradi česar je med sredinsko poravnanim menijem
            (Ekipe/Sezona/Zgodovina/Arhiv) in skrajno desno Predictions
@@ -946,15 +956,27 @@ li.dropdown:hover .dropdown-columns {
         z-index: 300;
     }
 
+    /* Ime lige (h3/.brand-logo) - namesto navadnega mesta v flex vrstici
+       (kjer je bilo poravnano samo na levi rob navbara, ne glede na
+       ".col-2.sidenav" spodaj) je zdaj tudi to "position: absolute" in
+       centrirano na 8.33% širine vrstice - točno na sredino sidenava
+       (sidenav sega od 0% do 16.66% širine vrstice, sredina = 16.66/2). */
+    header nav.header h3 {
+        position: absolute;
+        left: 8.33%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        margin-left: 0;
+    }
+
     /* Ekipe/Sezona/Zgodovina/Arhiv - poravnano na sredino cele strani.
        #nav-menu se razširi čez celotno širino headerja (od roba do roba),
        znotraj njega pa justify-content:center poskrbi za resnično sredinsko
-       poravnavo. Predictions (.nav-predictions-btn) je zdaj samostojen
-       element neposredno v "header nav" in svoj "right: 2%" računa glede
-       na isti okvir, zato ostane pravilno pripet skrajno desno. Ime lige
-       (h3) ostane levo, ker je zdaj edini element, ki v flex vrstici
-       "nav" dejansko zaseda prostor. top/transform sta zdaj glede na
-       navbar (header nav), ne glede na celo stran. */
+       poravnavo, "transform: translate(-4.175%, -50%)" pa to sredino
+       premakne na dejansko sredino glavne vsebine (glej opombo pri
+       ".col-2"/".col-3" zgoraj - stolpca sta namenoma neenako široka).
+       top/transform sta zdaj glede na navbar (header nav), ne glede na
+       celo stran. */
     #nav-menu {
         position: absolute;
         left: 0;

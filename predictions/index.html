@@ -598,6 +598,9 @@
   var boardSortDir = 'desc'; // 'asc' | 'desc'
   var pctSortKey = 'total'; // 'name' | 'total' | <PCT_COLUMNS key>
   var pctSortDir = 'desc'; // 'asc' | 'desc'
+  var krogiTableMap = {}; // userId -> {colKey:number} — ročna "Krogi tabela" (isti stolpci kot % tabela, a v točkah), urejena v Admin > Krogi Tabela
+  var krogiSortKey = 'total'; // 'name' | 'total' | <PCT_COLUMNS key>
+  var krogiSortDir = 'desc'; // 'asc' | 'desc'
   var PCT_COLUMNS = [
     {key:'start', label:'START'},
     {key:'w1', label:'W1'}, {key:'w2', label:'W2'}, {key:'w3', label:'W3'}, {key:'w4', label:'W4'},
@@ -618,6 +621,13 @@
     {key:'pin2', label:'P-IN'}
   ];
   function pctRowTotal(data){
+    var sum = 0;
+    PCT_COLUMNS.forEach(function(c){ var v = data && data[c.key]; if(typeof v==='number') sum += v; });
+    return sum;
+  }
+  // "Krogi tabela" uporablja iste stolpce (PCT_COLUMNS) kot % tabela, samo da vrednosti
+  // pomenijo pridobljene TOČKE namesto %.
+  function krogiRowTotal(data){
     var sum = 0;
     PCT_COLUMNS.forEach(function(c){ var v = data && data[c.key]; if(typeof v==='number') sum += v; });
     return sum;
@@ -738,6 +748,7 @@
     subscribeRoster();
     subscribeRounds();
     subscribePctTable();
+    subscribeKrogiTable();
   }
 
   function emptyState(icon, text){
@@ -788,6 +799,14 @@
       if(currentTab==='board') renderLeaderboard();
       if(currentTab==='admin' && adminSubTab==='pcttable') renderAdminPctTable();
     }, function(e){ console.warn('pcttable sub error', e); toast(dbErrorMsg(e), 7000); });
+  }
+  function subscribeKrogiTable(){
+    db.collection('krogitable').onSnapshot(function(snap){
+      krogiTableMap = {};
+      snap.docs.forEach(function(d){ krogiTableMap[d.id] = d.data()||{}; });
+      if(currentTab==='board') renderLeaderboard();
+      if(currentTab==='admin' && adminSubTab==='krogitable') renderAdminKrogiTable();
+    }, function(e){ console.warn('krogitable sub error', e); toast(dbErrorMsg(e), 7000); });
   }
 
   /* ============================================================
@@ -868,6 +887,16 @@
   function pctSortIndicator(key){
     if(pctSortKey!==key) return '';
     return ' <span class="sort-ind">'+(pctSortDir==='asc'?'▲':'▼')+'</span>';
+  }
+  function krogiSortValue(row, key){
+    if(key==='name') return (row.name||'').toLowerCase();
+    if(key==='total') return row.total;
+    var v = row.data[key];
+    return typeof v==='number' ? v : -1;
+  }
+  function krogiSortIndicator(key){
+    if(krogiSortKey!==key) return '';
+    return ' <span class="sort-ind">'+(krogiSortDir==='asc'?'▲':'▼')+'</span>';
   }
 
   function pointsBoardTableHtml(){
@@ -970,6 +999,53 @@
     return html;
   }
 
+  /* "Krogi tabela" - ročno urejena (Admin > Krogi Tabela), isti stolpci kot % tabela
+     (W1-W15, P-IN, QF, SF, F, specials), a vrednosti so pridobljene TOČKE, ne %. Prikazana
+     na Lestvica > "Po krogih" namesto prejšnjega samodejnega izračuna iz oddanih napovedi. */
+  function krogiBoardTableHtml(){
+    var rows = roster.map(function(u){
+      var data = krogiTableMap[u.id] || {};
+      return { id:u.id, name:(u.nickname||u.name), data:data, total: krogiRowTotal(data) };
+    });
+    rows.sort(function(a,b){
+      var va = krogiSortValue(a, krogiSortKey), vb = krogiSortValue(b, krogiSortKey);
+      var cmp = va<vb ? -1 : (va>vb ? 1 : 0);
+      if(cmp===0) cmp = a.name.localeCompare(b.name);
+      return krogiSortDir==='asc' ? cmp : -cmp;
+    });
+    var colTotals = {}; PCT_COLUMNS.forEach(function(c){ colTotals[c.key]=0; });
+    var grandTotal = 0;
+    rows.forEach(function(r){
+      grandTotal += r.total;
+      PCT_COLUMNS.forEach(function(c){ var v=r.data[c.key]; if(typeof v==='number') colTotals[c.key]+=v; });
+    });
+    var html = '<div class="table-scroll"><table class="board"><thead><tr>';
+    html += '<th class="name-h sortable" data-krogisort="name">Igralec'+krogiSortIndicator('name')+'</th>';
+    html += '<th class="sortable" data-krogisort="total">SKUPAJ'+krogiSortIndicator('total')+'</th>';
+    PCT_COLUMNS.forEach(function(c){
+      html += '<th class="sortable" data-krogisort="'+esc(c.key)+'">'+esc(c.label)+krogiSortIndicator(c.key)+'</th>';
+    });
+    html += '</tr></thead><tbody>';
+    if(rows.length===0){
+      html += '<tr><td colspan="30" class="muted" style="text-align:center;padding:20px;">Še ni podatkov — vnesi jih v Admin &gt; Krogi Tabela.</td></tr>';
+    }
+    rows.forEach(function(r){
+      html += '<tr><td class="name">'+esc(r.name)+'</td><td class="total">'+r.total+'</td>';
+      PCT_COLUMNS.forEach(function(c){
+        var v = r.data[c.key];
+        html += '<td class="pts">'+(typeof v==='number' ? v : '<span class="muted">-</span>')+'</td>';
+      });
+      html += '</tr>';
+    });
+    if(rows.length){
+      html += '<tr class="pct-totals-row"><td class="name">SKUPAJ</td><td class="total">'+grandTotal+'</td>';
+      PCT_COLUMNS.forEach(function(c){ html += '<td class="pts">'+colTotals[c.key]+'</td>'; });
+      html += '</tr>';
+    }
+    html += '</tbody></table></div>';
+    return html;
+  }
+
   function renderLeaderboardTable(){
     var html = '<div class="row" style="margin-bottom:10px;">';
     html += '<button class="btn small'+(boardViewMode==='total'?' primary':'')+'" data-boardview="total">Skupno</button>';
@@ -977,12 +1053,12 @@
     html += '<button class="btn small'+(boardViewMode==='pct'?' primary':'')+'" data-boardview="pct">%</button>';
     html += '</div>';
     html += '<p class="small muted" style="margin:-4px 0 10px;">Klikni glavo stolpca za razvrščanje po njem.</p>';
-    html += (boardViewMode==='pct') ? pctBoardTableHtml() : pointsBoardTableHtml();
+    html += (boardViewMode==='pct') ? pctBoardTableHtml() : (boardViewMode==='perRound' ? krogiBoardTableHtml() : pointsBoardTableHtml());
     $('#board-content').innerHTML = html;
     $all('[data-boardview]').forEach(function(btn){
       btn.addEventListener('click', function(){
         boardViewMode = btn.getAttribute('data-boardview');
-        if(boardViewMode!=='pct'){ boardSortKey = 'total'; boardSortDir = 'desc'; }
+        if(boardViewMode==='total'){ boardSortKey = 'total'; boardSortDir = 'desc'; }
         renderLeaderboardTable();
       });
     });
@@ -992,6 +1068,15 @@
           var key = th.getAttribute('data-pctsort');
           if(pctSortKey===key) pctSortDir = (pctSortDir==='asc'?'desc':'asc');
           else { pctSortKey = key; pctSortDir = (key==='name'?'asc':'desc'); }
+          renderLeaderboardTable();
+        });
+      });
+    } else if(boardViewMode==='perRound'){
+      $all('th.sortable[data-krogisort]').forEach(function(th){
+        th.addEventListener('click', function(){
+          var key = th.getAttribute('data-krogisort');
+          if(krogiSortKey===key) krogiSortDir = (krogiSortDir==='asc'?'desc':'asc');
+          else { krogiSortKey = key; krogiSortDir = (key==='name'?'asc':'desc'); }
           renderLeaderboardTable();
         });
       });
@@ -1460,7 +1545,7 @@
     var html = '<div class="section-head"><div><h2>Admin</h2><p>Krogi, igralci, ocenjevanje in % lestvica</p></div>';
     html += '<button class="btn ghost small" id="lockOutBtn">Zakleni admin</button></div>';
     html += '<div class="subnav">';
-    [['rounds','Krogi'],['roster','Igralci'],['grading','Ocenjevanje'],['pcttable','% Tabela']].forEach(function(t){
+    [['rounds','Krogi'],['roster','Igralci'],['grading','Ocenjevanje'],['pcttable','% Tabela'],['krogitable','Krogi Tabela']].forEach(function(t){
       html += '<button data-sub="'+t[0]+'" class="'+(adminSubTab===t[0]?'active':'')+'">'+t[1]+'</button>';
     });
     html += '</div><div id="adminSubContent"></div>';
@@ -1476,6 +1561,7 @@
     if(adminSubTab==='roster') renderAdminRoster();
     if(adminSubTab==='grading') renderAdminGrading();
     if(adminSubTab==='pcttable') renderAdminPctTable();
+    if(adminSubTab==='krogitable') renderAdminKrogiTable();
   }
 
   function renderAdminGate(){
@@ -2326,6 +2412,53 @@
       db.doc('pcttable/'+uid).set(payload, {merge:true}).then(function(){ toast('Shranjeno.', 1200); }).catch(function(e){ toast(dbErrorMsg(e), 7000); });
     }
     $all('.pct-cell').forEach(function(input){
+      input.addEventListener('change', function(){ saveCell(input); });
+      input.addEventListener('keydown', function(e){ if(e.key==='Enter') input.blur(); });
+    });
+  }
+
+  /* ---------- Admin > Krogi Tabela (ročna tabela s TOČKAMI, isti stolpci kot % Tabela,
+     prikazana na Lestvica > Po krogih) ---------- */
+  function renderAdminKrogiTable(){
+    var el = $('#adminSubContent'); if(!el) return;
+    var rows = roster.map(function(u){
+      var data = krogiTableMap[u.id] || {};
+      return { id:u.id, name:(u.nickname||u.name), data:data, total: krogiRowTotal(data) };
+    });
+    var colTotals = {}; PCT_COLUMNS.forEach(function(c){ colTotals[c.key]=0; });
+    var grandTotal = 0;
+    rows.forEach(function(r){
+      grandTotal += r.total;
+      PCT_COLUMNS.forEach(function(c){ var v=r.data[c.key]; if(typeof v==='number') colTotals[c.key]+=v; });
+    });
+    var html = '<div class="card"><h3>Krogi Tabela</h3>';
+    html += '<p class="small muted">Vrednosti se shranijo samodejno, ko zapustiš polje (ali pritisneš Enter). Prazno polje pomeni "-" (ni podatka). Isti stolpci kot % Tabela, a tu vnašaš pridobljene TOČKE. Prikaz je viden na zavihku Lestvica &gt; Po krogih.</p>';
+    html += '<div class="table-scroll"><table class="board"><thead><tr>';
+    html += '<th class="name-h">Igralec</th><th>SKUPAJ</th>';
+    PCT_COLUMNS.forEach(function(c){ html += '<th>'+esc(c.label)+'</th>'; });
+    html += '</tr></thead><tbody>';
+    rows.forEach(function(r){
+      html += '<tr data-uid="'+r.id+'"><td class="name">'+esc(r.name)+'</td><td class="total">'+r.total+'</td>';
+      PCT_COLUMNS.forEach(function(c){
+        var v = r.data[c.key];
+        html += '<td class="pts"><input type="number" step="0.5" class="krogi-cell" data-uid="'+r.id+'" data-col="'+esc(c.key)+'" value="'+(typeof v==='number'?v:'')+'"></td>';
+      });
+      html += '</tr>';
+    });
+    html += '<tr class="pct-totals-row"><td class="name">SKUPAJ</td><td class="total">'+grandTotal+'</td>';
+    PCT_COLUMNS.forEach(function(c){ html += '<td class="pts">'+colTotals[c.key]+'</td>'; });
+    html += '</tr>';
+    html += '</tbody></table></div></div>';
+    el.innerHTML = html;
+    function saveCell(input){
+      var uid = input.getAttribute('data-uid'), col = input.getAttribute('data-col');
+      var raw = input.value.trim();
+      var val = raw==='' ? null : parseFloat(raw);
+      if(raw!=='' && isNaN(val)) val = null;
+      var payload = {}; payload[col] = val;
+      db.doc('krogitable/'+uid).set(payload, {merge:true}).then(function(){ toast('Shranjeno.', 1200); }).catch(function(e){ toast(dbErrorMsg(e), 7000); });
+    }
+    $all('.krogi-cell').forEach(function(input){
       input.addEventListener('change', function(){ saveCell(input); });
       input.addEventListener('keydown', function(e){ if(e.key==='Enter') input.blur(); });
     });
