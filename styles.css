@@ -130,15 +130,18 @@ p.podlestvico {
        toliko, kolikor je najvišji od njih (privzeto obnašanje flexboxa,
        tu eksplicitno, da se ne podre po nesreči). */
     align-items: stretch;
-    /* Isti "max-width: 1500px; margin: 0 auto" kot pri "header nav" (glej
+    /* Isti "max-width: 1900px; margin: 0 auto" kot pri "header nav" (glej
        @media min-width:769px spodaj) - brez tega je ".row" (stolpci) na
-       zaslonih nad 1500px širine raztegnjen čez CELO širino zaslona, medtem
-       ko se navbar zgoraj ustavi pri 1500px in centrira - posledica je bil
+       zaslonih nad 1900px širine raztegnjen čez CELO širino zaslona, medtem
+       ko se navbar zgoraj ustavi pri 1900px in centrira - posledica je bil
        vedno večji zamik med imenom lige/Predictions v navbaru in sredino
        stranskega menija/lestvice spodaj, čim širši je bil zaslon. Zdaj imata
        oba (navbar in vsebina) IDENTIČEN okvir/koordinatni sistem, zato
-       ostaneta poravnana na vseh širinah zaslona. */
-    max-width: 1500px;
+       ostaneta poravnana na vseh širinah zaslona. Meja je namenoma precej
+       visoka (1900px namesto npr. 1500px), da se prazen rob ob straneh
+       pojavi šele na res širokih/ultra-wide zaslonih - na običajnih
+       1080p/1440p monitorjih ga ne bo videti. */
+    max-width: 1900px;
     margin: 0 auto;
     width: 100%;
 }
@@ -984,8 +987,10 @@ li.dropdown:hover .dropdown-columns {
            (Ekipe/Sezona/Zgodovina/Arhiv) in skrajno desno Predictions
            nastala ogromna prazna vrzel. Z max-width + centriranjem
            navigacija ostane kompaktna in berljiva ne glede na širino
-           zaslona. */
-        max-width: 1500px;
+           zaslona. Vrednost mora biti enaka kot pri ".row" zgoraj (glej
+           tamkajšnji komentar), sicer se navbar spet razide od sredine
+           sidebara/lestvice. */
+        max-width: 1900px;
         margin: 0 auto;
         width: 100%;
         /* Vzpostavi lasten "stacking context" za cel navbar, da odprt
