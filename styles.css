@@ -532,8 +532,16 @@ header, footer {
     height: 100%;
 }
 .col-1 {width: 8.33%;}
-.col-2 {width: 16.66%;}
-.col-3 {width: 25%;}
+/* ".col-2" in ".col-3" se v celotni strani uporabljata izključno kot
+   ".col-2.sidenav" (levi meni) in ".col-3.lestvica" (desna lestvica) - glej
+   opombo pri "nav ul" (razlog, zakaj je bil navbar centriran drugače kot
+   glavna vsebina). Prej 16.66%/25% - neenaki širini stranskih stolpcev sta
+   glavni stolpec (.col-7, ostaja nespremenjen na 58.33%) potisnili levo od
+   sredine strani, s tem pa stran od sredinsko poravnanega navbara. Zdaj sta
+   oba stranska stolpca enako široka (skupaj (100-58.33)/2), zato je glavna
+   vsebina resnično na sredini strani in se ujema z navbarjem. */
+.col-2 {width: 20.835%;}
+.col-3 {width: 20.835%;}
 .col-4 {width: 33.33%}
 .col-5 {width: 41.66%;}
 .col-6 {width: 50%;}
