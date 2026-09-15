@@ -130,6 +130,17 @@ p.podlestvico {
        toliko, kolikor je najvišji od njih (privzeto obnašanje flexboxa,
        tu eksplicitno, da se ne podre po nesreči). */
     align-items: stretch;
+    /* Isti "max-width: 1500px; margin: 0 auto" kot pri "header nav" (glej
+       @media min-width:769px spodaj) - brez tega je ".row" (stolpci) na
+       zaslonih nad 1500px širine raztegnjen čez CELO širino zaslona, medtem
+       ko se navbar zgoraj ustavi pri 1500px in centrira - posledica je bil
+       vedno večji zamik med imenom lige/Predictions v navbaru in sredino
+       stranskega menija/lestvice spodaj, čim širši je bil zaslon. Zdaj imata
+       oba (navbar in vsebina) IDENTIČEN okvir/koordinatni sistem, zato
+       ostaneta poravnana na vseh širinah zaslona. */
+    max-width: 1500px;
+    margin: 0 auto;
+    width: 100%;
 }
 .row::after {
     content: "";
@@ -199,6 +210,21 @@ table.tabeleuvrstitev {
     padding: 0;
 }
 
+/* EKIPE - NASLOV (ime managerja + ime ekipe, glej ekipe/*.html) - prej
+   surov inline "style" na h1 + <span> za ime managerja, ime ekipe in
+   presledek med njima pa kar 3x "&nbsp;" v HTML-ju. Zdaj razred, da lahko
+   spodaj (mobilni "@media") ime managerja in ime ekipe postavimo vsako v
+   svojo vrstico brez te ročne "&nbsp;" špranje. */
+.team-heading {
+    border: 2px solid #333;
+    font-family: Dubai;
+    font-size: 35px;
+}
+
+.team-heading-manager {
+    color: red;
+}
+
 /* EKIPE - LOGO EKIPE (glej ekipe/*.html) - prej trdo 350x350px preko
    inline "style", zato ni bilo mogoče prilagoditi velikosti za mobilne
    zaslone niti dodati razmika do besedila/tabele zraven. Nekateri logotipi
@@ -213,6 +239,20 @@ table.tabeleuvrstitev {
     vertical-align: top;
     border-radius: 10px;
     margin: 0 1.5em 1em 0;
+}
+
+/* PLAYOFF BRACKET (slika, npr. "bracket.png"/"bracket2526.PNG") - vstavljena
+   je kot navaden <img> (včasih znotraj <a> za povečavo na klik), zato je bila
+   privzeto poravnana na levi rob vsebine namesto na sredino. Atributni
+   izbirnik ujame sliko na vseh podstraneh ne glede na natančno ime
+   datoteke/sezono. Slika je precej širša (npr. 1110px) od mobilnega zaslona,
+   zato "max-width: 100%" poskrbi, da se na mobilnem pomanjša namesto da
+   povzroči vodoravno drsenje strani. */
+img[src*="bracket" i] {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto;
 }
 
 table.tockovanjepredictions {
@@ -1027,6 +1067,19 @@ li.dropdown:hover .dropdown-columns {
         margin: 0 auto 1em;
     }
 
+    /* EKIPE - naslov (glej ".team-heading" zgoraj) - na mobilnem naj ime
+       managerja in ime ekipe vsako dobi svojo vrstico ("display:block"
+       namesto privzetega "inline"), obe vrstici pa naj bosta sredinsko
+       poravnani namesto privzeto na levo. */
+    .team-heading {
+        text-align: center;
+    }
+
+    .team-heading-manager,
+    .team-heading-name {
+        display: block;
+    }
+
     table.tabeleuvrstitev {
         float: none;
         display: table;
@@ -1349,7 +1402,14 @@ li.dropdown:hover .dropdown-columns {
         width: 100%;
         text-align: center;
         margin: 0;
-        padding: 0;
+        /* Prej "padding: 0" - glavna vsebina se je tako zanašala izključno na
+           "p { margin-left: 5%; margin-right: 5% }" (glej vrh datoteke) za
+           kakršenkoli odmik od roba zaslona, kar velja SAMO za <p> elemente.
+           Naslovi (h1-h3), tabele, sezname (ul/li) in slike/divove, ki niso
+           znotraj <p>, se je zato na mobilnem dotikalo samega roba zaslona
+           brez prostora za dihanje. Majhen "padding: 0 1em" tu poskrbi za
+           minimalen odmik za VSAKO vrsto vsebine, ne glede na element. */
+        padding: 0 1em;
     }
 
     .main-content {
