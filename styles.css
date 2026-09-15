@@ -532,16 +532,8 @@ header, footer {
     height: 100%;
 }
 .col-1 {width: 8.33%;}
-/* ".col-2" in ".col-3" se v celotni strani uporabljata izključno kot
-   ".col-2.sidenav" (levi meni) in ".col-3.lestvica" (desna lestvica) - glej
-   opombo pri "nav ul" (razlog, zakaj je bil navbar centriran drugače kot
-   glavna vsebina). Prej 16.66%/25% - neenaki širini stranskih stolpcev sta
-   glavni stolpec (.col-7, ostaja nespremenjen na 58.33%) potisnili levo od
-   sredine strani, s tem pa stran od sredinsko poravnanega navbara. Zdaj sta
-   oba stranska stolpca enako široka (skupaj (100-58.33)/2), zato je glavna
-   vsebina resnično na sredini strani in se ujema z navbarjem. */
-.col-2 {width: 20.835%;}
-.col-3 {width: 20.835%;}
+.col-2 {width: 16.66%;}
+.col-3 {width: 25%;}
 .col-4 {width: 33.33%}
 .col-5 {width: 41.66%;}
 .col-6 {width: 50%;}
@@ -968,7 +960,18 @@ li.dropdown:hover .dropdown-columns {
         left: 0;
         width: 100%;
         top: 50%;
-        transform: translateY(-50%);
+        /* ".col-2.sidenav" (16.66%) in ".col-3.lestvica" (25%) sta namenoma
+           različno široka - lestvica ima tabelo z veliko več podatki kot
+           stranski meni, zato potrebuje več prostora. Zaradi tega glavna
+           vsebina (.col-7.main, širina 58.33%) NI vizualno na sredini cele
+           strani, ampak je njeno resnično središče 4.175% širine vrstice
+           (100% - .col-2 - .col-3, deljeno na pol) levo od sredine. #nav-menu
+           pa se centrira glede na CELO širino "header nav", zato je bil
+           navbar zamaknjen v primerjavi s sredino vsebine spodaj. Namesto da
+           bi spremenili širini stolpcev (kar bi lestvici odvzelo prostor),
+           tu namesto tega premaknemo sam navbar za enak izračunan zamik
+           (translateX), da se poravna z dejansko sredino glavne vsebine. */
+        transform: translate(-4.175%, -50%);
         /* #nav-menu zdaj sega čez celo širino (tudi čez ime lige na levi),
            zato mora biti "prazen" prostor prozoren za klike - drugače
            prekrije link na "NBA Fantasy Koroška". Sami elementi menija
