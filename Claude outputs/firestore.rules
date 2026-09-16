@@ -1,0 +1,28 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Roster (16 igralcev)
+    match /roster/{docId} {
+      allow read, write: if true;
+    }
+    // Krogi + gnezdene oddane napovedi
+    match /rounds/{roundId} {
+      allow read, write: if true;
+      match /submissions/{userId} {
+        allow read, write: if true;
+      }
+    }
+    // Loterija % za draft pick
+    match /percent/{docId} {
+      allow read, write: if true;
+    }
+    // % Tabela (ročna 30-stolpčna tabela na Lestvici)
+    match /pcttable/{docId} {
+      allow read, write: if true;
+    }
+    // Krogi Tabela (ročna tabela na Lestvici > "Po krogih" / Admin > Krogi Tabela)
+    match /krogitable/{docId} {
+      allow read, write: if true;
+    }
+  }
+}
