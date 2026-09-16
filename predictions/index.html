@@ -923,11 +923,11 @@
       html += '<th class="sortable" data-sortkey="krogiTotal">SKUPAJ'+sortIndicator('krogiTotal')+'</th>';
       html += '<th class="sortable" data-sortkey="pct" title="Iz Admin &gt; % Tabela">FRP%'+sortIndicator('pct')+'</th>';
     } else {
+      html += '<th class="sortable" data-sortkey="total">Skupaj'+sortIndicator('total')+'</th>';
       html += '<th class="sortable" data-sortkey="seasonlong">SeasonLong'+sortIndicator('seasonlong')+'</th>';
       html += '<th class="sortable" data-sortkey="xmas">XMAS'+sortIndicator('xmas')+'</th>';
       html += '<th class="sortable" data-sortkey="allstar">AllStar'+sortIndicator('allstar')+'</th>';
       html += '<th class="sortable" data-sortkey="krogiTotal">KrogiSkupaj'+sortIndicator('krogiTotal')+'</th>';
-      html += '<th class="sortable" data-sortkey="total">Skupaj'+sortIndicator('total')+'</th>';
       html += '<th class="sortable" data-sortkey="pct" title="Iz Admin &gt; % Tabela">FRP%'+sortIndicator('pct')+'</th>';
     }
     html += '</tr></thead><tbody>';
@@ -944,11 +944,11 @@
         html += '<td class="total">'+r.krogiTotal+'</td>';
         html += pctCell(r);
       } else {
+        html += '<td class="total">'+r.total+'</td>';
         html += '<td class="pts">'+r.seasonlong+'</td>';
         html += '<td class="pts">'+r.xmas+'</td>';
         html += '<td class="pts">'+r.allstar+'</td>';
         html += '<td class="pts">'+r.krogiTotal+'</td>';
-        html += '<td class="total">'+r.total+'</td>';
         html += pctCell(r);
       }
       html += '</tr>';
