@@ -227,6 +227,13 @@
   /* ---------- Leaderboard ---------- */
   .table-scroll{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius-l);background:var(--surface);}
   table.board{border-collapse:collapse;width:100%;min-width:560px;}
+  /* Prepreči izbiranje besedila v telesu lestvice na mobilnih napravah: brez tega
+     brskalnik pri vodoravnem drsenju čez ".table-scroll" pogosto zamenja potezo
+     za poskus označevanja besedila in prikaže domači "oblaček"/lupo za izbiro
+     (na iOS okrogla povečevalna lupa, na Androidu balon za kopiranje), ki potem
+     ostane viden še nekaj časa po dvigu prsta. Glava stolpcev (th.sortable) je
+     imela to zaščito že prej. */
+  table.board td{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
   table.board th,table.board td{padding:10px 14px;text-align:center;border-bottom:1px solid var(--border);white-space:nowrap;}
   table.board thead th{
     font-family:var(--font-display);font-weight:700;font-size:13px;letter-spacing:0.03em;text-transform:uppercase;
