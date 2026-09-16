@@ -399,6 +399,17 @@
     background:#222;
     color:#fff;
     padding:0.5em 1em;
+    /* Ko je stran dodana na Home Screen na iPhonu ("apple-mobile-web-app-capable"),
+       teče v fullscreen/standalone načinu in status vrstica (ura/baterija, tudi
+       "dynamic island") je nastavljena kot prosojna ("black-translucent") - torej
+       prekriva vrh strani, namesto da bi zanjo pustila prostor. Ta gumb je prav
+       prvi element na strani, zato je brez spodnjega popravka del njega skrit
+       pod status vrstico in ga ni mogoče klikniti. "env(safe-area-inset-top)" je
+       0 v navadnem brskalniku (ni učinka tam), v standalone načinu na iPhonu pa
+       vrne točno višino zareze/status vrstice, za katero moramo dodatno
+       "spustiti" vsebino. Deluje samo skupaj z "viewport-fit=cover" v meta
+       viewport oznaki (ki je že nastavljena zgoraj v <head>).*/
+    padding-top:calc(0.5em + env(safe-area-inset-top));
     font-family:"Segoe UI","Inter",Arial,sans-serif;
     font-size:14px;
     text-decoration:none;
