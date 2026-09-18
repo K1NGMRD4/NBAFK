@@ -529,14 +529,17 @@ p {
     padding: 0.9em 0.5em;
     height: auto;
     box-shadow: 0 4px 18px rgba(0,0,0,0.25);
-    /* Zaobljeni zgornji vogali so brez odmika od navbara pustili čuden
-       "izrezan" bel trikotnik v obeh zgornjih vogalih (stran med navbarom
-       in kartico je bila vidna samo tam, kjer se vogal zaokroži, ne pa na
-       sredini) - z majhnim marginom zgoraj (isto kot "top: 12px" pri
-       sticky spodaj) je zdaj razmik enakomeren na vseh straneh kartice. Na
-       mobilnem (glej @media max-width:768px) je "margin: 0" na predalčku,
-       zato tega ne pokvari. */
-    margin-top: 12px;
+    /* Prejšnji poskus (majhen "margin-top") je naredil še slabši vtis, ker
+       se je sidenav zamaknil navzdol, glavna vsebina in lestvica pa ne -
+       vrh vseh treh stolpcev ni bil več poravnan. Namesto premika kartice
+       navzdol raje pustimo zgornja dva vogala OGLATA (samo spodnja dva sta
+       zaobljena) - tako se sidenav še vedno "prilepi" naravnost na navbar
+       (oba sta temna, zato deluje kot ena povezana površina, brez belega
+       "izrezanega" trikotnika), obenem pa ostane v isti vrstici kot glavna
+       vsebina in lestvica. Na mobilnem (glej @media max-width:768px) je
+       "border-radius: 0" na predalčku itak že na vseh štirih vogalih. */
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
 
 
