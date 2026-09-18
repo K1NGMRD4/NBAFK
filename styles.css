@@ -375,6 +375,29 @@ nav ul li a:hover {
         position: sticky;
         top: 12px;
     }
+
+    /* Na straneh z veliko podstranmi (npr. 15 krogov + play-in + 3x
+       playoff) je bil seznam povezav v sidenavu precej daljši od zaslona.
+       Ker je sidenav samo "sticky" (ne "fixed"), to pomeni, da si moral za
+       klik na zadnjo povezavo (npr. finale) scrollati skoraj do konca
+       CELE strani, ne glede na to, kako kratka je bila dejanska glavna
+       vsebina. Zdaj ima sidenav omejeno višino glede na zaslon in znotraj
+       sebe svoj scroll, zato so čisto vse povezave dosegljive takoj. */
+    .col-2.sidenav {
+        max-height: calc(100vh - 24px);
+        overflow-y: auto;
+    }
+
+    .col-2.sidenav::-webkit-scrollbar {
+        width: 6px;
+    }
+    .col-2.sidenav::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .col-2.sidenav::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,0.15);
+        border-radius: 3px;
+    }
 }
 
 
@@ -506,6 +529,14 @@ p {
     padding: 0.9em 0.5em;
     height: auto;
     box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+    /* Zaobljeni zgornji vogali so brez odmika od navbara pustili čuden
+       "izrezan" bel trikotnik v obeh zgornjih vogalih (stran med navbarom
+       in kartico je bila vidna samo tam, kjer se vogal zaokroži, ne pa na
+       sredini) - z majhnim marginom zgoraj (isto kot "top: 12px" pri
+       sticky spodaj) je zdaj razmik enakomeren na vseh straneh kartice. Na
+       mobilnem (glej @media max-width:768px) je "margin: 0" na predalčku,
+       zato tega ne pokvari. */
+    margin-top: 12px;
 }
 
 
