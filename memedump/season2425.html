@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function() {
             <div id="sidenav-placeholder"></div>
 
             <div class="col-7 main">
-                <div class="season-banner"><span class="season-tag">2024/25</span><span class="season-dot">&bull;</span><span class="season-banner-league">Fantasy Koroška</span><span class="season-dot">&bull;</span><span class="season-chip">sezona 8</span></div>
+                <h1 style="text-align: center;"><span style="color:red; font-size: 20px;">2024/25</span> - Fantasy Koroška - <span style="color:red; font-size: 20px;">sezona 8</span> </h1>
                 <h2 style="text-align: center;">DRAFT COUNTDOWN:</h2>
                 <p id="demo"></p>
                 <script>
@@ -135,6 +135,11 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(r => r.text())
             .then(html => {
                 document.getElementById("sidenav-placeholder").outerHTML = html;
+                // Označi trenutno stran v sidenavu (glej ".col-2.sidenav a.active" v styles.css)
+                var sidenavHere = (location.pathname.split('/').pop() || 'index.html');
+                document.querySelectorAll('.col-2.sidenav a').forEach(function(a){
+                    if ((a.getAttribute('href') || '').split('/').pop() === sidenavHere) a.classList.add('active');
+                });
             })
             .catch(err => console.error("Napaka pri nalaganju sidenav:", err));
     });

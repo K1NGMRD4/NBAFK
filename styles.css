@@ -362,11 +362,14 @@ nav ul li a:hover {
 }
 
 @media screen and (min-width: 769px) {
-    /* Lestvica naj se ne razteza na višino najvišjega stolpca (main
-       content) - to je prej pustilo ogromen prazen prostor, kadar je
-       bila glavna vsebina krajša od iframa. Namesto tega lestvica
-       "lebdi" (sticky) ob strani, medtem ko scrollaš glavno vsebino. */
-    .col-3.lestvica {
+    /* Lestvica IN stranski meni naj se ne raztezata na višino najvišjega
+       stolpca (main content) - prej je "align-items: stretch" na ".row"
+       pustil ogromen prazen sivi prostor pod seznamom povezav, kadar je
+       bila glavna vsebina daljša od menija (in obratno pri lestvici).
+       Namesto tega oba stranska stolpca "lebdita" (sticky) ob strani,
+       medtem ko scrollaš glavno vsebino. */
+    .col-3.lestvica,
+    .col-2.sidenav {
         align-self: flex-start;
         position: -webkit-sticky;
         position: sticky;
@@ -391,33 +394,67 @@ div.col-2.sidenav img {
 }
 
 /*LASTNOSTI STRANSKEGA MENIJA V STRANEH IN PODSTRANEH*/
+/* Prenovljen izgled - prej je bila vsaka povezava v svoji škatlici s tenko
+   belo obrobo ("border: 0.5px solid white"), kar je bilo videti kot
+   razpredelnica, ne kot meni. Zdaj: brez obrob, zaobljeni robovi, mehak
+   hover (premik + ozadje) in rdeč naglasni rob na levi ob hover/aktivni
+   povezavi - ista rdeča kot ".season-chip"/mobilni sidenav-toggle gumb,
+   zaradi skladnosti s preostankom strani. Besedilo je zdaj poravnano
+   levo namesto na sredino, da se ikona + ime lepo poravnata v vrsto. */
 ul.menizgodovina, ul.meniekipe, ul.meniseason2425, ul.menipredictions {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    padding: 0;
+    gap: 0.35em;
+    padding: 0.5em;
     /* Zmanjšano iz 0.9em, usklajeno z manjšim fontom navbara. */
     font-size: 0.8em;
-    margin-left: 2%;
-    margin-right: 2%;
+    margin: 0;
     list-style-type: none;
     text-decoration: none;
-    text-align: center;
+    text-align: left;
 }
 ul.meniseason2425 li, ul.menipredictions li, ul.meniekipe li, ul.menizgodovina li {
     list-style-type: none;
     text-decoration: none;
-    padding: 0.4em 0.4em;
-    border: 0.5px solid white;
+    padding: 0;
+}
+/* Majhna ikona/emoji pred vsako povezavo (glej sidenavXXX.html datoteke) -
+   fiksna širina, da se besedilo lepo poravna v stolpec ne glede na to,
+   kako širok je posamezen emoji. "aria-hidden" na samem elementu (v HTML-ju)
+   poskrbi, da bralniki zaslona ikone ne berejo posebej - besedilo povezave
+   je že samo po sebi opisno. */
+.menu-ico {
+    display: inline-block;
+    width: 1.3em;
+    flex-shrink: 0;
+    text-align: center;
 }
 ul.menizgodovina li a, ul.meniekipe li a, ul.meniseason2425 li a, ul.menipredictions li a {
-   color: white;
+   display: flex;
+   align-items: center;
+   gap: 0.6em;
+   color: rgba(255,255,255,0.85);
    text-decoration: none;
-   transition: background-color 0.2s;
+   padding: 0.55em 0.7em;
+   border-radius: 8px;
+   border-left: 3px solid transparent;
+   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
 }
 ul.menizgodovina li a:hover, ul.meniekipe li a:hover, ul.meniseason2425 li a:hover, ul.menipredictions li a:hover {
-    color: red;
-    transition: .1s;
+    background: rgba(255,255,255,0.08);
+    border-left-color: #e23b3b;
+    color: #fff;
+    transform: translateX(3px);
+}
+/* Trenutna stran - glej skripto ob koncu vsake strani, ki po nalaganju
+   sidenava (fetch + outerHTML) primerja "href" vsake povezave s trenutnim
+   URL-jem in doda razred "active". Obarvano ozadje + rdeč rob, da je
+   vedno jasno, kje si. */
+ul.menizgodovina li a.active, ul.meniekipe li a.active, ul.meniseason2425 li a.active, ul.menipredictions li a.active {
+    background: linear-gradient(135deg, rgba(184,28,28,0.3), rgba(226,59,59,0.15));
+    border-left-color: #e23b3b;
+    color: #fff;
+    font-weight: 700;
 }
 
 .meniekipe, .menizgodovina, .menipredictions {
@@ -463,11 +500,12 @@ p {
 
 /*LASTNOSTI LEVEGA MENIJA V BODYJU*/
 .col-2.sidenav {
-    background-color: #333;
-    border-top: 2px solid white;
-    border-bottom: 2px solid white;
-    padding: 0;
+    background: linear-gradient(160deg, #333, #262626);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 0.9em 0.5em;
     height: auto;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.25);
 }
 
 
@@ -1394,6 +1432,12 @@ li.dropdown:hover .dropdown-columns {
         margin: 0;
         overflow-y: auto;
         z-index: 401;
+        /* Predalček je na mobilnem prislonjen na levi rob zaslona - zaobljeni
+           robovi iz desktop različice (glej ".col-2.sidenav" zgoraj) bi tu
+           pustili čudne "izrezane" vogale ob robu zaslona, zato jih tu
+           izklopimo. */
+        border-radius: 0;
+        border: none;
         box-shadow: 3px 0 20px rgba(0,0,0,0.45);
         transform: translateX(-105%);
         transition: transform 0.3s ease;
