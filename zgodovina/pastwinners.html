@@ -107,22 +107,16 @@
              ".player-name" zgoraj: white-space:nowrap + text-overflow:
              ellipsis), naslov sezone in medalje pa nagneteni skupaj.
              Rezultat: na telefonu skoraj ni bilo razvidno, kaj piše. Tu
-             za ožje zaslone zmanjšamo število stolpcev in dovolimo
-             imenom, da se prelomijo v novo vrstico namesto da se
-             obrežejo. */
-          @media (max-width: 700px) {
-            .grid {
-              grid-template-columns: repeat(2, 1fr);
-            }
-          }
-
-          @media (max-width: 460px) {
+             za mobilne/manjše zaslone (enaka meja - 768px - kot jo
+             uporablja preostanek strani, glej styles.css) gre grid naravnost
+             na EN stolpec - vsaka sezona v svoji vrstici, ena pod drugo -
+             namesto na vmesno stanje z 2 stolpcema, in dovolimo imenom, da
+             se prelomijo v novo vrstico namesto da se obrežejo. Desktop
+             (nad 768px) ostane pri 3-stolpčnem gridu, nespremenjen. */
+          @media (max-width: 768px) {
             .grid {
               grid-template-columns: 1fr;
             }
-          }
-
-          @media (max-width: 700px) {
             .player-name {
               white-space: normal;
               overflow: visible;
