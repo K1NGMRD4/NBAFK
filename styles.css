@@ -162,6 +162,26 @@ body {
     font-size: 17px;
 }
 
+/* Zelo prosojna košarkarska slika (parket + črte) kot tematsko ozadje čez
+   celo stran - slika je vnaprej zbledela (~8% neprosojnosti) proti beli,
+   zato je komaj opazna in ne moti branja besedila čez njo. Namesto
+   "background-attachment: fixed" neposredno na body (ki je na iPhone/
+   Safari znano "hroščat" - ozadje se včasih sesuje ali izgine med
+   scrollanjem) uporabimo ločen fiksno pozicioniran sloj ZA vso vsebino
+   (z-index:-1) - enak "prilepljen med scrollanjem" učinek, brez te mobilne
+   težave. */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image: url("logos/court-bg.jpg");
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+    pointer-events: none;
+}
+
 /*HAMBURGER IKONA JE SKRITA PRI VEČJIH ZASLONIH*/
 .hamburger {
     display: none;
@@ -385,6 +405,13 @@ nav ul li a:hover {
        sebe svoj scroll, zato so čisto vse povezave dosegljive takoj. */
     .col-2.sidenav {
         max-height: calc(100vh - 24px);
+        /* Na krajših straneh (kratek seznam povezav, npr. Ekipe/Zgodovina)
+           se je kartica ustavila pri višini svoje vsebine - če je bila
+           glavna vsebina/lestvica zraven veliko daljša, je pod kratkim
+           sidenavom ostalo golo belo ozadje strani namesto teme kartice.
+           Z "min-height" kartica vedno zapolni vsaj en zaslon (enako kot
+           max-height zgoraj), tudi če je povezav le peščica. */
+        min-height: calc(100vh - 24px);
         overflow-y: auto;
     }
 

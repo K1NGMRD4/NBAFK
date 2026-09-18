@@ -99,6 +99,27 @@
             padding: 2px 6px;
             border-radius: 20px;
           }
+
+          /* Enako kot pri zgodovina/pastwinners.html - na mobilnem gre grid
+             naravnost na EN stolpec (vsaka sezona v svoji vrstici), imena pa
+             se prelomijo v novo vrstico namesto da se obrežejo z "...". */
+          @media (max-width: 768px) {
+            .grid {
+              grid-template-columns: 1fr;
+            }
+            .player-name {
+              white-space: normal;
+              overflow: visible;
+              text-overflow: unset;
+              font-size: 0.95rem;
+            }
+            .card {
+              padding: 0.85rem 0.9rem;
+            }
+            .entry {
+              align-items: flex-start;
+            }
+          }
         </style>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
@@ -146,7 +167,7 @@ document.addEventListener("DOMContentLoaded", function() {
             </div>
 
             <div class="col-7 main" style="text-align: center;">
-                <h1 style="text-align: center;"><span style="color:red; font-size: 20px;">2025/26</span> - Fantasy Koroška - <span style="color:red; font-size: 20px;">sezona 9    </span> </h1>
+                <div class="season-banner"><span class="season-tag">2026/27</span><span class="season-dot">&bull;</span><span class="season-banner-league">Fantasy Koroška</span><span class="season-dot">&bull;</span><span class="season-chip">sezona 10</span></div>
                 <div class="lb-wrap">
                       <div class="lb-title">NBA Fantasy Koroška</div>
                       <div class="lb-subtitle">since 2017 - podium</div>
