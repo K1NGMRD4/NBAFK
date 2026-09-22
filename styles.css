@@ -435,10 +435,71 @@ nav ul li a:hover {
        stretch" (na ".sidenav-inner" spodaj) dejansko razteza kartico na
        celotno višino ".col-2.sidenav", "max-height" pa jo hkrati navzgor
        omeji na višino zaslona (lebdeča kartica med scrollanjem, brez
-       belih robov). */
+       belih robov).
+
+       TRETJI, LOČEN PROBLEM (odkrit naknadno): tudi z zgornjima dvema
+       popravkoma je ostal tanek svetel rob OKROG kartice - zgoraj (med
+       navbarom in kartico) in levo (med robom zaslona in kartico). Vzrok
+       je splošno pravilo "[class*='col-'] { padding: 0.25em; }" (glej dno
+       datoteke, velja za VSE stolpce), ki doda 0.25em notranjega odmika
+       na vseh straneh ".col-2.sidenav" - s tem se ".sidenav-inner" (ki
+       zapolni ta stolpec) ni mogel dotakniti roba stolpca. "padding: 0"
+       spodaj (višja specifičnost od "[class*='col-']") to odstrani, tako
+       da se kartica zdaj dotika navbara zgoraj.
+
+       ČETRTI, LOČEN PROBLEM (odkrit naknadno, na širokih zaslonih): ".row"
+       ima namenoma "max-width: 1900px; margin: 0 auto" (glej opombo pri
+       ".row" na vrhu datoteke), da ostane poravnan z omejeno širino
+       navbara na res širokih zaslonih. Posledica: na vsakem zaslonu, ki
+       je širši od 1900px (kar vključuje marsikater navaden 1920px
+       monitor, ne samo "ultra-wide"), se CELOTNA vrstica (torej tudi
+       sidenav) centrira in pusti prazen (bel) rob na levi IN desni strani
+       - medtem ko sta "header" in "footer" (glej njune lastnosti spodaj)
+       navadna blok elementa BREZ max-width, zato njuno temno ozadje sega
+       do popolnoma obeh robov zaslona. Ta neusklajenost (header/footer
+       robna, ".row" sredinsko omejen) je bila prava vzrok navideznega
+       "belega robu okoli sidebara" na širših zaslonih - ne le tanek rob,
+       ampak cela leva stran kartice.
+
+       Spodnji ".col-2.sidenav::before" (navidezen element - glej opombo
+       spodaj, ZAKAJ je na ".col-2.sidenav", NE na ".sidenav-inner") to
+       popravi TAKO, da ne spreminja postavitve/širine ".col-2.sidenav"
+       (main/lestvica ostaneta na istem mestu, poravnava z navbarom se
+       ohrani, ni tveganja za vodoravni drsnik) - preprosto doda nevidno
+       "zaplato" enake barve ozadja, nameščeno TAKOJ LEVO od stolpca
+       ("right: 100%" - se torej dotika stolpca brez vrzeli) in široko
+       celih "100vw" (zagotovo dovolj široko, ne glede na to, kako širok
+       je prazen rob na levi), visoko čez CELOTNO višino stolpca (od
+       navbara do footerja - ne le čez trenutno vidno/"sticky" kartico) -
+       vizualno izgleda, kot da je vsa leva stran (ne le kartica) ena
+       neprekinjena temna površina do resničnega levega roba zaslona, ne
+       glede na širino zaslona ali na to, ali je ".row" centriran ali ne.
+
+       Zakaj na ".col-2.sidenav" in NE na ".sidenav-inner": slednji ima
+       "overflow-y: auto", kar po CSS specifikaciji (če je ena od dveh osi
+       "auto"/"scroll", druga pa "visible", se tudi druga tiho spremeni v
+       "auto") prisili tudi "overflow-x" v "auto" - kartica bi torej
+       postala vodoravno "scrollable" območje, znotraj katerega bi bila
+       ta "zaplata" (ki namenoma sega daleč v levo) OBREZANA/nevidna.
+       ".col-2.sidenav" nima nastavljenega "overflow", zato tega problema
+       ni - "position: relative" spodaj mu doda vlogo "containing block"
+       za to absolutno pozicionirano zaplato. */
     .col-2.sidenav {
         height: auto;
         display: flex;
+        padding: 0;
+        position: relative;
+    }
+
+    .col-2.sidenav::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 100%;
+        width: 100vw;
+        background-color: #2c2c2c;
+        z-index: -1;
     }
 
     .sidenav-inner {
