@@ -85,6 +85,33 @@ figure.spodnja {
     line-height: 1.4;
 }
 
+/* Na mobilnem je bila vsaka kartica v svoji lastni vrstici (1 na vrstico) -
+   krivec je bil privzeti brskalnikov "figure" rob (margin-inline), ki se
+   prišteje h "flex-basis:150px" in tako 2 kartici skupaj potrebujeta več
+   prostora, kot ga je na voljo. Tu za mobilne širine kartici damo TOČNO
+   polovico vrstice (minus polovica reže/gap), rob pa počistimo na 0, saj
+   za razmik med karticama skrbi že "gap" na ".ekipeespnlinks" - tako sta
+   zagotovljeni VEDNO natanko 2 kartici v vrstici. Slika in besedilo sta
+   rahlo pomanjšana, da kartica ostane lepo proporcionalna. */
+@media (max-width: 768px) {
+    .team-card {
+        flex: 0 1 calc(50% - 0.5em);
+        max-width: calc(50% - 0.5em);
+        margin-inline-start: 0;
+        margin-inline-end: 0;
+        padding: 10px 6px;
+    }
+
+    .team-card img {
+        width: 90px;
+        height: 90px;
+    }
+
+    .team-card figcaption {
+        font-size: 12px;
+    }
+}
+
     </style>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
