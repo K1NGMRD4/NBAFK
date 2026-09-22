@@ -391,19 +391,40 @@ nav ul li a:hover {
           niti predolg. Nima več lastnega ozadja/paddinga (glej spodaj -
           to je zdaj na ".sidenav-inner").
        2) ".sidenav-inner" (notranji ovoj z naslovom+seznamom, glej HTML)
-          je znotraj tega SAM "position: sticky" in ima svoj
-          "max-height"/scroll - "lebdi" pri vrhu zaslona, dokler se ne
-          doseže DNA zunanjega stolpca (torej TOČNO takrat, ko se konča
-          daljši od glavne vsebine/lestvice), nato se povsem naravno
-          "odlepi". Tako je ozadje sidenava vedno natanko tako dolgo kot
-          preostala vsebina, hkrati pa seznam povezav ostane "lepljiv"
-          in dosegljiv brez scrollanja cele strani. */
+          je znotraj tega SAM "position: sticky" in ima "max-height"/scroll
+          za seznam povezav - "lebdi" pri vrhu zaslona, dokler se ne
+          doseže dna zunanjega stolpca, nato se naravno "odlepi".
+
+          POMEMBNO - "align-self: stretch" (ne "flex-start"!): brez tega
+          bi bila kartica (ozadje/rob/senca) visoka samo toliko, kolikor
+          je NJENE LASTNE vsebine (naslov+seznam), kar je na večini strani
+          KRAJŠE od zunanjega stolpca (ki je visok kot glavna vsebina/
+          lestvica) - vmes bi ostal grd bel pas praznega ozadja strani, ker
+          zunanji ".col-2.sidenav" nima lastnega ozadja. Z "stretch" se
+          kartica vedno razteza na CELOTNO višino zunanjega stolpca (torej
+          čez celo stran/scroll, brez belih robov), "max-height" pa jo
+          hkrati navzgor omeji na višino zaslona in doda notranji scroll,
+          kadar je seznam povezav daljši od zaslona - obe pravili delujeta
+          skupaj (velja manjša od dveh vrednosti). */
+    /* PRAVI vzrok belega prostora ni bil spodaj (gl. ".sidenav-inner"), ampak
+       splošno pravilo "[class*='col-'] { height: 100%; }" (glej dno datoteke,
+       veljavno za VSE stolpce, brez media queryja) - eksplicitna "height:100%"
+       (namesto "auto") na ".col-2.sidenav" je Chromu preprečila, da bi ga
+       ".row"-ov "align-items: stretch"ploh poskusil raztegniti (odstotkovna
+       višina brez definirane starševske višine se sicer obnaša kot "auto",
+       A samo deklariran "auto" (ne poljubna vrednost, ki se NA KONCU izračuna
+       kot auto) dejansko sproži stretch) - zato je bil ".col-2.sidenav" VEDNO
+       visok samo toliko, kolikor je njegove lastne vsebine, ne glede na to,
+       kaj je bilo nastavljeno na ".sidenav-inner" znotraj njega. Spodnji
+       "height: auto;" (višja specifičnost od "[class*='col-']") to popravi -
+       šele s tem ".row" dejansko raztegne ".col-2.sidenav" na višino
+       glavne vsebine/lestvice, kot je bilo od začetka namen te razdelitve. */
     .col-2.sidenav {
-        display: flex;
+        height: auto;
     }
 
     .sidenav-inner {
-        align-self: flex-start;
+        align-self: stretch;
         position: -webkit-sticky;
         position: sticky;
         top: 0;
