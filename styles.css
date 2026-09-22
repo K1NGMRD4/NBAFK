@@ -162,26 +162,6 @@ body {
     font-size: 17px;
 }
 
-/* Zelo prosojna košarkarska slika (parket + črte) kot tematsko ozadje čez
-   celo stran - slika je vnaprej zbledela (~8% neprosojnosti) proti beli,
-   zato je komaj opazna in ne moti branja besedila čez njo. Namesto
-   "background-attachment: fixed" neposredno na body (ki je na iPhone/
-   Safari znano "hroščat" - ozadje se včasih sesuje ali izgine med
-   scrollanjem) uporabimo ločen fiksno pozicioniran sloj ZA vso vsebino
-   (z-index:-1) - enak "prilepljen med scrollanjem" učinek, brez te mobilne
-   težave. */
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    background-image: url("logos/court-bg.jpg");
-    background-size: cover;
-    background-position: center top;
-    background-repeat: no-repeat;
-    pointer-events: none;
-}
-
 /*HAMBURGER IKONA JE SKRITA PRI VEČJIH ZASLONIH*/
 .hamburger {
     display: none;
@@ -559,14 +539,14 @@ p {
     /* Prejšnji poskus (majhen "margin-top") je naredil še slabši vtis, ker
        se je sidenav zamaknil navzdol, glavna vsebina in lestvica pa ne -
        vrh vseh treh stolpcev ni bil več poravnan. Namesto premika kartice
-       navzdol raje pustimo zgornja dva vogala OGLATA (samo spodnja dva sta
-       zaobljena) - tako se sidenav še vedno "prilepi" naravnost na navbar
-       (oba sta temna, zato deluje kot ena povezana površina, brez belega
-       "izrezanega" trikotnika), obenem pa ostane v isti vrstici kot glavna
-       vsebina in lestvica. Na mobilnem (glej @media max-width:768px) je
-       "border-radius: 0" na predalčku itak že na vseh štirih vogalih. */
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
+       navzdol raje pustimo vse štiri vogale OGLATE - tako se sidenav
+       "prilepi" naravnost na navbar ZGORAJ in na footer SPODAJ (vsi trije
+       so temni, zato delujejo kot ena sama povezana površina, brez belega
+       "izrezanega" trikotnika na katerem koli koncu), obenem pa ostane v
+       isti vrstici kot glavna vsebina in lestvica. Na mobilnem (glej
+       @media max-width:768px) je "border-radius: 0" na predalčku itak že
+       na vseh štirih vogalih. */
+    border-radius: 0;
 }
 
 
@@ -649,8 +629,14 @@ p#demo {
         }
 
 /*BARVE ZA HEADER IN FOOTER*/
+/* Isti gradient kot ".col-2.sidenav" (glej zgoraj) namesto ravne barve
+   #333 - prej so bili navbar/footer/sidenav trije rahlo različni odtenki
+   temne barve druga ob drugi, kar je bilo vidno predvsem tam, kjer se
+   sidenav zdaj "prilepi" naravnost na navbar/footer (oglati vogali, brez
+   robu vmes) - z enakim gradientom vsi trije delujejo kot ena usklajena
+   površina. */
 header, footer {
-    background-color: #333;
+    background: linear-gradient(160deg, #333, #262626);
     color: white;
     padding: 0px 0px;
 }
