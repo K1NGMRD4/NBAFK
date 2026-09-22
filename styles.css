@@ -418,9 +418,27 @@ nav ul li a:hover {
        kaj je bilo nastavljeno na ".sidenav-inner" znotraj njega. Spodnji
        "height: auto;" (višja specifičnost od "[class*='col-']") to popravi -
        šele s tem ".row" dejansko raztegne ".col-2.sidenav" na višino
-       glavne vsebine/lestvice, kot je bilo od začetka namen te razdelitve. */
+       glavne vsebine/lestvice, kot je bilo od začetka namen te razdelitve.
+
+       DRUGI, LOČEN PROBLEM (odkrit naknadno): tudi ko je ".col-2.sidenav"
+       pravilno visok kot vrstica, se ".sidenav-inner" (dejanska temna
+       kartica z menijem) NI raztegnil do te višine - ostal je visok samo
+       toliko, kolikor je njegove lastne vsebine (naslov+seznam), pod njim
+       pa je bil bel prostor vse do konca stolpca. Razlog: "align-self:
+       stretch" na ".sidenav-inner" (spodaj) deluje SAMO, če je njegov
+       starš ("col-2.sidenav") sam flex vsebnik - "display:flex" je bil
+       manjkal. Spodnji "display:flex" to popravi - POMEMBNO: BREZ
+       "flex-direction: column" (privzeta smer je "row") - v "column" smeri
+       postane "align-self: stretch" navpičen (glavna os), zato bi
+       raztegoval ŠIRINO (ki je itak že 100%), NE višine; šele privzeta
+       "row" smer naredi višino navzkrižno os, na kateri "align-self:
+       stretch" (na ".sidenav-inner" spodaj) dejansko razteza kartico na
+       celotno višino ".col-2.sidenav", "max-height" pa jo hkrati navzgor
+       omeji na višino zaslona (lebdeča kartica med scrollanjem, brez
+       belih robov). */
     .col-2.sidenav {
         height: auto;
+        display: flex;
     }
 
     .sidenav-inner {
