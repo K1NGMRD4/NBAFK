@@ -112,7 +112,7 @@ Kakorkoli že, čaka nas polfinale in najprej srečno vsem udeležencem, ne poza
             <!-- Desna stran (lestvica) -->
             <div class="col-3 lestvica">
                 <div class="iframelestvica">
-                    <iframe scrolling="no" src="../trenutnalestvica.html" class="trenutnalestvica"></iframe>
+                    <iframe scrolling="no" src="../trenutnalestvica.html" class="trenutnalestvica" onload="try{this.style.height=(this.contentWindow.document.body.scrollHeight+20)+'px';}catch(e){}"></iframe>
                 </div>
             </div>
         </div>
@@ -132,16 +132,8 @@ Kakorkoli že, čaka nas polfinale in najprej srečno vsem udeležencem, ne poza
                 <li><a href="../sezona2627.html">Sezona 2026/27</a></li>
                 <li><a href="../zgodovina.html">Zgodovina</a></li>
                 <li><a href="../arhiv.html">Arhiv</a></li>
-                <li><a href="../predictions/index.html">Predictions</a></li>
-            </ul>
-            <form class="donatebtn" action="https://www.paypal.com/donate" method="post" target="_blank">
-                <input type="hidden" name="business" value="jost.mrdavsic@gmail.com">
-                <input type="hidden" name="no_recurring" value="5">
-                <input type="hidden" name="item_name" value="NBA Fantasy Koroska">
-                <input type="hidden" name="item_number" value="LM, Content creation & WebPage design">
-                <input type="hidden" name="currency_code" value="EUR">
-                <input type="image" name="submit" src="../donate.png" alt="Donate">
-            </form>
+</ul>
+<a href="../predictions/index.html" class="nav-predictions-btn" aria-label="Predictions">🏀<span class="nav-predictions-label"> Predictions</span></a>
         </nav>
         <p style="text-align:center; margin-top: 10px;">
             <span style="font-weight: bold">&copy; NBA Fantasy Koroška &copy;</span><br /><br />

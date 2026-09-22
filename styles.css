@@ -362,12 +362,11 @@ nav ul li a:hover {
 }
 
 @media screen and (min-width: 769px) {
-    /* Lestvica IN stranski meni naj se ne raztezata na višino najvišjega
-       stolpca (main content) - prej je "align-items: stretch" na ".row"
-       pustil ogromen prazen sivi prostor pod seznamom povezav, kadar je
-       bila glavna vsebina daljša od menija (in obratno pri lestvici).
-       Namesto tega oba stranska stolpca "lebdita" (sticky) ob strani,
-       medtem ko scrollaš glavno vsebino. */
+    /* Lestvica naj se ne razteza na višino najvišjega stolpca (main
+       content) - prej je "align-items: stretch" na ".row" pustil ogromen
+       prazen prostor pod tabelo, kadar je bila glavna vsebina daljša.
+       Namesto tega lestvica "lebdi" (sticky) ob strani, medtem ko
+       scrollaš glavno vsebino. */
     .col-3.lestvica {
         align-self: flex-start;
         position: -webkit-sticky;
@@ -375,49 +374,51 @@ nav ul li a:hover {
         top: 12px;
     }
 
-    /* Sidenav je prej imel isti "top: 12px" kot lestvica - ko si scrollal
-       navzdol in je navbar izginil iz pogleda, je ta 12px odmik od vrha
-       pustil tanek pas BELEGA ozadja strani nad "prilepljenim" sidenavom
-       (grdo se je videlo predvsem, ker sta navbar in sidenav sicer istega
-       temnega odtenka). Sidenav zdaj "lebdi" povsem ob vrhu zaslona
-       (top: 0), zato ob scrollanju takoj zapolni celoten levi del zaslona
-       brez vrzeli - spodaj majhen odmik (glej max/min-height spodaj)
-       ostane, da se kartica ne dotika popolnoma spodnjega roba. */
+    /* SIDENAV - prej je bil ".col-2.sidenav" SAM sticky s fiksno
+       "min-height: 100vh", da se ne bi ustavil prehitro (glej staro
+       opombo spodaj v git zgodovini). Težava: ta fiksna višina ni imela
+       zveze z DEJANSKO dolžino glavne vsebine/lestvice - na krajših
+       straneh je bil sidenav (in s tem cela vrstica) na silo visok skoraj
+       cel zaslon, čeprav je glavna vsebina/lestvica zraven veliko krajša,
+       kar je pustilo bel prostor POD glavno vsebino/lestvico, preden se
+       je sploh začel footer.
+
+       Rešitev je razdelitev na DVE plasti:
+       1) ".col-2.sidenav" (zunanji stolpec) OSTANE navaden flex element
+          brez lastnega "align-self" - privzeto "align-items: stretch" na
+          ".row" poskrbi, da je VEDNO natanko tako visok kot najvišji od
+          preostalih stolpcev (glavna vsebina/lestvica), niti prekratek
+          niti predolg. Nima več lastnega ozadja/paddinga (glej spodaj -
+          to je zdaj na ".sidenav-inner").
+       2) ".sidenav-inner" (notranji ovoj z naslovom+seznamom, glej HTML)
+          je znotraj tega SAM "position: sticky" in ima svoj
+          "max-height"/scroll - "lebdi" pri vrhu zaslona, dokler se ne
+          doseže DNA zunanjega stolpca (torej TOČNO takrat, ko se konča
+          daljši od glavne vsebine/lestvice), nato se povsem naravno
+          "odlepi". Tako je ozadje sidenava vedno natanko tako dolgo kot
+          preostala vsebina, hkrati pa seznam povezav ostane "lepljiv"
+          in dosegljiv brez scrollanja cele strani. */
     .col-2.sidenav {
+        display: flex;
+    }
+
+    .sidenav-inner {
         align-self: flex-start;
         position: -webkit-sticky;
         position: sticky;
         top: 0;
-    }
-
-    /* Na straneh z veliko podstranmi (npr. 15 krogov + play-in + 3x
-       playoff) je bil seznam povezav v sidenavu precej daljši od zaslona.
-       Ker je sidenav samo "sticky" (ne "fixed"), to pomeni, da si moral za
-       klik na zadnjo povezavo (npr. finale) scrollati skoraj do konca
-       CELE strani, ne glede na to, kako kratka je bila dejanska glavna
-       vsebina. Zdaj ima sidenav omejeno višino glede na zaslon in znotraj
-       sebe svoj scroll, zato so čisto vse povezave dosegljive takoj. */
-    .col-2.sidenav {
-        /* "- 12px" namesto prejšnjega "- 24px", ker zgornji odmik (top)
-           zdaj znaša 0 namesto 12px - spodnji 12px odmik ostane. */
+        width: 100%;
         max-height: calc(100vh - 12px);
-        /* Na krajših straneh (kratek seznam povezav, npr. Ekipe/Zgodovina)
-           se je kartica ustavila pri višini svoje vsebine - če je bila
-           glavna vsebina/lestvica zraven veliko daljša, je pod kratkim
-           sidenavom ostalo golo belo ozadje strani namesto teme kartice.
-           Z "min-height" kartica vedno zapolni vsaj en zaslon (enako kot
-           max-height zgoraj), tudi če je povezav le peščica. */
-        min-height: calc(100vh - 12px);
         overflow-y: auto;
     }
 
-    .col-2.sidenav::-webkit-scrollbar {
+    .sidenav-inner::-webkit-scrollbar {
         width: 6px;
     }
-    .col-2.sidenav::-webkit-scrollbar-track {
+    .sidenav-inner::-webkit-scrollbar-track {
         background: transparent;
     }
-    .col-2.sidenav::-webkit-scrollbar-thumb {
+    .sidenav-inner::-webkit-scrollbar-thumb {
         background: rgba(255,255,255,0.15);
         border-radius: 3px;
     }
@@ -435,7 +436,7 @@ img.tockekrog {
     display: none;
 }
 
-div.col-2.sidenav img {
+.sidenav-inner img {
     width: 100%;
 }
 
@@ -545,7 +546,14 @@ p {
 
 
 /*LASTNOSTI LEVEGA MENIJA V BODYJU*/
-.col-2.sidenav {
+/* ".col-2.sidenav" (HTML) je zdaj samo zunanji, nevidni "prostor" v vrstici
+   (glej @media min-width:769px zgoraj - razteza se na višino ostalih
+   stolpcev). Vso vizualno podobo (ozadje, rob, padding, senca) nosi
+   notranji ".sidenav-inner" ovoj okoli naslova+seznama (glej HTML), ki je
+   na desktopu SAM "position: sticky" - tako je kartica vedno natanko tako
+   visoka kot preostala vsebina (glej opombo pri "@media min-width:769px"
+   zgoraj), na mobilnem pa preprosto zapolni ves izvlečni predalček. */
+.sidenav-inner {
     /* Prej gradient (linear-gradient(160deg, #333, #262626)) - CSS gradient
        se izriše GLEDE NA VELIKOST VSAKEGA ELEMENTA posebej, ne glede na
        sosednje elemente. Header/footer sta nizka in široka, zato gradient
@@ -558,9 +566,7 @@ p {
        gradienta, da ostane enako temna kot prej. */
     background-color: #2c2c2c;
     border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 14px;
     padding: 0.9em 0.5em;
-    height: auto;
     box-shadow: 0 4px 18px rgba(0,0,0,0.25);
     /* Prejšnji poskus (majhen "margin-top") je naredil še slabši vtis, ker
        se je sidenav zamaknil navzdol, glavna vsebina in lestvica pa ne -
@@ -573,6 +579,8 @@ p {
        @media max-width:768px) je "border-radius: 0" na predalčku itak že
        na vseh štirih vogalih. */
     border-radius: 0;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 
@@ -604,16 +612,19 @@ iframe.trenutnalestvicapredictions {
     border: none;
     margin: 0;
     width: 100%;
-    /* Prejšnjih 2600px je bilo bistveno več, kot vsebina dejansko
-       potrebuje (izmerjeno ~1900-2200px na telefonu/laptopu/4K), zato je
-       pod krajšo glavno vsebino nastal ogromen prazen prostor. Ta
-       vrednost ima še vedno lep zalogaj rezerve za prihodnje sezone
-       (več krogov/playoff bracket), .col-3.lestvica pa je zdaj "sticky"
-       namesto da bi na silo raztegoval ostala dva stolpca nase (glej
-       zgoraj). */
-    height: max(100vh, 2300px);
-    /* Varnostna mreža: če vsebina kljub temu kdaj preseže to višino,
-       naj se prikaže scrollbar namesto tihega obreza. */
+    /* Prej fiksnih "max(100vh, 2300px)" - ne glede na to, koliko vsebine je
+       DEJANSKO v iframu (npr. draft order z 16 ekipami je lahko veliko
+       krajši), je bil iframe VEDNO vsaj toliko visok, kar je pod krajšo
+       vsebino pustilo velik prazen (bel) prostor - tako znotraj samega
+       iframa kot posledično v celotni vrstici (glavna vsebina/sidenav sta
+       se prek "align-items: stretch" raztegnila na to umetno višino).
+       Zdaj "onload" na <iframe> (glej HTML) po nalaganju sam izmeri
+       dejansko višino vsebine in jo nastavi - spodnja vrednost je samo
+       kratkotrajen privzeti "placeholder", preden JS popravi višino. */
+    height: 400px;
+    /* Varnostna mreža: če JS iz kakršnegakoli razloga ne uspe (npr.
+       onemogočen JavaScript), naj se prikaže scrollbar namesto tihega
+       obreza. */
     overflow-y: auto;
     font-size: 0.5em; /* vpliva na iframe element, ne vsebino */
 }
@@ -1564,6 +1575,16 @@ li.dropdown:hover .dropdown-columns {
         transform: translateX(0);
     }
 
+    /* Na mobilnem ".sidenav-inner" nima svojega "position: sticky" (to
+       velja samo na desktopu, glej @media min-width:769px zgoraj) - tu
+       samo poskrbi, da ozadje zapolni CEL izvlečni predalček (ne le
+       toliko, kolikor je dejanske vsebine), tudi če je seznam povezav
+       kratek. Za scroll znotraj predalčka poskrbi že zunanji
+       ".col-2.sidenav" (overflow-y:auto zgoraj). */
+    .sidenav-inner {
+        min-height: 100%;
+    }
+
     .col-7.main {
         width: 100%;
         text-align: center;
@@ -1595,9 +1616,9 @@ li.dropdown:hover .dropdown-columns {
      iframe.trenutnalestvica,
     iframe.trenutnalestvicapredictions {
         width: 100%;
-        /* Višina se podeduje iz splošnega pravila zgoraj (height: max(100vh, 2300px)) -
-           prej je bila tu podvojena, večja vrednost (2600px), kar je
-           ustvarilo isti "prazen prostor" bug tudi na mobilnem. */
+        /* Višina se podeduje iz splošnega pravila zgoraj (privzetih 400px,
+           ki jih po nalaganju prek "onload" na <iframe> takoj popravi JS
+           na dejansko višino vsebine - glej HTML in opombo zgoraj). */
         overflow-y: auto;
     }
 

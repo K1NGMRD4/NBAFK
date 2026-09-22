@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", function() {
             <div class="col-3 lestvica">
                     <!--TABELA-->
                 <div class="iframelestvicapredictions">
-                    <iframe src="../trenutnalestvicapredictions.html" class="trenutnalestvicapredictions"></iframe>
+                    <iframe src="../trenutnalestvicapredictions.html" class="trenutnalestvicapredictions" onload="try{this.style.height=(this.contentWindow.document.body.scrollHeight+20)+'px';}catch(e){}"></iframe>
                 </div>
             </div>
         </div>
@@ -136,19 +136,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 <li><a href="../sezona2627.html">Sezona 2026/27</a></li>
                 <li><a href="../zgodovina.html">Zgodovina</a></li>
                 <li><a href="../arhiv.html">Arhiv</a></li>
-                <li><a href="../predictions/index.html">Predictions</a></li>
-            </ul>
-            <form class="donatebtn" action="https://www.paypal.com/donate" method="post" target="_blank">
-                <!-- Identify your business so that you can collect the payments. -->
-                <input type="hidden" name="business" value="jost.mrdavsic@gmail.com">
-                <!-- Specify details about the contribution -->
-                <input type="hidden" name="no_recurring" value="5">
-                <input type="hidden" name="item_name" value="NBA Fantasy Koroska">
-                <input type="hidden" name="item_number" value="LM, Content creation & WebPage design">
-                <input type="hidden" name="currency_code" value="EUR">
-                <!-- Display the payment button. -->
-                <input type="image" name="submit" src="../donate.png" alt="Donate">
-            </form>
+</ul>
+<a href="../predictions/index.html" class="nav-predictions-btn" aria-label="Predictions">🏀<span class="nav-predictions-label"> Predictions</span></a>
         </nav>
         <p style="text-align:center; margin-top: 10px;"> <span style="font-weight: bold">&copy; NBA Fantasy Koroška &copy;</span><br /><br /> SEASON 8 <br /> <span style="font-size: 12px">since 2017</span></p>
     </footer>
