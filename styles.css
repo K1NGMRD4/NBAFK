@@ -368,12 +368,26 @@ nav ul li a:hover {
        bila glavna vsebina daljša od menija (in obratno pri lestvici).
        Namesto tega oba stranska stolpca "lebdita" (sticky) ob strani,
        medtem ko scrollaš glavno vsebino. */
-    .col-3.lestvica,
-    .col-2.sidenav {
+    .col-3.lestvica {
         align-self: flex-start;
         position: -webkit-sticky;
         position: sticky;
         top: 12px;
+    }
+
+    /* Sidenav je prej imel isti "top: 12px" kot lestvica - ko si scrollal
+       navzdol in je navbar izginil iz pogleda, je ta 12px odmik od vrha
+       pustil tanek pas BELEGA ozadja strani nad "prilepljenim" sidenavom
+       (grdo se je videlo predvsem, ker sta navbar in sidenav sicer istega
+       temnega odtenka). Sidenav zdaj "lebdi" povsem ob vrhu zaslona
+       (top: 0), zato ob scrollanju takoj zapolni celoten levi del zaslona
+       brez vrzeli - spodaj majhen odmik (glej max/min-height spodaj)
+       ostane, da se kartica ne dotika popolnoma spodnjega roba. */
+    .col-2.sidenav {
+        align-self: flex-start;
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
     }
 
     /* Na straneh z veliko podstranmi (npr. 15 krogov + play-in + 3x
@@ -384,14 +398,16 @@ nav ul li a:hover {
        vsebina. Zdaj ima sidenav omejeno višino glede na zaslon in znotraj
        sebe svoj scroll, zato so čisto vse povezave dosegljive takoj. */
     .col-2.sidenav {
-        max-height: calc(100vh - 24px);
+        /* "- 12px" namesto prejšnjega "- 24px", ker zgornji odmik (top)
+           zdaj znaša 0 namesto 12px - spodnji 12px odmik ostane. */
+        max-height: calc(100vh - 12px);
         /* Na krajših straneh (kratek seznam povezav, npr. Ekipe/Zgodovina)
            se je kartica ustavila pri višini svoje vsebine - če je bila
            glavna vsebina/lestvica zraven veliko daljša, je pod kratkim
            sidenavom ostalo golo belo ozadje strani namesto teme kartice.
            Z "min-height" kartica vedno zapolni vsaj en zaslon (enako kot
            max-height zgoraj), tudi če je povezav le peščica. */
-        min-height: calc(100vh - 24px);
+        min-height: calc(100vh - 12px);
         overflow-y: auto;
     }
 
