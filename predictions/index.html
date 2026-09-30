@@ -243,8 +243,16 @@
   table.board td.name{
     text-align:left;font-weight:700;position:sticky;left:0;background:var(--surface);
     border-right:1px solid var(--border);
+    /* Imena so vsa kratka (vzdevki) - ožji fiksen "width" namesto samodejnega
+       (ki bi se raztegnil po najširši celici) zoži stolpec; "overflow:hidden"
+       + "text-overflow:ellipsis" je le varovalka, če bi kdaj kdo vpisal daljši
+       vzdevek, da se stolpec spet ne razširi. */
+    width:90px;max-width:90px;overflow:hidden;text-overflow:ellipsis;
   }
-  table.board thead th.name-h{text-align:left;position:sticky;left:0;z-index:2;border-right:1px solid var(--border);}
+  table.board thead th.name-h{
+    text-align:left;position:sticky;left:0;z-index:2;border-right:1px solid var(--border);
+    width:90px;max-width:90px;
+  }
   table.board thead th.rank-h{width:34px;}
   table.board thead th.sortable{cursor:pointer;user-select:none;}
   table.board thead th.sortable:hover{color:var(--ink);}
@@ -257,13 +265,14 @@
     display:inline-block;background:var(--gold-soft);color:var(--gold);border-radius:99px;padding:2px 9px;font-size:12.5px;
   }
   /* "Skupno" pogled (glej pointsBoardTableHtml spodaj) - stolpec "%" je zdaj
-     takoj za "Skupaj" (format ime-skupaj-%), z lastnim svetlo modrim ozadjem,
-     da je pri screenshotanju jasno viden/ločen od ostalih stolpcev. */
-  table.board thead th.pct-highlight,
-  table.board td.pct-highlight{
-    background:#cfe9fb;
+     takoj za "Skupaj" (format ime-skupaj-%). Prvotno je imel svetlo modro
+     ozadje celice + "pill" značko za samo številko, a to je bilo na željo
+     odstranjeno ("brez podlage") - ločuje se zdaj samo z bolj temnim/krepkim
+     besedilom (var(--ink), namesto privzete zlate barve "pill" značke). */
+  table.board td.pct-highlight .pill{
+    display:inline;background:none;padding:0;border-radius:0;
+    color:var(--ink);font-weight:800;
   }
-  table.board tbody tr:hover td.pct-highlight{background:#bfe0f7;}
   table.board tbody tr:hover td{background:var(--surface-alt);}
   table.board tbody tr:hover td.total{background:var(--accent-soft);}
   table.board tbody tr:hover td.name{background:var(--surface-alt);}
@@ -336,6 +345,11 @@
   .submitted-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
   .chip{background:var(--surface-alt);border-radius:99px;padding:4px 10px;font-size:12.5px;color:var(--ink-dim);}
   .chip.me{background:var(--accent-soft);color:var(--accent-soft-ink);font-weight:700;}
+  /* "Manjkajoči" (glej watchSubmissionsFor spodaj) - vizualno ločeno od
+     "Oddali" (prazno/obrobljeno namesto polnega ozadja), da je na prvi
+     pogled jasno, kdo še ni oddal. */
+  .chip.missing{background:none;border:1px dashed var(--border-strong);color:var(--ink-faint);}
+  .chip.missing.me{border-color:var(--accent);color:var(--accent);font-weight:700;}
 
   /* ---------- Admin ---------- */
   .pin-gate{max-width:340px;margin:60px auto;text-align:center;}
@@ -1191,11 +1205,25 @@
       var list = $('#submittedList');
       if(!list) return;
       var ids = snap.docs.map(function(d){ return d.id; });
+      var idSet = {};
+      ids.forEach(function(id){ idSet[id] = true; });
       var html = ids.map(function(id){
         var isMe = id===submitSelectedUser;
         return '<span class="chip'+(isMe?' me':'')+'">'+esc(rosterName(id))+'</span>';
       }).join('');
-      list.innerHTML = '<div class="small muted" style="margin-top:14px;">Oddalo: '+ids.length+' / '+roster.length+'</div><div class="submitted-list">'+html+'</div>';
+      /* "Manjkajoči" - preostanek celotnega rosterja (16 igralcev), ki jih ni
+         med oddanimi ("idSet"). Ko nekdo odda napoved, Firestore onSnapshot
+         samodejno sproži ta callback znova (vsi odjemalci ga poslušajo v
+         živo) - uporabnik se torej sam "prestavi" iz "Manjkajoči" v "Oddali"
+         brez dodatne kode, saj se oba seznama vsakič znova izračunata iz
+         istega, sveže prejetega "ids" seznama. */
+      var missing = roster.filter(function(u){ return !idSet[u.id]; });
+      var missingHtml = missing.map(function(u){
+        var isMe = u.id===submitSelectedUser;
+        return '<span class="chip missing'+(isMe?' me':'')+'">'+esc(u.nickname||u.name)+'</span>';
+      }).join('');
+      list.innerHTML = '<div class="small muted" style="margin-top:14px;">Oddalo: '+ids.length+' / '+roster.length+'</div><div class="submitted-list">'+html+'</div>'
+        + '<div class="small muted" style="margin-top:14px;">Manjkajoči: '+missing.length+' / '+roster.length+'</div><div class="submitted-list">'+missingHtml+'</div>';
     }, function(e){ console.warn(e); });
   }
 
