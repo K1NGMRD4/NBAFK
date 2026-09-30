@@ -256,6 +256,14 @@
   table.board td.pct .pill{
     display:inline-block;background:var(--gold-soft);color:var(--gold);border-radius:99px;padding:2px 9px;font-size:12.5px;
   }
+  /* "Skupno" pogled (glej pointsBoardTableHtml spodaj) - stolpec "%" je zdaj
+     takoj za "Skupaj" (format ime-skupaj-%), z lastnim svetlo modrim ozadjem,
+     da je pri screenshotanju jasno viden/ločen od ostalih stolpcev. */
+  table.board thead th.pct-highlight,
+  table.board td.pct-highlight{
+    background:#cfe9fb;
+  }
+  table.board tbody tr:hover td.pct-highlight{background:#bfe0f7;}
   table.board tbody tr:hover td{background:var(--surface-alt);}
   table.board tbody tr:hover td.total{background:var(--accent-soft);}
   table.board tbody tr:hover td.name{background:var(--surface-alt);}
@@ -929,7 +937,7 @@
       if(cmp===0) cmp = a.name.localeCompare(b.name);
       return boardSortDir==='asc' ? cmp : -cmp;
     });
-    var pctCell = function(r){ return '<td class="pct">'+(r.pct>0 ? '<span class="pill">'+r.pct+'%</span>' : '<span class="muted">—</span>')+'</td>'; };
+    var pctCell = function(r, highlight){ return '<td class="pct'+(highlight?' pct-highlight':'')+'">'+(r.pct>0 ? '<span class="pill">'+r.pct+'%</span>' : '<span class="muted">—</span>')+'</td>'; };
     var html = '<div class="table-scroll"><table class="board"><thead><tr>';
     html += '<th class="rank-h">#</th>';
     html += '<th class="name-h sortable" data-sortkey="name">Igralec'+sortIndicator('name')+'</th>';
@@ -941,12 +949,16 @@
       html += '<th class="sortable" data-sortkey="krogiTotal">SKUPAJ'+sortIndicator('krogiTotal')+'</th>';
       html += '<th class="sortable" data-sortkey="pct" title="Iz Admin &gt; % Tabela">FRP%'+sortIndicator('pct')+'</th>';
     } else {
+      /* "Skupno" pogled - "%" stolpec je namenoma takoj za "Skupaj" (format
+         ime-skupaj-%, glej pctCell klic spodaj z "highlight"=true za svetlo
+         modro ozadje), ostali stolpci (SeasonLong/XMAS/AllStar/KrogiSkupaj)
+         sledijo za njim, ne prekinjajo več zaporedja skupaj->%. */
       html += '<th class="sortable" data-sortkey="total">Skupaj'+sortIndicator('total')+'</th>';
+      html += '<th class="sortable pct-highlight" data-sortkey="pct" title="Iz Admin &gt; % Tabela">FRP%'+sortIndicator('pct')+'</th>';
       html += '<th class="sortable" data-sortkey="seasonlong">SeasonLong'+sortIndicator('seasonlong')+'</th>';
       html += '<th class="sortable" data-sortkey="xmas">XMAS'+sortIndicator('xmas')+'</th>';
       html += '<th class="sortable" data-sortkey="allstar">AllStar'+sortIndicator('allstar')+'</th>';
       html += '<th class="sortable" data-sortkey="krogiTotal">KrogiSkupaj'+sortIndicator('krogiTotal')+'</th>';
-      html += '<th class="sortable" data-sortkey="pct" title="Iz Admin &gt; % Tabela">FRP%'+sortIndicator('pct')+'</th>';
     }
     html += '</tr></thead><tbody>';
     if(rows.length===0){
@@ -963,11 +975,11 @@
         html += pctCell(r);
       } else {
         html += '<td class="total">'+r.total+'</td>';
+        html += pctCell(r, true);
         html += '<td class="pts">'+r.seasonlong+'</td>';
         html += '<td class="pts">'+r.xmas+'</td>';
         html += '<td class="pts">'+r.allstar+'</td>';
         html += '<td class="pts">'+r.krogiTotal+'</td>';
-        html += pctCell(r);
       }
       html += '</tr>';
     });
