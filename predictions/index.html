@@ -259,6 +259,12 @@
   table.board .sort-ind{font-size:10px;color:var(--accent);}
   table.board tr:nth-child(1) td.rank{color:var(--gold);}
   table.board td.pts{font-family:var(--font-mono);font-variant-numeric:tabular-nums;color:var(--ink-dim);font-size:13.5px;}
+  /* Celice v "Krogi Tabela" (Lestvica > Po krogih + Admin > Krogi Tabela), katerih
+     vrednost je SAMODEJNO izračunana iz že ocenjenega kroga (ni ročnega popravka admina)
+     - glej krogiCellInfo/computeAutoKrogi. Ležeče + rahlo bolj bledo besedilo, da se loči
+     od ročno vnesenih/popravljenih vrednosti. */
+  table.board td.pts.auto-val{color:var(--ink-faint);font-style:italic;}
+  table.board td.pts.auto-val input.krogi-cell{color:var(--ink-faint);font-style:italic;}
   table.board td.total{font-family:var(--font-mono);font-weight:700;font-size:15px;background:var(--accent-soft);color:var(--accent-soft-ink);}
   table.board td.pct{font-family:var(--font-mono);font-weight:700;font-size:13.5px;}
   table.board td.pct .pill{
@@ -641,6 +647,8 @@
   var krogiTableMap = {}; // userId -> {colKey:number} — ročna "Krogi tabela" (isti stolpci kot % tabela, a v točkah), urejena v Admin > Krogi Tabela
   var krogiSortKey = 'total'; // 'name' | 'total' | <PCT_COLUMNS key>
   var krogiSortDir = 'desc'; // 'asc' | 'desc'
+  var autoKrogiMap = {}; // userId -> {w1..w15, xmasasslp} — SAMODEJNO izračunano iz že ocenjenih krogov (glej computeAutoKrogi)
+  var autoKrogiFetchToken = 0;
   var PCT_COLUMNS = [
     {key:'start', label:'START'},
     {key:'w1', label:'W1'}, {key:'w2', label:'W2'}, {key:'w3', label:'W3'}, {key:'w4', label:'W4'},
@@ -679,9 +687,32 @@
     PCT_COLUMNS.forEach(function(c){ var v = data && data[c.key]; if(typeof v==='number') sum += v; });
     return sum;
   }
-  function krogiRowTotal(data){
+  // Stolpci, za katere obstaja samodejni vir podatkov (glej computeAutoKrogi spodaj) -
+  // W1-W15 (roundTotal ocenjenega "matchup" kroga z ustrezno številko) in XMAS+AS+SLP
+  // (vsota treh "special" krogov). Za ostale (P-IN, QF, SF, F, Bust, Steal, #1 daily/
+  // weekly, Streak, Gajbarja) v aplikaciji ni kroga/ocenjevanja, zato ostanejo čisto ročni.
+  var AUTO_KROGI_KEYS = { xmasasslp: true };
+  for(var _wk=1; _wk<=15; _wk++) AUTO_KROGI_KEYS['w'+_wk] = true;
+  /* Vrne { value, auto } za eno celico Krogi Tabele: ročno vnesena vrednost (krogitable)
+     ima vedno prednost pred samodejno izračunano; če ročne vrednosti ni (null/ni vnosa)
+     in stolpec sodi med AUTO_KROGI_KEYS, se uporabi samodejno izračunana vrednost iz
+     autoKrogiMap (če je na voljo). "auto:true" pomeni, da prikazana vrednost NI ročni
+     vnos admina, ampak samodejni izračun (uporabi se za rahlo vizualno ločitev). */
+  function krogiCellInfo(uid, data, colKey){
+    var manual = data && data[colKey];
+    if(typeof manual === 'number') return { value: manual, auto: false };
+    if(AUTO_KROGI_KEYS[colKey]){
+      var a = autoKrogiMap[uid] && autoKrogiMap[uid][colKey];
+      if(typeof a === 'number') return { value: a, auto: true };
+    }
+    return { value: null, auto: false };
+  }
+  function krogiRowTotal(data, uid){
     var sum = 0;
-    KROGI_COLUMNS.forEach(function(c){ var v = data && data[c.key]; if(typeof v==='number') sum += v; });
+    KROGI_COLUMNS.forEach(function(c){
+      var info = krogiCellInfo(uid, data, c.key);
+      if(typeof info.value === 'number') sum += info.value;
+    });
     return sum;
   }
   var historySelectedUser = null;
@@ -838,6 +869,7 @@
   function subscribeRounds(){
     db.collection('rounds').orderBy('number').onSnapshot(function(snap){
       rounds = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); });
+      computeAutoKrogi();
       if(currentTab==='board') renderLeaderboard();
       if(currentTab==='submit') renderSubmitTab();
       if(currentTab==='history') renderHistoryTab();
@@ -916,6 +948,53 @@
     });
   }
 
+  /* Samodejni izračun delčka "Krogi Tabele", ki ga je mogoče pridobiti iz že ocenjenih
+     krogov: W1-W15 (roundTotal "matchup" kroga s tisto številko) in XMAS+AS+SLP (vsota
+     treh "special" krogov: seasonlong + xmas + allstar). Rezultat je v autoKrogiMap
+     (userId -> {colKey:number}), ki jo krogiCellInfo uporabi kot privzeto vrednost, če
+     admin za to celico ni vnesel/shranil ročnega popravka. Kliče se ob vsaki spremembi
+     "rounds" (nova ocena, razveljavitev ocene, ...) - glej subscribeRounds. */
+  function computeAutoKrogi(){
+    var graded = rounds.filter(function(r){ return r.status==='graded'; });
+    var token = ++autoKrogiFetchToken;
+    if(graded.length===0){
+      autoKrogiMap = {};
+      afterAutoKrogiUpdate();
+      return;
+    }
+    Promise.all(graded.map(function(r){
+      return db.collection('rounds/'+r.id+'/submissions').get().then(function(snap){
+        return { round:r, subs: snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); }) };
+      });
+    })).then(function(results){
+      if(token !== autoKrogiFetchToken) return;
+      var map = {};
+      results.forEach(function(res){
+        var r = res.round;
+        var isSpecial = r.kind==='special';
+        res.subs.forEach(function(s){
+          var pts = typeof s.roundTotal==='number' ? s.roundTotal : null;
+          if(pts===null) return;
+          if(!map[s.userId]) map[s.userId] = {};
+          var row = map[s.userId];
+          if(isSpecial){
+            if(r.specialType==='seasonlong' || r.specialType==='xmas' || r.specialType==='allstar'){
+              row.xmasasslp = (typeof row.xmasasslp==='number' ? row.xmasasslp : 0) + pts;
+            }
+          } else if(r.number>=1 && r.number<=15){
+            row['w'+r.number] = pts;
+          }
+        });
+      });
+      autoKrogiMap = map;
+      afterAutoKrogiUpdate();
+    }).catch(function(e){ console.warn('auto krogi calc error', e); });
+  }
+  function afterAutoKrogiUpdate(){
+    if(currentTab==='board' && boardViewMode==='perRound') renderLeaderboardTable();
+    if(currentTab==='admin' && adminSubTab==='krogitable') renderAdminKrogiTable();
+  }
+
   // Vrednost izbranega stolpca za dano vrstico (uporablja se za sortiranje po kliku na glavo stolpca).
   function boardSortValue(r, key){
     if(key==='name') return (r.name||'').toLowerCase();
@@ -943,8 +1022,8 @@
   function krogiSortValue(row, key){
     if(key==='name') return (row.name||'').toLowerCase();
     if(key==='total') return row.total;
-    var v = row.data[key];
-    return typeof v==='number' ? v : -1;
+    var info = krogiCellInfo(row.id, row.data, key);
+    return typeof info.value==='number' ? info.value : -1;
   }
   function krogiSortIndicator(key){
     if(krogiSortKey!==key) return '';
@@ -1063,7 +1142,7 @@
   function krogiBoardTableHtml(){
     var rows = roster.map(function(u){
       var data = krogiTableMap[u.id] || {};
-      return { id:u.id, name:(u.nickname||u.name), data:data, total: krogiRowTotal(data) };
+      return { id:u.id, name:(u.nickname||u.name), data:data, total: krogiRowTotal(data, u.id) };
     });
     rows.sort(function(a,b){
       var va = krogiSortValue(a, krogiSortKey), vb = krogiSortValue(b, krogiSortKey);
@@ -1075,7 +1154,7 @@
     var grandTotal = 0;
     rows.forEach(function(r){
       grandTotal += r.total;
-      KROGI_COLUMNS.forEach(function(c){ var v=r.data[c.key]; if(typeof v==='number') colTotals[c.key]+=v; });
+      KROGI_COLUMNS.forEach(function(c){ var info=krogiCellInfo(r.id, r.data, c.key); if(typeof info.value==='number') colTotals[c.key]+=info.value; });
     });
     var html = '<div class="table-scroll"><table class="board"><thead><tr>';
     html += '<th class="name-h sortable" data-krogisort="name">Igralec'+krogiSortIndicator('name')+'</th>';
@@ -1088,14 +1167,16 @@
       html += '<tr><td colspan="30" class="muted" style="text-align:center;padding:20px;">Še ni podatkov — vnesi jih v Admin &gt; Krogi Tabela.</td></tr>';
     }
     rows.forEach(function(r){
-      /* "SKUPAJ" (r.total = krogiRowTotal - izračunan seštevek, glej round2
-         zgoraj) se prikaže zaokrožen na 2 decimalni mesti; posamezne,
-         ročno vnesene celice (KROGI_COLUMNS) ostanejo točno take, kot jih je
-         vnesel admin (niso "izračunane"). */
+      /* "SKUPAJ" (r.total = krogiRowTotal - izračunan seštevek, glej round2 zgoraj) se
+         prikaže zaokrožen na 2 decimalni mesti. Posamezne celice: W1-W15 in XMAS+AS+SLP
+         so SAMODEJNO izračunane iz že ocenjenih krogov (glej computeAutoKrogi), razen če
+         jih je admin ročno popravil v Admin > Krogi Tabela (ročni vnos ima prednost);
+         preostali stolpci (P-IN, QF, SF, F, Bust, Steal, #1 daily/weekly, Streak,
+         Gajbarja) ostanejo čisto ročni, kot doslej. */
       html += '<tr><td class="name">'+esc(r.name)+'</td><td class="total">'+round2(r.total)+'</td>';
       KROGI_COLUMNS.forEach(function(c){
-        var v = r.data[c.key];
-        html += '<td class="pts">'+(typeof v==='number' ? v : '<span class="muted">-</span>')+'</td>';
+        var info = krogiCellInfo(r.id, r.data, c.key);
+        html += '<td class="pts'+(info.auto?' auto-val':'')+'">'+(typeof info.value==='number' ? info.value : '<span class="muted">-</span>')+'</td>';
       });
       html += '</tr>';
     });
@@ -2499,16 +2580,16 @@
     var el = $('#adminSubContent'); if(!el) return;
     var rows = roster.map(function(u){
       var data = krogiTableMap[u.id] || {};
-      return { id:u.id, name:(u.nickname||u.name), data:data, total: krogiRowTotal(data) };
+      return { id:u.id, name:(u.nickname||u.name), data:data, total: krogiRowTotal(data, u.id) };
     });
     var colTotals = {}; KROGI_COLUMNS.forEach(function(c){ colTotals[c.key]=0; });
     var grandTotal = 0;
     rows.forEach(function(r){
       grandTotal += r.total;
-      KROGI_COLUMNS.forEach(function(c){ var v=r.data[c.key]; if(typeof v==='number') colTotals[c.key]+=v; });
+      KROGI_COLUMNS.forEach(function(c){ var info=krogiCellInfo(r.id, r.data, c.key); if(typeof info.value==='number') colTotals[c.key]+=info.value; });
     });
     var html = '<div class="card"><h3>Krogi Tabela</h3>';
-    html += '<p class="small muted">Vrednosti se shranijo samodejno, ko zapustiš polje (ali pritisneš Enter). Prazno polje pomeni "-" (ni podatka). Isti stolpci kot % Tabela (razen START), a tu vnašaš pridobljene TOČKE. Prikaz je viden na zavihku Lestvica &gt; Po krogih.</p>';
+    html += '<p class="small muted">Stolpci W1-W15 in XMAS+AS+SLP so SAMODEJNO izpolnjeni s trenutno izračunano vrednostjo iz že ocenjenih krogov (prikazani ležeče) - po potrebi jih lahko ročno popraviš, ročni vnos pa potem obvelja namesto samodejnega. Ostali stolpci (P-IN, QF, SF, F, Bust, Steal, #1 daily/weekly, Streak, Gajbarja) nimajo samodejnega vira in ostanejo čisto ročni. Vrednosti se shranijo samodejno, ko zapustiš polje (ali pritisneš Enter) - prazno polje pomeni "ni ročnega popravka" (za W1-W15/XMAS+AS+SLP se takrat spet prikaže samodejna vrednost, za ostale stolpce pa "-"). Prikaz je viden na zavihku Lestvica &gt; Po krogih.</p>';
     html += '<div class="table-scroll"><table class="board"><thead><tr>';
     html += '<th class="name-h">Igralec</th><th>SKUPAJ</th>';
     KROGI_COLUMNS.forEach(function(c){ html += '<th>'+esc(c.label)+'</th>'; });
@@ -2516,12 +2597,17 @@
     rows.forEach(function(r){
       /* "SKUPAJ" tu je enako zaokrožen (round2) kot na javnem "Lestvica > Po
          krogih" (glej krogiBoardTableHtml) - admin tako vidi/pregleda isto
-         vrednost, posamezne vnosne celice spodaj pa ostanejo nedotaknjene
-         (polje ostane editabilno s poljubno natančnostjo, ki jo admin vpiše). */
+         vrednost. Posamezne vnosne celice: privzeto prikažejo SAMODEJNO
+         izračunano vrednost (krogiCellInfo, info.auto===true -> razred
+         "auto-val" za rahlo vizualno ločitev), če zanjo obstaja samodejni vir
+         (W1-W15, XMAS+AS+SLP) in admin še ni shranil ročnega popravka; admin
+         lahko vrednost kadarkoli ročno popravi (shrani se v krogitable in od
+         takrat prevlada nad samodejnim izračunom), ali jo izbriše nazaj na
+         samodejno (prazno polje = brez ročnega popravka). */
       html += '<tr data-uid="'+r.id+'"><td class="name">'+esc(r.name)+'</td><td class="total">'+round2(r.total)+'</td>';
       KROGI_COLUMNS.forEach(function(c){
-        var v = r.data[c.key];
-        html += '<td class="pts"><input type="number" step="0.5" class="krogi-cell" data-uid="'+r.id+'" data-col="'+esc(c.key)+'" value="'+(typeof v==='number'?v:'')+'"></td>';
+        var info = krogiCellInfo(r.id, r.data, c.key);
+        html += '<td class="pts'+(info.auto?' auto-val':'')+'"><input type="number" step="0.5" class="krogi-cell" data-uid="'+r.id+'" data-col="'+esc(c.key)+'" value="'+(typeof info.value==='number'?info.value:'')+'"'+(info.auto?' title="Samodejno izračunano iz ocenjenega kroga - po potrebi popravi.">':'>')+'</td>';
       });
       html += '</tr>';
     });
