@@ -33,7 +33,8 @@
     --good-soft:#DCEEE3;
     --bad:#B8402F;
     --bad-soft:#F6DEDA;
-    --mid-soft:#E4EEF8;
+    --mid-soft:var(--surface);
+    --rank-contrast-ink:#FFFFFF;
     --gold:#A87C15;
     --gold-soft:#F3E6C4;
     --focus:#2B6CB0;
@@ -63,7 +64,8 @@
       --good-soft:#173A2A;
       --bad:#E0685A;
       --bad-soft:#3D2220;
-      --mid-soft:#1C2E3D;
+      --mid-soft:var(--surface);
+      --rank-contrast-ink:#151E1A;
       --gold:#D9AE49;
       --gold-soft:#3A2F13;
       --focus:#6AAAE8;
@@ -87,7 +89,8 @@
     --good-soft:#173A2A;
     --bad:#E0685A;
     --bad-soft:#3D2220;
-    --mid-soft:#1C2E3D;
+    --mid-soft:var(--surface);
+    --rank-contrast-ink:#151E1A;
     --gold:#D9AE49;
     --gold-soft:#3A2F13;
     --focus:#6AAAE8;
@@ -288,13 +291,21 @@
   table.board tr.pct-totals-row td{font-weight:800;background:var(--surface-alt);border-top:2px solid var(--border);}
   table.board tr.pct-totals-row td.name{background:var(--surface-alt);}
   /* Barvanje vrstic na Lestvica > "Skupno" po dejanski uvrstitvi (glej rankRowClass v
-     pointsBoardTableHtml): prva 4 mesta zeleno, zadnja 4 rdeče, preostala vmesna
-     mesta z blago modrim ozadjem. "total" celica (td.total) obdrži svoje lastno
-     poudarjeno ozadje (var(--accent-soft)) ne glede na uvrstitev - glej specifičnost
-     pravila zgoraj (table.board td.total). */
-  table.board tbody tr.rank-top td{background:var(--good-soft);}
-  table.board tbody tr.rank-bottom td{background:var(--bad-soft);}
+     pointsBoardTableHtml): prva 4 mesta živo zeleno, zadnja 4 živo rdeče (ozadje
+     var(--good)/var(--bad), besedilo var(--rank-contrast-ink) za berljivost - v
+     light temi je --good/--bad temen, zato belo besedilo, v dark temi je svetlejši,
+     zato temno besedilo), preostala vmesna mesta imajo nevtralno/belo ozadje
+     (var(--mid-soft), enako kot var(--surface)). "total" celica (td.total) mora
+     OBDRŽATI svoje lastno poudarjeno ozadje (var(--accent-soft)) - ker ima spodnje
+     pravilo (tbody+tr+td = 4 tipski izbirniki) VEČJO specifičnost kot "table.board
+     td.total" (table+td = 2 tipska + 2 razredna), je potreben spodnji izjemni
+     popravek z dodanim ".total" razredom, da znova prevlada. */
+  table.board tbody tr.rank-top td{background:var(--good);color:var(--rank-contrast-ink);}
+  table.board tbody tr.rank-bottom td{background:var(--bad);color:var(--rank-contrast-ink);}
   table.board tbody tr.rank-mid td{background:var(--mid-soft);}
+  table.board tbody tr.rank-top td.total,
+  table.board tbody tr.rank-mid td.total,
+  table.board tbody tr.rank-bottom td.total{background:var(--accent-soft);color:var(--accent-soft-ink);}
   input.pct-cell{
     width:52px;padding:4px 3px;font-family:var(--font-mono);font-size:12.5px;text-align:center;
     border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--ink);
