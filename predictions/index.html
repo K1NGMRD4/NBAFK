@@ -33,7 +33,6 @@
     --good-soft:#DCEEE3;
     --bad:#B8402F;
     --bad-soft:#F6DEDA;
-    --mid-soft:var(--surface);
     --rank-contrast-ink:#FFFFFF;
     --gold:#A87C15;
     --gold-soft:#F3E6C4;
@@ -64,7 +63,6 @@
       --good-soft:#173A2A;
       --bad:#E0685A;
       --bad-soft:#3D2220;
-      --mid-soft:var(--surface);
       --rank-contrast-ink:#151E1A;
       --gold:#D9AE49;
       --gold-soft:#3A2F13;
@@ -89,7 +87,6 @@
     --good-soft:#173A2A;
     --bad:#E0685A;
     --bad-soft:#3D2220;
-    --mid-soft:var(--surface);
     --rank-contrast-ink:#151E1A;
     --gold:#D9AE49;
     --gold-soft:#3A2F13;
@@ -294,18 +291,17 @@
      pointsBoardTableHtml): prva 4 mesta živo zeleno, zadnja 4 živo rdeče (ozadje
      var(--good)/var(--bad), besedilo var(--rank-contrast-ink) za berljivost - v
      light temi je --good/--bad temen, zato belo besedilo, v dark temi je svetlejši,
-     zato temno besedilo), preostala vmesna mesta imajo nevtralno/belo ozadje
-     (var(--mid-soft), enako kot var(--surface)). "total" celica (td.total) mora
-     OBDRŽATI svoje lastno poudarjeno ozadje (var(--accent-soft)) - ker ima spodnje
-     pravilo (tbody+tr+td = 4 tipski izbirniki) VEČJO specifičnost kot "table.board
-     td.total" (table+td = 2 tipska + 2 razredna), je potreben spodnji izjemni
-     popravek z dodanim ".total" razredom, da znova prevlada. */
-  table.board tbody tr.rank-top td{background:var(--good);color:var(--rank-contrast-ink);}
-  table.board tbody tr.rank-bottom td{background:var(--bad);color:var(--rank-contrast-ink);}
-  table.board tbody tr.rank-mid td{background:var(--mid-soft);}
-  table.board tbody tr.rank-top td.total,
-  table.board tbody tr.rank-mid td.total,
-  table.board tbody tr.rank-bottom td.total{background:var(--accent-soft);color:var(--accent-soft-ink);}
+     zato temno besedilo), preostala vmesna mesta imajo vedno čisto BELO ozadje
+     (fiksno #FFFFFF, ne glede na light/dark temo - na uporabnikovo izrecno željo) s
+     temnim besedilom za berljivost. "total" celica (td.total, "Skupaj" stolpec) je iz
+     tega vedno IZVZETA (:not(.total)) - obdrži torej vedno svoje lastno poudarjeno
+     ozadje (var(--accent-soft), glej "table.board td.total" + hover pravilo zgoraj),
+     ne glede na uvrstitev vrstice ali na to, ali je vrstica (ali sosednja celica v
+     njej) trenutno v "hover" stanju - izključitev prek :not() namesto poskusa
+     "premagati" specifičnost z dodatnim pravilom, da ni dvoumnosti. */
+  table.board tbody tr.rank-top td:not(.total){background:var(--good);color:var(--rank-contrast-ink);}
+  table.board tbody tr.rank-bottom td:not(.total){background:var(--bad);color:var(--rank-contrast-ink);}
+  table.board tbody tr.rank-mid td:not(.total){background:#FFFFFF;color:#151E1A;}
   input.pct-cell{
     width:52px;padding:4px 3px;font-family:var(--font-mono);font-size:12.5px;text-align:center;
     border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--ink);
