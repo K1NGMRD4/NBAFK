@@ -33,6 +33,7 @@
     --good-soft:#DCEEE3;
     --bad:#B8402F;
     --bad-soft:#F6DEDA;
+    --mid-soft:#E4EEF8;
     --gold:#A87C15;
     --gold-soft:#F3E6C4;
     --focus:#2B6CB0;
@@ -62,6 +63,7 @@
       --good-soft:#173A2A;
       --bad:#E0685A;
       --bad-soft:#3D2220;
+      --mid-soft:#1C2E3D;
       --gold:#D9AE49;
       --gold-soft:#3A2F13;
       --focus:#6AAAE8;
@@ -85,6 +87,7 @@
     --good-soft:#173A2A;
     --bad:#E0685A;
     --bad-soft:#3D2220;
+    --mid-soft:#1C2E3D;
     --gold:#D9AE49;
     --gold-soft:#3A2F13;
     --focus:#6AAAE8;
@@ -284,6 +287,14 @@
   table.board tbody tr:hover td.name{background:var(--surface-alt);}
   table.board tr.pct-totals-row td{font-weight:800;background:var(--surface-alt);border-top:2px solid var(--border);}
   table.board tr.pct-totals-row td.name{background:var(--surface-alt);}
+  /* Barvanje vrstic na Lestvica > "Skupno" po dejanski uvrstitvi (glej rankRowClass v
+     pointsBoardTableHtml): prva 4 mesta zeleno, zadnja 4 rdeče, preostala vmesna
+     mesta z blago modrim ozadjem. "total" celica (td.total) obdrži svoje lastno
+     poudarjeno ozadje (var(--accent-soft)) ne glede na uvrstitev - glej specifičnost
+     pravila zgoraj (table.board td.total). */
+  table.board tbody tr.rank-top td{background:var(--good-soft);}
+  table.board tbody tr.rank-bottom td{background:var(--bad-soft);}
+  table.board tbody tr.rank-mid td{background:var(--mid-soft);}
   input.pct-cell{
     width:52px;padding:4px 3px;font-family:var(--font-mono);font-size:12.5px;text-align:center;
     border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--ink);
@@ -1034,6 +1045,22 @@
     var graded = leaderboardGradedRounds || [];
     var matchupRounds = graded.filter(function(r){ return r.kind!=='special'; }).sort(function(a,b){ return (a.number||0)-(b.number||0); });
     var rows = (leaderboardRows || []).slice();
+    /* Barvanje vrstic na "Skupno" lestvici: prva 4 mesta zeleno, zadnja 4 rdeče, vmes
+       nevtralno/blago modro (glej CSS .rank-top/.rank-mid/.rank-bottom spodaj). Mesto
+       se računa po DEJANSKI uvrstitvi (leaderboardRows je že razvrščen po total/pct/ime,
+       glej renderLeaderboard) - torej vedno po resničnem mestu na lestvici, ne po
+       trenutno izbranem stolpcu za sortiranje prikaza (boardSortKey), da barva ne
+       "skače", če admin klikne na drug stolpec za sortiranje tabele. */
+    var standingsRank = {};
+    (leaderboardRows || []).forEach(function(r, i){ standingsRank[r.id] = i+1; });
+    var totalPlayers = (leaderboardRows || []).length;
+    function rankRowClass(id){
+      var rank = standingsRank[id];
+      if(!rank || totalPlayers===0) return '';
+      if(rank<=4) return 'rank-top';
+      if(rank>totalPlayers-4) return 'rank-bottom';
+      return 'rank-mid';
+    }
     rows.sort(function(a,b){
       var va = boardSortValue(a, boardSortKey), vb = boardSortValue(b, boardSortKey);
       var cmp = va<vb ? -1 : (va>vb ? 1 : 0);
@@ -1068,7 +1095,8 @@
       html += '<tr><td colspan="8" class="muted" style="text-align:center;padding:20px;">Še ni podatkov.</td></tr>';
     }
     rows.forEach(function(r, i){
-      html += '<tr><td class="rank">'+(i+1)+'</td><td class="name">'+esc(r.name)+'</td>';
+      var rowCls = rankRowClass(r.id);
+      html += '<tr'+(rowCls?' class="'+rowCls+'"':'')+'><td class="rank">'+(i+1)+'</td><td class="name">'+esc(r.name)+'</td>';
       if(boardViewMode==='perRound'){
         matchupRounds.forEach(function(rd){
           var v = r.perRound[rd.id];
@@ -1167,16 +1195,16 @@
       html += '<tr><td colspan="30" class="muted" style="text-align:center;padding:20px;">Še ni podatkov — vnesi jih v Admin &gt; Krogi Tabela.</td></tr>';
     }
     rows.forEach(function(r){
-      /* "SKUPAJ" (r.total = krogiRowTotal - izračunan seštevek, glej round2 zgoraj) se
-         prikaže zaokrožen na 2 decimalni mesti. Posamezne celice: W1-W15 in XMAS+AS+SLP
-         so SAMODEJNO izračunane iz že ocenjenih krogov (glej computeAutoKrogi), razen če
-         jih je admin ročno popravil v Admin > Krogi Tabela (ročni vnos ima prednost);
-         preostali stolpci (P-IN, QF, SF, F, Bust, Steal, #1 daily/weekly, Streak,
-         Gajbarja) ostanejo čisto ročni, kot doslej. */
+      /* "SKUPAJ" (r.total = krogiRowTotal - izračunan seštevek) in vse posamezne celice
+         se prikažejo zaokrožene na 2 decimalni mesti (round2 zgoraj). W1-W15 in
+         XMAS+AS+SLP so SAMODEJNO izračunane iz že ocenjenih krogov (glej
+         computeAutoKrogi), razen če jih je admin ročno popravil v Admin > Krogi
+         Tabela (ročni vnos ima prednost); preostali stolpci (P-IN, QF, SF, F, Bust,
+         Steal, #1 daily/weekly, Streak, Gajbarja) ostanejo čisto ročni, kot doslej. */
       html += '<tr><td class="name">'+esc(r.name)+'</td><td class="total">'+round2(r.total)+'</td>';
       KROGI_COLUMNS.forEach(function(c){
         var info = krogiCellInfo(r.id, r.data, c.key);
-        html += '<td class="pts'+(info.auto?' auto-val':'')+'">'+(typeof info.value==='number' ? info.value : '<span class="muted">-</span>')+'</td>';
+        html += '<td class="pts'+(info.auto?' auto-val':'')+'">'+(typeof info.value==='number' ? round2(info.value) : '<span class="muted">-</span>')+'</td>';
       });
       html += '</tr>';
     });
