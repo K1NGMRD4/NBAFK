@@ -664,6 +664,16 @@
   // ta stolpec je bil na uporabnikovo željo odstranjen samo iz "Krogi Tabela" (Lestvica >
   // Po krogih + Admin > Krogi Tabela), % Tabela pa ga obdrži.
   var KROGI_COLUMNS = PCT_COLUMNS.filter(function(c){ return c.key!=='start'; });
+  /* Zaokroži na 2 decimalni mesti za prikaz (odpravi "umazane" vrednosti tipa
+     519.69999999999993, ki nastanejo pri seštevanju decimalnih vnosov v JS) -
+     uporablja se na "Lestvica > Skupno" (vsi stolpci) in za izračunani
+     "SKUPAJ" v "Lestvica > Po krogih" + "Admin > Krogi Tabela" (glej klice
+     spodaj). "Number.EPSILON" prepreči znano težavo, da bi npr. 1.005
+     zaokrožilo navzdol na 1 namesto na 1.01 zaradi binarnega zapisa števil. */
+  function round2(n){
+    if(typeof n !== 'number' || !isFinite(n)) return n;
+    return Math.round((n + Number.EPSILON) * 100) / 100;
+  }
   function pctRowTotal(data){
     var sum = 0;
     PCT_COLUMNS.forEach(function(c){ var v = data && data[c.key]; if(typeof v==='number') sum += v; });
@@ -951,7 +961,7 @@
       if(cmp===0) cmp = a.name.localeCompare(b.name);
       return boardSortDir==='asc' ? cmp : -cmp;
     });
-    var pctCell = function(r, highlight){ return '<td class="pct'+(highlight?' pct-highlight':'')+'">'+(r.pct>0 ? '<span class="pill">'+r.pct+'%</span>' : '<span class="muted">—</span>')+'</td>'; };
+    var pctCell = function(r, highlight){ return '<td class="pct'+(highlight?' pct-highlight':'')+'">'+(r.pct>0 ? '<span class="pill">'+round2(r.pct)+'%</span>' : '<span class="muted">—</span>')+'</td>'; };
     var html = '<div class="table-scroll"><table class="board"><thead><tr>';
     html += '<th class="rank-h">#</th>';
     html += '<th class="name-h sortable" data-sortkey="name">Igralec'+sortIndicator('name')+'</th>';
@@ -988,12 +998,14 @@
         html += '<td class="total">'+r.krogiTotal+'</td>';
         html += pctCell(r);
       } else {
-        html += '<td class="total">'+r.total+'</td>';
+        /* "Glavna" (Skupno) lestvica - zaokroženo na 2 decimalni mesti v VSEH
+           stolpcih (na uporabnikovo željo), ne le v "%" (glej round2 zgoraj). */
+        html += '<td class="total">'+round2(r.total)+'</td>';
         html += pctCell(r, true);
-        html += '<td class="pts">'+r.seasonlong+'</td>';
-        html += '<td class="pts">'+r.xmas+'</td>';
-        html += '<td class="pts">'+r.allstar+'</td>';
-        html += '<td class="pts">'+r.krogiTotal+'</td>';
+        html += '<td class="pts">'+round2(r.seasonlong)+'</td>';
+        html += '<td class="pts">'+round2(r.xmas)+'</td>';
+        html += '<td class="pts">'+round2(r.allstar)+'</td>';
+        html += '<td class="pts">'+round2(r.krogiTotal)+'</td>';
       }
       html += '</tr>';
     });
@@ -1076,7 +1088,11 @@
       html += '<tr><td colspan="30" class="muted" style="text-align:center;padding:20px;">Še ni podatkov — vnesi jih v Admin &gt; Krogi Tabela.</td></tr>';
     }
     rows.forEach(function(r){
-      html += '<tr><td class="name">'+esc(r.name)+'</td><td class="total">'+r.total+'</td>';
+      /* "SKUPAJ" (r.total = krogiRowTotal - izračunan seštevek, glej round2
+         zgoraj) se prikaže zaokrožen na 2 decimalni mesti; posamezne,
+         ročno vnesene celice (KROGI_COLUMNS) ostanejo točno take, kot jih je
+         vnesel admin (niso "izračunane"). */
+      html += '<tr><td class="name">'+esc(r.name)+'</td><td class="total">'+round2(r.total)+'</td>';
       KROGI_COLUMNS.forEach(function(c){
         var v = r.data[c.key];
         html += '<td class="pts">'+(typeof v==='number' ? v : '<span class="muted">-</span>')+'</td>';
@@ -1084,8 +1100,8 @@
       html += '</tr>';
     });
     if(rows.length){
-      html += '<tr class="pct-totals-row"><td class="name">SKUPAJ</td><td class="total">'+grandTotal+'</td>';
-      KROGI_COLUMNS.forEach(function(c){ html += '<td class="pts">'+colTotals[c.key]+'</td>'; });
+      html += '<tr class="pct-totals-row"><td class="name">SKUPAJ</td><td class="total">'+round2(grandTotal)+'</td>';
+      KROGI_COLUMNS.forEach(function(c){ html += '<td class="pts">'+round2(colTotals[c.key])+'</td>'; });
       html += '</tr>';
     }
     html += '</tbody></table></div>';
@@ -2498,15 +2514,19 @@
     KROGI_COLUMNS.forEach(function(c){ html += '<th>'+esc(c.label)+'</th>'; });
     html += '</tr></thead><tbody>';
     rows.forEach(function(r){
-      html += '<tr data-uid="'+r.id+'"><td class="name">'+esc(r.name)+'</td><td class="total">'+r.total+'</td>';
+      /* "SKUPAJ" tu je enako zaokrožen (round2) kot na javnem "Lestvica > Po
+         krogih" (glej krogiBoardTableHtml) - admin tako vidi/pregleda isto
+         vrednost, posamezne vnosne celice spodaj pa ostanejo nedotaknjene
+         (polje ostane editabilno s poljubno natančnostjo, ki jo admin vpiše). */
+      html += '<tr data-uid="'+r.id+'"><td class="name">'+esc(r.name)+'</td><td class="total">'+round2(r.total)+'</td>';
       KROGI_COLUMNS.forEach(function(c){
         var v = r.data[c.key];
         html += '<td class="pts"><input type="number" step="0.5" class="krogi-cell" data-uid="'+r.id+'" data-col="'+esc(c.key)+'" value="'+(typeof v==='number'?v:'')+'"></td>';
       });
       html += '</tr>';
     });
-    html += '<tr class="pct-totals-row"><td class="name">SKUPAJ</td><td class="total">'+grandTotal+'</td>';
-    KROGI_COLUMNS.forEach(function(c){ html += '<td class="pts">'+colTotals[c.key]+'</td>'; });
+    html += '<tr class="pct-totals-row"><td class="name">SKUPAJ</td><td class="total">'+round2(grandTotal)+'</td>';
+    KROGI_COLUMNS.forEach(function(c){ html += '<td class="pts">'+round2(colTotals[c.key])+'</td>'; });
     html += '</tr>';
     html += '</tbody></table></div></div>';
     el.innerHTML = html;
