@@ -286,10 +286,7 @@
   /* ===== Lestvica - moderen videz (Skupno / Po krogih / %) =====
      Celotna lestvica je "kartica" s črnim besedilom na svetli podlagi (ne glede na
      light/dark temo - na uporabnikovo željo). Skupno: prva 4 mesta zelena, zadnja 4
-     rdeča, vmesna bela (glej rankRowClass v pointsBoardTableHtml). Na telefonu
-     (<=640px) se vsaka vrstica "Skupno" pretvori v kartico (brez vodoravnega
-     drsenja), glava stolpcev pa v "chip" gumbe za razvrščanje (isti th elementi
-     z istimi klik-poslušalci, zato razvrščanje deluje naprej). */
+     rdeča, vmesna bela (glej rankRowClass v pointsBoardTableHtml). */
   #board-content .table-scroll{background:#fff;border:0;border-radius:18px;box-shadow:0 1px 2px rgba(0,0,0,.06),0 10px 28px -12px rgba(0,0,0,.28);}
   #board-content table.board{color:#000;}
   #board-content table.board th,#board-content table.board td{border-bottom:1px solid #eceff2;color:#000;}
@@ -310,69 +307,13 @@
   #board-content table.board tr.pct-totals-row td{background:#eef1f4;color:#000;border-top:2px solid #dde1e6;}
   #board-content table.board .muted{color:#000;opacity:.4;}
 
-  /* --- Skupno (table.board-total) --- */
-  #board-content table.board-total{min-width:0;}
-  #board-content table.board-total tbody tr.rank-top{background:#dcf5e5;}
-  #board-content table.board-total tbody tr.rank-bottom{background:#fde1e1;}
-  #board-content table.board-total tbody tr.rank-mid{background:#fff;}
-  #board-content table.board-total tbody td{background:transparent;color:#000;}
-  #board-content table.board-total tbody td.total{background:transparent;}
-  #board-content table.board-total tbody tr:hover td,#board-content table.board-total tbody tr:hover td.total{background:transparent;}
-  #board-content table.board-total tbody td.name{background:inherit;font-size:15px;max-width:200px;width:auto;}
-  #board-content table.board-total tbody tr:hover{filter:brightness(.97);}
-  #board-content table.board-total tbody td.rank{width:56px;}
-  #board-content table.board-total tbody tr.rank-top td.rank{box-shadow:inset 5px 0 0 #1fa85a;}
-  #board-content table.board-total tbody tr.rank-bottom td.rank{box-shadow:inset 5px 0 0 #e04848;}
-  #board-content table.board-total td.rank .rank-badge{
-    display:inline-flex;align-items:center;justify-content:center;min-width:32px;height:32px;padding:0 6px;border-radius:99px;
-    background:rgba(0,0,0,.07);font-family:inherit;font-weight:800;font-size:14px;color:#000;
-  }
-  #board-content table.board-total tr.rank-top .rank-badge,#board-content table.board-total tr.rank-bottom .rank-badge{background:rgba(255,255,255,.8);}
-  #board-content table.board-total tbody td.total{font-size:17px;}
-  #board-content table.board-total td.pct .pill,#board-content table.board-total td.pct-highlight .pill{
-    display:inline-block;background:rgba(0,0,0,.07);color:#000;font-weight:800;padding:3px 10px;border-radius:99px;font-size:13px;
-  }
-  #board-content table.board-total tr.rank-top td.pct .pill,#board-content table.board-total tr.rank-bottom td.pct .pill{background:rgba(255,255,255,.8);}
-
-  @media (max-width:640px){
-    #board-content .table-scroll:has(table.board-total){background:transparent;box-shadow:none;border-radius:0;overflow:visible;}
-    #board-content table.board-total,#board-content table.board-total thead,#board-content table.board-total tbody,
-    #board-content table.board-total tr,#board-content table.board-total th,#board-content table.board-total td{display:block;}
-    #board-content table.board-total{width:100%;}
-    #board-content table.board-total thead{margin-bottom:12px;}
-    #board-content table.board-total thead tr{
-      display:flex;flex-wrap:wrap;align-items:center;gap:6px;background:#fff;border-radius:16px;padding:10px;
-      box-shadow:0 1px 2px rgba(0,0,0,.06),0 8px 22px -12px rgba(0,0,0,.28);
-    }
-    #board-content table.board-total thead tr::before{content:"Razvrsti po:";width:100%;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#000;}
-    #board-content table.board-total thead th.rank-h{display:none;}
-    #board-content table.board-total thead th{
-      position:static;width:auto;max-width:none;border:1px solid #dde1e6;border-radius:99px;background:#f3f5f7;
-      padding:6px 12px;font-size:12px;letter-spacing:0;text-transform:none;font-weight:700;text-align:center;
-    }
-    #board-content table.board-total thead th:has(.sort-ind){background:#fff;border-color:#000;font-weight:800;}
-    #board-content table.board-total tbody tr{
-      display:grid;grid-template-columns:46px repeat(5,minmax(0,1fr));column-gap:6px;row-gap:10px;align-items:center;
-      margin:0 0 10px;padding:12px 12px 12px 10px;border-radius:16px;overflow:hidden;
-      box-shadow:0 1px 2px rgba(0,0,0,.06),0 6px 16px -8px rgba(0,0,0,.25);
-    }
-    #board-content table.board-total tbody tr.rank-top{box-shadow:inset 5px 0 0 #1fa85a,0 1px 2px rgba(0,0,0,.06),0 6px 16px -8px rgba(0,0,0,.25);}
-    #board-content table.board-total tbody tr.rank-bottom{box-shadow:inset 5px 0 0 #e04848,0 1px 2px rgba(0,0,0,.06),0 6px 16px -8px rgba(0,0,0,.25);}
-    #board-content table.board-total tbody td{border:0;padding:0;box-shadow:none;white-space:nowrap;}
-    #board-content table.board-total tbody td.rank{grid-column:1;grid-row:1 / span 2;align-self:center;text-align:center;width:auto;}
-    #board-content table.board-total td.rank .rank-badge{min-width:36px;height:36px;font-size:16px;}
-    #board-content table.board-total tbody td.name{grid-column:2 / span 3;grid-row:1;position:static;max-width:none;overflow:hidden;text-overflow:ellipsis;text-align:left;font-size:17px;border:0;}
-    #board-content table.board-total tbody td.total{grid-column:5 / span 2;grid-row:1;text-align:right;font-size:24px;line-height:1;}
-    #board-content table.board-total tbody td[data-label]::before{
-      content:attr(data-label);display:block;font-family:inherit;font-size:9.5px;font-weight:800;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:uppercase;color:#000;margin-bottom:3px;
-    }
-    #board-content table.board-total tbody td.pts,#board-content table.board-total tbody td.pct{
-      text-align:center;background:rgba(255,255,255,.6);border-radius:10px;padding:6px 2px;font-size:14px;font-weight:700;
-    }
-    #board-content table.board-total tbody tr td.pct .pill,#board-content table.board-total tbody tr.rank-top td.pct .pill,#board-content table.board-total tbody tr.rank-bottom td.pct .pill{padding:0;background:none;font-size:14px;}
-    #board-content table.board-total tbody tr.rank-top td.rank,#board-content table.board-total tbody tr.rank-bottom td.rank{box-shadow:none;}
-    #board-content table.board-total tbody td[colspan]{grid-column:1 / -1;text-align:center;}
-  }
+  /* --- Skupno: ista navadna tabela kot "Po krogih" (vodoravno drsenje na telefonu),
+     le da so prva 4 mesta po skupnem številu točk zelena, zadnja 4 rdeča, vmes bela
+     (razred vrstice določi rankRowClass v pointsBoardTableHtml). Vse celice v vrstici
+     (tudi ime in "Skupaj") dobijo isto ozadje, besedilo ostane črno. */
+  #board-content table.board tbody tr.rank-top td{background:#dcf5e5;}
+  #board-content table.board tbody tr.rank-bottom td{background:#fde1e1;}
+  #board-content table.board tbody tr.rank-mid td{background:#fff;}
   input.pct-cell{
     width:52px;padding:4px 3px;font-family:var(--font-mono);font-size:12.5px;text-align:center;
     border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--ink);
@@ -1145,11 +1086,8 @@
       if(cmp===0) cmp = a.name.localeCompare(b.name);
       return boardSortDir==='asc' ? cmp : -cmp;
     });
-    var pctCell = function(r, highlight){ return '<td class="pct'+(highlight?' pct-highlight':'')+'" data-label="FRP%">'+(r.pct>0 ? '<span class="pill">'+round2(r.pct)+'%</span>' : '<span class="muted">—</span>')+'</td>'; };
-    /* "board-total" = moderen prikaz Lestvice > Skupno (na telefonu vsaka vrstica
-       postane kartica, glej CSS "#board-content table.board-total"); "data-label"
-       na celicah se uporabi samo v tem mobilnem kartičnem prikazu (::before). */
-    var html = '<div class="table-scroll"><table class="board board-total"><thead><tr>';
+    var pctCell = function(r, highlight){ return '<td class="pct'+(highlight?' pct-highlight':'')+'">'+(r.pct>0 ? '<span class="pill">'+round2(r.pct)+'%</span>' : '<span class="muted">—</span>')+'</td>'; };
+    var html = '<div class="table-scroll"><table class="board"><thead><tr>';
     html += '<th class="rank-h">#</th>';
     html += '<th class="name-h sortable" data-sortkey="name">Igralec'+sortIndicator('name')+'</th>';
     if(boardViewMode==='perRound'){
@@ -1177,7 +1115,7 @@
     }
     rows.forEach(function(r, i){
       var rowCls = rankRowClass(r.id);
-      html += '<tr'+(rowCls?' class="'+rowCls+'"':'')+'><td class="rank"><span class="rank-badge">'+(i+1)+'</span></td><td class="name">'+esc(r.name)+'</td>';
+      html += '<tr'+(rowCls?' class="'+rowCls+'"':'')+'><td class="rank">'+(i+1)+'</td><td class="name">'+esc(r.name)+'</td>';
       if(boardViewMode==='perRound'){
         matchupRounds.forEach(function(rd){
           var v = r.perRound[rd.id];
@@ -1188,12 +1126,12 @@
       } else {
         /* "Glavna" (Skupno) lestvica - zaokroženo na 2 decimalni mesti v VSEH
            stolpcih (na uporabnikovo željo), ne le v "%" (glej round2 zgoraj). */
-        html += '<td class="total" data-label="Skupaj">'+round2(r.total)+'</td>';
+        html += '<td class="total">'+round2(r.total)+'</td>';
         html += pctCell(r, true);
-        html += '<td class="pts" data-label="Season">'+round2(r.seasonlong)+'</td>';
-        html += '<td class="pts" data-label="XMAS">'+round2(r.xmas)+'</td>';
-        html += '<td class="pts" data-label="AllStar">'+round2(r.allstar)+'</td>';
-        html += '<td class="pts" data-label="Krogi">'+round2(r.krogiTotal)+'</td>';
+        html += '<td class="pts">'+round2(r.seasonlong)+'</td>';
+        html += '<td class="pts">'+round2(r.xmas)+'</td>';
+        html += '<td class="pts">'+round2(r.allstar)+'</td>';
+        html += '<td class="pts">'+round2(r.krogiTotal)+'</td>';
       }
       html += '</tr>';
     });
