@@ -317,6 +317,10 @@
   #board-content table.board tbody tr.rank-top td{background:#dcf5e5;}
   #board-content table.board tbody tr.rank-bottom td{background:#fde1e1;}
   #board-content table.board tbody tr.rank-mid td{background:#fff;}
+  /* Skupno: brez hover učinka (tudi v stolpcu "Igralec") - ob hoverju ostane barva vrstice. */
+  #board-content table.board tbody tr.rank-top:hover td,#board-content table.board tbody tr.rank-top:hover td.name{background:#dcf5e5;}
+  #board-content table.board tbody tr.rank-bottom:hover td,#board-content table.board tbody tr.rank-bottom:hover td.name{background:#fde1e1;}
+  #board-content table.board tbody tr.rank-mid:hover td,#board-content table.board tbody tr.rank-mid:hover td.name{background:#fff;}
   input.pct-cell{
     width:52px;padding:4px 3px;font-family:var(--font-mono);font-size:12.5px;text-align:center;
     border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--ink);
