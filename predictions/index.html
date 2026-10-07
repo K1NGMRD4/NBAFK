@@ -306,6 +306,9 @@
   #board-content table.board tbody tr:hover td.name{background:#f6f8fa;}
   #board-content table.board tr.pct-totals-row td{background:#eef1f4;color:#000;border-top:2px solid #dde1e6;}
   #board-content table.board .muted{color:#000;opacity:.4;}
+  /* "%" značka (FRP%) ima lastno barvo (var(--ink), v temni temi skoraj bela), ki je
+     ne preglasi barva celice - zato tu izrecno črna. */
+  #board-content table.board td.pct .pill,#board-content table.board td.pct-highlight .pill{color:#000;}
 
   /* --- Skupno: ista navadna tabela kot "Po krogih" (vodoravno drsenje na telefonu),
      le da so prva 4 mesta po skupnem številu točk zelena, zadnja 4 rdeča, vmes bela
