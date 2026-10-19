@@ -365,6 +365,16 @@
   .bonusq{padding:12px 0;border-top:1px dashed var(--border);}
   .bonusq:first-child{border-top:none;}
   .bonusq .qtext{font-weight:700;margin-bottom:6px;}
+  .cl-group{border:1px solid var(--border);border-radius:var(--radius-l);margin-bottom:12px;background:var(--surface);overflow:hidden;}
+  .cl-group > summary{cursor:pointer;padding:12px 14px;background:var(--surface-alt);list-style:revert;}
+  .cl-entry{padding:12px 14px;border-top:1px solid var(--border);}
+  .cl-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .cl-user{font-weight:800;}
+  .cl-meta{margin-top:3px;}
+  .cl-changes{margin:8px 0 0;padding-left:18px;font-size:13px;}
+  .cl-changes li{margin:2px 0;}
+  .cl-label{color:var(--ink-dim);}
+  .cl-from{text-decoration:line-through;color:var(--ink-faint);}
   .bonusq img.qimg{display:block;max-width:100%;height:auto;margin:6px 0 12px;border:1px solid var(--border);border-radius:10px;background:#fff;}
   .points-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;max-width:240px;}
   .ptbtn{
@@ -1570,7 +1580,15 @@
         data.bonusPoints = (existing && existing.bonusPoints) || null;
         data.roundTotal = (existing && existing.roundTotal!=null) ? existing.roundTotal : null;
       }
-      db.doc('rounds/'+round.id+'/submissions/'+submitSelectedUser).set(data).then(function(){
+      var subPath = 'rounds/'+round.id+'/submissions/'+submitSelectedUser;
+      /* Pred shranjevanjem preberemo trenutno shranjeno napoved, da change log
+         zabeleži NATANČNO razliko (tudi če je isti igralec med tem oddal z druge
+         naprave). Če branje ne uspe, uporabimo stanje iz obrazca. Napoved se
+         v vsakem primeru shrani kot prej; zapis v change log nikoli ne vpliva nanjo. */
+      db.doc(subPath).get().then(function(s){ return s.exists ? s.data() : null; }, function(){ return existing || null; }).then(function(prev){
+        var changes = computeSubmissionChanges(round, prev, data);
+        return db.doc(subPath).set(data).then(function(){ logSubmissionChange(round, prev, data, changes); });
+      }).then(function(){
         toast('Napoved oddana!');
         btn.disabled = false; btn.textContent = 'Posodobi napoved';
         $('#submitMsg').textContent = 'Shranjeno.';
@@ -1781,6 +1799,206 @@
   }
 
   /* ============================================================
+     CHANGE LOG (zapis oddaj in urejanj napovedi)
+     Zbirka "changelog" v Firestore: en dokument na oddajo/urejanje.
+  ============================================================ */
+  var changelogEntries = [], changelogUnsub = null, changelogError = null, changelogLoaded = false;
+  var changelogFilterRound = 'all', changelogFilterUser = 'all', changelogOpenMap = {};
+  var clientIpPromise = null;
+
+  function fetchIpFrom(url){
+    return fetch(url, {cache:'no-store'}).then(function(r){ return r.json(); }).then(function(j){ return (j && j.ip) || null; });
+  }
+  /* Javni IP naprave: brskalnik ga sam ne pozna, zato ga vprašamo zunanjo storitev
+     (ipify). Če je blokirana (npr. adblock) ali ne odgovori v 4 s, se IP zapiše
+     kot prazen - oddaja napovedi zaradi tega NIKOLI ne odpove. */
+  function getClientIp(){
+    if(clientIpPromise) return clientIpPromise;
+    clientIpPromise = new Promise(function(resolve){
+      var done = false;
+      function fin(v){ if(!done){ done = true; resolve(v); } }
+      setTimeout(function(){ fin(null); }, 4000);
+      try{
+        fetchIpFrom('https://api.ipify.org?format=json')
+          .catch(function(){ return fetchIpFrom('https://api64.ipify.org?format=json'); })
+          .then(fin, function(){ fin(null); });
+      }catch(e){ fin(null); }
+    }).then(function(ip){ if(!ip) clientIpPromise = null; return ip; });
+    return clientIpPromise;
+  }
+
+  function shortTeam(s){ return String(s==null?'':s).replace(/\s*\([^)]*\)\s*$/, ''); }
+  function parseGridVal(v){
+    var m = {};
+    String(v||'').split(';').forEach(function(pair){
+      var idx = pair.indexOf(':');
+      if(idx>0) m[pair.slice(0,idx).trim()] = pair.slice(idx+1).trim();
+    });
+    return m;
+  }
+  function roundTitleOf(round){
+    if(round.kind==='special') return round.label || specialTypeLabel(round.specialType);
+    return 'Krog '+round.number+(round.label ? ' — '+round.label : '');
+  }
+
+  /* Seznam sprememb med prejšnjo (prev, lahko null) in novo napovedjo (data).
+     Za novo oddajo (prev===null) vrne celotno napoved, za urejanje samo spremenjene vnose. */
+  function computeSubmissionChanges(round, prev, data){
+    var isSpecial = round.kind==='special', out = [];
+    if(!isSpecial){
+      (round.matchups||[]).forEach(function(m, i){
+        var o = prev && prev.picks ? prev.picks[i] : null, n = (data.picks||[])[i];
+        if(!prev || o!==n){
+          out.push({ label: 'Tekma '+(i+1)+': '+shortTeam(m.a)+' vs '+shortTeam(m.b), from: o ? shortTeam(o) : null, to: n ? shortTeam(n) : null });
+        }
+      });
+    }
+    var questions = isSpecial ? (round.questions||[]) : (round.bonusQuestions||[]);
+    var newAns = (isSpecial ? data.answers : data.bonusAnswers) || [];
+    var oldAns = prev ? ((isSpecial ? prev.answers : prev.bonusAnswers) || []) : [];
+    questions.forEach(function(q, i){
+      var o = oldAns[i]==null ? '' : String(oldAns[i]);
+      var n = newAns[i]==null ? '' : String(newAns[i]);
+      if(prev && o===n) return;
+      if(q.type==='grid'){
+        var og = parseGridVal(o), ng = parseGridVal(n), keys = {};
+        Object.keys(og).concat(Object.keys(ng)).forEach(function(k){ keys[k] = 1; });
+        Object.keys(keys).forEach(function(k){
+          if(!prev || og[k]!==ng[k]) out.push({ label: (i+1)+'. '+(q.text||'')+' — '+shortTeam(k), from: og[k]||null, to: ng[k]||null });
+        });
+      } else {
+        out.push({ label: (i+1)+'. '+(q.text||''), from: o||null, to: n||null });
+      }
+    });
+    return out;
+  }
+
+  function logSubmissionChange(round, prev, data, changes){
+    try{
+      if(!db) return;
+      if(prev && changes.length===0) return; // ponovno shranjeno brez sprememb - ni vredno zapisa
+      getClientIp().then(function(ip){
+        return db.collection('changelog').add({
+          roundId: round.id,
+          roundKind: round.kind==='special' ? 'special' : 'matchup',
+          roundNumber: round.kind==='special' ? null : (round.number!=null ? round.number : null),
+          roundTitle: roundTitleOf(round),
+          userId: data.userId,
+          userName: data.name || '',
+          type: prev ? 'edit' : 'create',
+          changes: changes,
+          ip: ip || null,
+          userAgent: String(navigator.userAgent||'').slice(0, 250),
+          at: firebase.firestore.FieldValue.serverTimestamp(),
+          atClient: new Date().toISOString()
+        });
+      }).catch(function(e){ console.warn('changelog: zapis ni uspel', e); });
+    }catch(e){ console.warn('changelog', e); }
+  }
+
+  function uaShort(ua){
+    ua = String(ua||'');
+    if(!ua) return '';
+    var os = /iPhone/.test(ua) ? 'iPhone' : /iPad/.test(ua) ? 'iPad' : /Android/.test(ua) ? 'Android' : /Windows/.test(ua) ? 'Windows' : /Mac OS X|Macintosh/.test(ua) ? 'Mac' : /Linux/.test(ua) ? 'Linux' : '';
+    var br = /Edg\//.test(ua) ? 'Edge' : /OPR\/|Opera/.test(ua) ? 'Opera' : /Firefox|FxiOS/.test(ua) ? 'Firefox' : /CriOS|Chrome/.test(ua) ? 'Chrome' : /Safari/.test(ua) ? 'Safari' : '';
+    return [os, br].filter(Boolean).join(' · ');
+  }
+  function entryDate(e){
+    try{
+      if(e.at && typeof e.at.toDate==='function') return e.at.toDate();
+      if(e.atClient) return new Date(e.atClient);
+    }catch(x){}
+    return null;
+  }
+
+  function ensureChangelogSub(){
+    if(changelogUnsub || !db) return;
+    changelogUnsub = db.collection('changelog').orderBy('at','desc').limit(1000).onSnapshot(function(snap){
+      changelogEntries = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); });
+      changelogLoaded = true; changelogError = null;
+      if(currentTab==='admin' && adminSubTab==='changelog') renderAdminChangelog();
+    }, function(e){
+      console.warn(e);
+      changelogUnsub = null; changelogError = e; changelogLoaded = true;
+      if(currentTab==='admin' && adminSubTab==='changelog') renderAdminChangelog();
+    });
+  }
+
+  function renderAdminChangelog(){
+    var el = $('#adminSubContent'); if(!el) return;
+    ensureChangelogSub();
+    var html = '<div class="card"><h3>Change log</h3>';
+    html += '<p class="small muted">Vsaka oddaja in vsako urejanje napovedi, razvrščeno po krogih (najnovejše zgoraj). Zapisuje se od uvedbe tega zavihka naprej - starejših sprememb ni mogoče rekonstruirati. IP je javni IP naprave (če ga ni bilo mogoče pridobiti, je prazen).</p>';
+    if(changelogError){
+      html += '<p class="small" style="color:var(--bad);">Zapisov ni mogoče prebrati ('+esc((changelogError.code||'napaka'))+'). Če gre za "permission-denied", v Firebase konzoli (Firestore → Rules) dovoli dostop do zbirke <span class="mono">changelog</span> (enako kot za ostale zbirke, npr. <span class="mono">match /changelog/{id} { allow read, write: if true; }</span>).</p></div>';
+      el.innerHTML = html; return;
+    }
+    if(!changelogLoaded){ html += emptyState('⏳','Nalagam …')+'</div>'; el.innerHTML = html; return; }
+
+    var roundOpts = {}, userOpts = {};
+    changelogEntries.forEach(function(e){
+      roundOpts[e.roundId] = e.roundTitle || e.roundId;
+      userOpts[e.userId] = e.userName || e.userId;
+    });
+    html += '<div class="row" style="margin-bottom:14px;gap:10px;flex-wrap:wrap;">';
+    html += '<select id="clRound" style="max-width:260px;"><option value="all">Vsi krogi</option>';
+    Object.keys(roundOpts).forEach(function(id){ html += '<option value="'+esc(id)+'"'+(changelogFilterRound===id?' selected':'')+'>'+esc(roundOpts[id])+'</option>'; });
+    html += '</select><select id="clUser" style="max-width:260px;"><option value="all">Vsi igralci</option>';
+    Object.keys(userOpts).forEach(function(id){ html += '<option value="'+esc(id)+'"'+(changelogFilterUser===id?' selected':'')+'>'+esc(userOpts[id])+'</option>'; });
+    html += '</select></div>';
+
+    var list = changelogEntries.filter(function(e){
+      return (changelogFilterRound==='all' || e.roundId===changelogFilterRound) && (changelogFilterUser==='all' || e.userId===changelogFilterUser);
+    });
+    if(list.length===0){
+      html += emptyState('📝', changelogEntries.length ? 'Za izbrani filter ni zapisov.' : 'Zapisov še ni - pojavili se bodo, ko bo kdo oddal ali uredil napoved.')+'</div>';
+    } else {
+      var groups = {}, order = [];
+      list.forEach(function(e){
+        if(!groups[e.roundId]){ groups[e.roundId] = { title: e.roundTitle || e.roundId, number: e.roundNumber, entries: [] }; order.push(e.roundId); }
+        groups[e.roundId].entries.push(e);
+      });
+      /* skupine: najnovejša aktivnost zgoraj (entries so že razvrščeni od najnovejšega) */
+      order.forEach(function(rid, gi){
+        var g = groups[rid];
+        var isOpen = (changelogOpenMap[rid]!==undefined) ? changelogOpenMap[rid] : (gi===0);
+        html += '<details class="cl-group" data-rid="'+esc(rid)+'"'+(isOpen?' open':'')+'><summary><strong>'+esc(g.title)+'</strong> <span class="muted small">· '+g.entries.length+' '+(g.entries.length===1?'zapis':'zapisov')+'</span></summary>';
+        g.entries.forEach(function(e){
+          var d = entryDate(e);
+          var dateStr = d ? d.toLocaleDateString('sl-SI',{day:'numeric',month:'numeric',year:'numeric'}) : '—';
+          var timeStr = d ? d.toLocaleTimeString('sl-SI',{hour:'2-digit',minute:'2-digit',second:'2-digit'}) : '';
+          var isCreate = e.type==='create';
+          html += '<div class="cl-entry">';
+          html += '<div class="cl-head"><span class="cl-user">'+esc(e.userName||rosterName(e.userId)||e.userId)+'</span>';
+          html += '<span class="badge '+(isCreate?'open':'locked')+'">'+(isCreate?'Nova napoved':'Urejena napoved')+'</span>';
+          html += '<span class="small muted">'+esc(dateStr)+' ob '+esc(timeStr)+'</span></div>';
+          var meta = [];
+          if(e.ip) meta.push('IP: <span class="mono">'+esc(e.ip)+'</span>'); else meta.push('IP: <span class="muted">ni na voljo</span>');
+          var ua = uaShort(e.userAgent); if(ua) meta.push(esc(ua));
+          html += '<div class="small muted cl-meta">'+meta.join(' · ')+'</div>';
+          html += '<ul class="cl-changes">';
+          (e.changes||[]).forEach(function(c){
+            html += '<li><span class="cl-label">'+esc(c.label)+'</span>: ';
+            if(isCreate || c.from==null) html += '<strong>'+esc(c.to==null?'—':c.to)+'</strong>';
+            else html += '<span class="cl-from">'+esc(c.from)+'</span> → <strong>'+esc(c.to==null?'—':c.to)+'</strong>';
+            html += '</li>';
+          });
+          html += '</ul></div>';
+        });
+        html += '</details>';
+      });
+      html += '</div>';
+    }
+    el.innerHTML = html;
+    var r = $('#clRound'), u = $('#clUser');
+    if(r) r.addEventListener('change', function(){ changelogFilterRound = r.value; renderAdminChangelog(); });
+    if(u) u.addEventListener('change', function(){ changelogFilterUser = u.value; renderAdminChangelog(); });
+    $all('details.cl-group', el).forEach(function(dt){
+      dt.addEventListener('toggle', function(){ changelogOpenMap[dt.getAttribute('data-rid')] = dt.open; });
+    });
+  }
+
+  /* ============================================================
      ADMIN — SHELL
   ============================================================ */
   function renderAdmin(){
@@ -1788,7 +2006,7 @@
     var html = '<div class="section-head"><div><h2>Admin</h2><p>Krogi, igralci, ocenjevanje in % lestvica</p></div>';
     html += '<button class="btn ghost small" id="lockOutBtn">Zakleni admin</button></div>';
     html += '<div class="subnav">';
-    [['rounds','Krogi'],['roster','Igralci'],['grading','Ocenjevanje'],['pcttable','% Tabela'],['krogitable','Krogi Tabela']].forEach(function(t){
+    [['rounds','Krogi'],['roster','Igralci'],['grading','Ocenjevanje'],['pcttable','% Tabela'],['krogitable','Krogi Tabela'],['changelog','Change log']].forEach(function(t){
       html += '<button data-sub="'+t[0]+'" class="'+(adminSubTab===t[0]?'active':'')+'">'+t[1]+'</button>';
     });
     html += '</div><div id="adminSubContent"></div>';
@@ -1805,6 +2023,7 @@
     if(adminSubTab==='grading') renderAdminGrading();
     if(adminSubTab==='pcttable') renderAdminPctTable();
     if(adminSubTab==='krogitable') renderAdminKrogiTable();
+    if(adminSubTab==='changelog') renderAdminChangelog();
   }
 
   function renderAdminGate(){
