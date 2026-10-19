@@ -885,7 +885,11 @@
     $all('nav.tabs button').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-tab')===tab); });
     $all('.panel').forEach(function(p){ p.classList.remove('active'); });
     $('#panel-'+tab).classList.add('active');
-    if(tab==='board') renderLeaderboard();
+    if(tab==='board'){
+      // Ob vsakem vstopu na lestvico je Skupno privzeto urejeno po točkah (od največ do najmanj)
+      boardSortKey = 'total'; boardSortDir = 'desc';
+      renderLeaderboard();
+    }
     if(tab==='submit') renderSubmitTab();
     if(tab==='history') renderHistoryTab();
     if(tab==='admin') renderAdmin();
@@ -1090,8 +1094,9 @@
     rows.sort(function(a,b){
       var va = boardSortValue(a, boardSortKey), vb = boardSortValue(b, boardSortKey);
       var cmp = va<vb ? -1 : (va>vb ? 1 : 0);
-      if(cmp===0) cmp = a.name.localeCompare(b.name);
-      return boardSortDir==='asc' ? cmp : -cmp;
+      if(cmp!==0) return boardSortDir==='asc' ? cmp : -cmp;
+      /* Pri izenačenju ostane dejanski vrstni red lestvice (točke → %, nato ime) */
+      return (standingsRank[a.id]||0) - (standingsRank[b.id]||0);
     });
     var pctCell = function(r, highlight){ return '<td class="pct'+(highlight?' pct-highlight':'')+'">'+(r.pct>0 ? '<span class="pill">'+round2(r.pct)+'%</span>' : '<span class="muted">—</span>')+'</td>'; };
     var html = '<div class="table-scroll"><table class="board"><thead><tr>';
