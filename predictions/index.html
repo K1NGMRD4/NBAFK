@@ -560,7 +560,6 @@
       <button data-tab="board" class="active">Lestvica</button>
       <button data-tab="submit">Oddaj napoved</button>
       <button data-tab="history">Zgodovina napovedi</button>
-      <button data-tab="tables">Tabele</button>
       <button data-tab="admin">Admin</button>
     </nav>
   </header>
@@ -594,21 +593,10 @@
       <div class="section-head">
         <div>
           <h2>Zgodovina napovedi</h2>
-          <p>Pregled napovedi po krogih (kdo je kaj izbral) in po posameznih igralcih</p>
+          <p>Pregled napovedi po krogih (kdo je kaj izbral), po posameznih igralcih in matrika napovedi (Tabele)</p>
         </div>
       </div>
       <div id="history-content"><div class="empty"><span class="icon">⏳</span>Nalagam …</div></div>
-    </section>
-
-    <!-- TABELE (matrika napovedi po krogih) -->
-    <section class="panel" id="panel-tables">
-      <div class="section-head">
-        <div>
-          <h2>Tabele</h2>
-          <p>Matrika napovedi po krogih: vodoravno napovedi posameznega igralca, navpično koliko igralcev je napovedalo zmago ekipe</p>
-        </div>
-      </div>
-      <div id="tables-content"><div class="empty"><span class="icon">⏳</span>Nalagam …</div></div>
     </section>
 
     <!-- ADMIN -->
@@ -972,7 +960,6 @@
     }
     if(tab==='submit') renderSubmitTab();
     if(tab==='history') renderHistoryTab();
-    if(tab==='tables') renderTablesTab();
     if(tab==='admin') renderAdmin();
   }
 
@@ -985,7 +972,6 @@
       if(currentTab==='board') renderLeaderboard();
       if(currentTab==='submit') renderSubmitTab();
       if(currentTab==='history') renderHistoryTab();
-      if(currentTab==='tables') renderTablesTab();
       if(currentTab==='admin' && adminSubTab==='roster') renderAdminRoster();
     }, function(e){ console.warn('roster sub error', e); toast(dbErrorMsg(e), 7000); $('#board-content').innerHTML = emptyState('⚠️', dbErrorMsg(e)); });
   }
@@ -996,7 +982,6 @@
       if(currentTab==='board') renderLeaderboard();
       if(currentTab==='submit') renderSubmitTab();
       if(currentTab==='history') renderHistoryTab();
-      if(currentTab==='tables') renderTablesTab();
       if(currentTab==='admin' && adminSubTab==='rounds') renderAdminRounds();
     }, function(e){ console.warn('rounds sub error', e); toast(dbErrorMsg(e), 7000); });
   }
@@ -1658,6 +1643,7 @@
     var html = '<div class="row" style="margin-bottom:14px;">';
     html += '<button class="btn small'+(historyViewMode==='perRound'?' primary':'')+'" data-historyview="perRound">Po krogih</button>';
     html += '<button class="btn small'+(historyViewMode==='perUser'?' primary':'')+'" data-historyview="perUser">Po userjih</button>';
+    html += '<button class="btn small'+(historyViewMode==='tables'?' primary':'')+'" data-historyview="tables">Tabele</button>';
     html += '</div><div id="historyViewBody"></div>';
     $('#history-content').innerHTML = html;
     $all('[data-historyview]').forEach(function(btn){
@@ -1667,6 +1653,7 @@
       });
     });
     if(historyViewMode==='perRound') renderHistoryPerRoundView();
+    else if(historyViewMode==='tables') renderTablesTab();
     else renderHistoryPerUserView();
   }
 
@@ -1860,7 +1847,7 @@
   }
 
   function renderTablesTab(){
-    var el = $('#tables-content'); if(!el) return;
+    var el = $('#historyViewBody'); if(!el) return;
     if(roster.length===0){ el.innerHTML = emptyState('🏀', 'Liga še ni nastavljena.'); return; }
     var visible = rounds.filter(function(r){ return r.kind!=='special' && (r.status==='locked' || r.status==='graded'); })
       .sort(function(a,b){ return (b.number||0)-(a.number||0); });
