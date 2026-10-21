@@ -365,6 +365,37 @@
   .bonusq{padding:12px 0;border-top:1px dashed var(--border);}
   .bonusq:first-child{border-top:none;}
   .bonusq .qtext{font-weight:700;margin-bottom:6px;}
+  /* Tooltip + interaktivni tortni diagrami */
+  #tipBox{position:fixed;z-index:9999;display:none;pointer-events:none;max-width:270px;background:#15181c;color:#fff;border-radius:9px;padding:8px 11px;font-size:12.5px;line-height:1.4;box-shadow:0 8px 24px rgba(0,0,0,.35);white-space:normal;}
+  .pie-chart{cursor:pointer;}
+  .pie-legend-row[data-seg]{cursor:pointer;}
+  /* Tabele: matrika napovedi */
+  table.pm{border-collapse:separate;border-spacing:0;font-size:12.5px;min-width:100%;}
+  table.pm th,table.pm td{border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:6px 4px;text-align:center;white-space:nowrap;color:var(--ink);}
+  table.pm thead th{background:var(--surface-alt);font-weight:700;}
+  table.pm th.pm-grp{font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-dim);}
+  table.pm th.pm-th{min-width:46px;max-width:90px;overflow:hidden;text-overflow:ellipsis;font-size:12px;}
+  table.pm th.pm-bonus,table.pm td.pm-bonus{min-width:120px;max-width:170px;white-space:normal;line-height:1.2;}
+  table.pm th.pm-bonus{font-size:11.5px;font-weight:600;}
+  table.pm td.pm-bonus{font-weight:600;}
+  table.pm .pm-sep{border-left:2px solid var(--border-strong,var(--border));}
+  table.pm td.pm-name,table.pm th.pm-corner{position:sticky;left:0;z-index:3;background:var(--surface-alt);font-weight:800;text-align:left;padding:6px 10px;min-width:86px;border-right:2px solid var(--border-strong,var(--border));}
+  table.pm td.pm-name{z-index:2;}
+  table.pm td.pm-cell{min-width:46px;font-weight:700;}
+  table.pm td.pm-total,table.pm th.pm-total-h{min-width:62px;font-weight:800;background:var(--surface-alt);}
+  table.pm td.pm-win{background:#2e9e4f;color:#fff;}
+  table.pm td.pm-lose{background:#e53935;color:#fff;}
+  table.pm td.pm-part{background:#f4c430;color:#1a1a1a;}
+  table.pm td.pm-picked{background:var(--accent-soft);color:var(--accent-soft-ink);}
+  table.pm td.pm-na{color:var(--ink-faint);font-weight:400;}
+  table.pm td[data-tip]{cursor:help;}
+  table.pm tr.pm-foot td{background:var(--surface-alt);font-weight:700;}
+  table.pm tr.pm-foot td.pm-name{font-size:11px;letter-spacing:.03em;}
+  table.pm tr.pm-winrow td.pm-cell{background:#2f6fe0;color:#fff;font-weight:800;}
+  @media (max-width:640px){
+    table.pm th,table.pm td{padding:5px 3px;font-size:12px;}
+    table.pm td.pm-name,table.pm th.pm-corner{min-width:70px;padding:5px 7px;}
+  }
   .cl-group{border:1px solid var(--border);border-radius:var(--radius-l);margin-bottom:12px;background:var(--surface);overflow:hidden;}
   .cl-group > summary{cursor:pointer;padding:12px 14px;background:var(--surface-alt);list-style:revert;}
   .cl-entry{padding:12px 14px;border-top:1px solid var(--border);}
@@ -529,6 +560,7 @@
       <button data-tab="board" class="active">Lestvica</button>
       <button data-tab="submit">Oddaj napoved</button>
       <button data-tab="history">Zgodovina napovedi</button>
+      <button data-tab="tables">Tabele</button>
       <button data-tab="admin">Admin</button>
     </nav>
   </header>
@@ -566,6 +598,17 @@
         </div>
       </div>
       <div id="history-content"><div class="empty"><span class="icon">⏳</span>Nalagam …</div></div>
+    </section>
+
+    <!-- TABELE (matrika napovedi po krogih) -->
+    <section class="panel" id="panel-tables">
+      <div class="section-head">
+        <div>
+          <h2>Tabele</h2>
+          <p>Matrika napovedi po krogih: vodoravno napovedi posameznega igralca, navpično koliko igralcev je napovedalo zmago ekipe</p>
+        </div>
+      </div>
+      <div id="tables-content"><div class="empty"><span class="icon">⏳</span>Nalagam …</div></div>
     </section>
 
     <!-- ADMIN -->
@@ -884,6 +927,7 @@
   ============================================================ */
   async function init(){
     bindNav();
+    initTooltips();
     renderAdmin();
     renderSubmitSkeleton();
 
@@ -928,6 +972,7 @@
     }
     if(tab==='submit') renderSubmitTab();
     if(tab==='history') renderHistoryTab();
+    if(tab==='tables') renderTablesTab();
     if(tab==='admin') renderAdmin();
   }
 
@@ -940,6 +985,7 @@
       if(currentTab==='board') renderLeaderboard();
       if(currentTab==='submit') renderSubmitTab();
       if(currentTab==='history') renderHistoryTab();
+      if(currentTab==='tables') renderTablesTab();
       if(currentTab==='admin' && adminSubTab==='roster') renderAdminRoster();
     }, function(e){ console.warn('roster sub error', e); toast(dbErrorMsg(e), 7000); $('#board-content').innerHTML = emptyState('⚠️', dbErrorMsg(e)); });
   }
@@ -950,6 +996,7 @@
       if(currentTab==='board') renderLeaderboard();
       if(currentTab==='submit') renderSubmitTab();
       if(currentTab==='history') renderHistoryTab();
+      if(currentTab==='tables') renderTablesTab();
       if(currentTab==='admin' && adminSubTab==='rounds') renderAdminRounds();
     }, function(e){ console.warn('rounds sub error', e); toast(dbErrorMsg(e), 7000); });
   }
@@ -1663,35 +1710,41 @@
     }
     html += '<div class="pie-grid">';
     (round.matchups||[]).forEach(function(m, i){
-      var countA = 0, countB = 0;
+      var countA = 0, countB = 0, votersA = [], votersB = [];
       subs.forEach(function(s){
         var p = s.picks ? s.picks[i] : null;
-        if(p===m.a) countA++; else if(p===m.b) countB++;
+        if(p===m.a){ countA++; votersA.push(rosterName(s.userId)); }
+        else if(p===m.b){ countB++; votersB.push(rosterName(s.userId)); }
       });
+      votersA.sort(function(a,b){ return a.localeCompare(b); });
+      votersB.sort(function(a,b){ return a.localeCompare(b); });
       var winner = (round.winners||[])[i];
-      html += pieMatchupHtml(m, countA, countB, winner);
+      html += pieMatchupHtml(m, countA, countB, winner, votersA, votersB);
     });
     html += '</div></div></details>';
     return html;
   }
 
-  function pieMatchupHtml(m, countA, countB, winner){
+  function pieMatchupHtml(m, countA, countB, winner, votersA, votersB){
     var total = countA + countB;
     var pctA = total ? Math.round(countA/total*100) : 0;
     var pctB = total ? 100-pctA : 0;
     var gradient = total===0 ? 'var(--border)' : ('conic-gradient(var(--accent) 0 '+pctA+'%, var(--focus) '+pctA+'% 100%)');
     var winA = !!(winner && winner===m.a), winB = !!(winner && winner===m.b);
-    var html = '<div class="pie-matchup">';
+    /* Podatki za tooltip (hover na računalniku, tap na telefonu): kdo je glasoval za katero ekipo.
+       Obe ekipi in glasovalci so v data-pie, segment pod kazalcem izračuna initTooltips(). */
+    var pieData = { a:{team:teamNameOnly(m.a), voters:votersA||[]}, b:{team:teamNameOnly(m.b), voters:votersB||[]}, pctA:pctA, total:total };
+    var html = '<div class="pie-matchup" data-pie="'+esc(JSON.stringify(pieData))+'">';
     html += '<div class="pie-chart" style="background:'+gradient+';"></div>';
     html += '<div class="pie-legend">';
-    html += '<div class="pie-legend-row'+(winA?' winner':'')+'">';
+    html += '<div class="pie-legend-row'+(winA?' winner':'')+'" data-seg="a">';
     html += '<span class="pie-swatch" style="background:var(--accent);"></span>';
     html += teamLogoImg(m.a);
     html += '<span class="pie-name">'+esc(teamNameOnly(m.a))+'</span>';
     html += '<span class="pie-pct">'+pctA+'% ('+countA+')</span>';
     if(winA) html += '<span class="pie-win-badge">✓</span>';
     html += '</div>';
-    html += '<div class="pie-legend-row'+(winB?' winner':'')+'">';
+    html += '<div class="pie-legend-row'+(winB?' winner':'')+'" data-seg="b">';
     html += '<span class="pie-swatch" style="background:var(--focus);"></span>';
     html += teamLogoImg(m.b);
     html += '<span class="pie-name">'+esc(teamNameOnly(m.b))+'</span>';
@@ -1699,6 +1752,238 @@
     if(winB) html += '<span class="pie-win-badge">✓</span>';
     html += '</div>';
     html += '</div></div>';
+    return html;
+  }
+
+  /* ============================================================
+     TOOLTIP (hover na računalniku, dotik na telefonu)
+     - elementi z data-tip="vrstica1\nvrstica2" (celice tabele)
+     - tortni diagram (.pie-chart) in vrstice legende (.pie-legend-row[data-seg]):
+       kdo je glasoval za posamezno ekipo
+  ============================================================ */
+  var tipBox = null, tipTarget = null, lastPointerType = 'mouse';
+  function tipEnsure(){
+    if(!tipBox){ tipBox = document.createElement('div'); tipBox.id = 'tipBox'; document.body.appendChild(tipBox); }
+    return tipBox;
+  }
+  function tipShow(html, x, y){
+    var b = tipEnsure();
+    b.innerHTML = html; b.style.display = 'block';
+    var w = b.offsetWidth, h = b.offsetHeight, vw = window.innerWidth, vh = window.innerHeight;
+    var left = Math.min(Math.max(8, x + 14), vw - w - 8);
+    var top = y + 16; if(top + h > vh - 8) top = Math.max(8, y - h - 12);
+    b.style.left = left+'px'; b.style.top = top+'px';
+  }
+  function tipHide(){ if(tipBox) tipBox.style.display = 'none'; tipTarget = null; }
+  function tipTextHtml(t){ return esc(t).replace(/\n/g, '<br>'); }
+  function pieSegAt(pieEl, x, y){
+    var chart = pieEl.querySelector('.pie-chart'); if(!chart) return null;
+    var r = chart.getBoundingClientRect();
+    var dx = x - (r.left + r.width/2), dy = y - (r.top + r.height/2);
+    if(Math.sqrt(dx*dx+dy*dy) > r.width/2) return null;
+    var d; try{ d = JSON.parse(pieEl.getAttribute('data-pie')); }catch(e){ return null; }
+    if(!d.total) return null;
+    var ang = Math.atan2(dx, -dy) * 180 / Math.PI; if(ang < 0) ang += 360; // 0° zgoraj, v smeri ure (kot conic-gradient)
+    return ang < d.pctA*3.6 ? 'a' : 'b';
+  }
+  function pieTipHtml(pieEl, seg){
+    var d; try{ d = JSON.parse(pieEl.getAttribute('data-pie')); }catch(e){ return ''; }
+    var t = d[seg]; if(!t) return '';
+    return '<strong>'+esc(t.team)+'</strong> ('+t.voters.length+')<br>'+(t.voters.length ? esc(t.voters.join(', ')) : '<span style="opacity:.7">Nihče</span>');
+  }
+  function tipContentFor(target, ev){
+    // vrne {html, key} ali null
+    var pie = target.closest('[data-pie]');
+    if(pie){
+      var seg = null;
+      var row = target.closest('.pie-legend-row[data-seg]');
+      if(row) seg = row.getAttribute('data-seg');
+      else if(target.closest('.pie-chart')) seg = pieSegAt(pie, ev.clientX, ev.clientY);
+      if(!seg) return null;
+      var h = pieTipHtml(pie, seg);
+      return h ? { html:h, key:'pie:'+seg, el:pie } : null;
+    }
+    var tipEl = target.closest('[data-tip]');
+    if(tipEl) return { html: tipTextHtml(tipEl.getAttribute('data-tip')), key:'tip', el:tipEl };
+    return null;
+  }
+  function initTooltips(){
+    document.addEventListener('pointerdown', function(e){ lastPointerType = e.pointerType || 'mouse'; }, true);
+    document.addEventListener('mouseover', function(e){
+      if(lastPointerType!=='mouse') return;
+      var c = tipContentFor(e.target, e);
+      if(c){ tipTarget = c.el; tipShow(c.html, e.clientX, e.clientY); } else tipHide();
+    });
+    document.addEventListener('mousemove', function(e){
+      if(lastPointerType!=='mouse') return;
+      if(!e.target.closest) return;
+      var c = tipContentFor(e.target, e);
+      if(c){ tipTarget = c.el; tipShow(c.html, e.clientX, e.clientY); } else tipHide();
+    });
+    document.addEventListener('mouseout', function(e){
+      if(lastPointerType!=='mouse') return;
+      if(!e.relatedTarget) tipHide();
+    });
+    document.addEventListener('click', function(e){
+      if(lastPointerType==='mouse') return; // na računalniku ga že prikaže hover
+      var c = tipContentFor(e.target, e);
+      if(!c){ tipHide(); return; }
+      var same = tipBox && tipBox.style.display==='block' && tipTarget===c.el && tipBox.getAttribute('data-key')===c.key;
+      if(same){ tipHide(); return; }
+      tipTarget = c.el; tipEnsure().setAttribute('data-key', c.key);
+      tipShow(c.html, e.clientX, e.clientY);
+    });
+    window.addEventListener('scroll', function(){ if(lastPointerType!=='mouse') tipHide(); }, true);
+  }
+
+  /* ============================================================
+     TABELE (matrika napovedi po krogih)
+  ============================================================ */
+  var tablesToken = 0, tablesOpenMap = {};
+  function stripDiacritics(t){ return String(t||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
+  function managerKey(full){
+    var parts = stripDiacritics(full).trim().split(/\s+/).filter(Boolean);
+    if(!parts.length) return '';
+    return parts[0].charAt(0)+'|'+parts[parts.length-1];
+  }
+  /* Glava stolpca = vzdevek igralca (kot v vrsticah). Ekipo povežemo z igralcem prek
+     imena managerja v oklepaju (začetnica imena + priimek, brez šumnikov), če ne gre,
+     pokažemo ime ekipe. */
+  function teamColLabel(team){
+    var key = managerKey(teamManagerFullName(team));
+    if(key){
+      for(var i=0;i<roster.length;i++){
+        if(managerKey(roster[i].name)===key) return roster[i].nickname || roster[i].name;
+      }
+    }
+    return teamNameOnly(team);
+  }
+
+  function renderTablesTab(){
+    var el = $('#tables-content'); if(!el) return;
+    if(roster.length===0){ el.innerHTML = emptyState('🏀', 'Liga še ni nastavljena.'); return; }
+    var visible = rounds.filter(function(r){ return r.kind!=='special' && (r.status==='locked' || r.status==='graded'); })
+      .sort(function(a,b){ return (b.number||0)-(a.number||0); });
+    if(visible.length===0){ el.innerHTML = emptyState('📋', 'Tabele bodo vidne, ko admin zaklene prvi krog za oddajanje.'); return; }
+    if(!el.querySelector('details')) el.innerHTML = emptyState('⏳', 'Nalagam …');
+    var token = ++tablesToken;
+    Promise.all(visible.map(function(r){
+      return db.collection('rounds/'+r.id+'/submissions').get().then(function(snap){
+        return { round:r, subs: snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); }) };
+      });
+    })).then(function(results){
+      if(token !== tablesToken) return;
+      el.innerHTML = results.map(function(res, idx){ return predictionMatrixCardHtml(res.round, res.subs, idx===0); }).join('');
+      $all('details.pm-round', el).forEach(function(dt){
+        dt.addEventListener('toggle', function(){ tablesOpenMap[dt.getAttribute('data-rid')] = dt.open; });
+      });
+    }).catch(function(e){ console.error(e); el.innerHTML = emptyState('⚠️', 'Napaka pri nalaganju.'); });
+  }
+
+  function fmtPts(n){ return (typeof n==='number' && isFinite(n)) ? String(round2(n)) : '—'; }
+
+  function predictionMatrixCardHtml(round, subs, isFirst){
+    var titleLabel = 'Krog '+round.number+(round.label ? ' — '+round.label : '');
+    var graded = round.status==='graded' && (round.winners||[]).length>0;
+    var open = (tablesOpenMap[round.id]!==undefined) ? tablesOpenMap[round.id] : isFirst;
+    var matchups = round.matchups || [];
+    var questions = round.bonusQuestions || [];
+    var N = subs.length;
+    var subBy = {}; subs.forEach(function(s){ subBy[s.userId] = s; });
+
+    var cols = [];
+    matchups.forEach(function(m, i){
+      cols.push({mi:i, team:m.a, opp:m.b, first:true});
+      cols.push({mi:i, team:m.b, opp:m.a, first:false});
+    });
+    cols.forEach(function(c){
+      c.count = subs.filter(function(s){ return s.picks && s.picks[c.mi]===c.team; }).length;
+      var w = (round.winners||[])[c.mi];
+      c.isWin = graded && w===c.team;
+      c.weight = c.isWin ? (c.count>0 ? round2(((N-c.count)/c.count)+1) : 0) : 0;
+    });
+
+    var html = '<details class="card history-round pm-round" data-rid="'+esc(round.id)+'"'+(open?' open':'')+'><summary>';
+    html += '<span class="hrs-title">'+esc(titleLabel)+'</span><span class="hrs-meta">';
+    html += '<span class="mono hrs-total">'+N+' odd.</span>';
+    html += '<span class="badge '+round.status+'">'+statusLabel(round.status)+'</span><span class="chev">▸</span></span></summary>';
+    html += '<div class="history-round-body">';
+    if(N===0){ html += '<p class="small muted" style="margin-top:8px;">Še nihče ni oddal napovedi.</p></div></details>'; return html; }
+    if(!graded) html += '<p class="small muted" style="margin:8px 0;">Krog še ni ocenjen — obarvanje in točke se pojavijo po ocenjevanju.</p>';
+    html += '<div class="table-scroll" style="margin-top:8px;"><table class="pm"><thead>';
+
+    // vrstica 1: skupine
+    html += '<tr><th class="pm-corner" rowspan="2">IGRALEC \\ ZA</th>';
+    matchups.forEach(function(m, i){ html += '<th colspan="2" class="pm-grp pm-sep">Tekma '+(i+1)+'</th>'; });
+    html += '<th class="pm-total-h" rowspan="2">VSOTA<br>TOČK</th>';
+    if(questions.length) html += '<th class="pm-grp pm-sep" colspan="'+questions.length+'">Bonus vprašanja</th>';
+    html += '</tr><tr>';
+    cols.forEach(function(c){
+      html += '<th class="pm-th'+(c.first?' pm-sep':'')+'" title="'+esc(c.team)+'">'+esc(teamColLabel(c.team))+'</th>';
+    });
+    questions.forEach(function(q, qi){
+      html += '<th class="pm-th pm-bonus'+(qi===0?' pm-sep':'')+'" title="'+esc(q.text||'')+'">'+esc(q.text||('Vprašanje '+(qi+1)))+'</th>';
+    });
+    html += '</tr></thead><tbody>';
+
+    roster.forEach(function(u){
+      var sub = subBy[u.id];
+      var uname = u.nickname || u.name;
+      html += '<tr><td class="pm-name">'+esc(uname)+'</td>';
+      cols.forEach(function(c){
+        var cls = 'pm-cell'+(c.first?' pm-sep':'');
+        if(!sub){ html += '<td class="'+cls+' pm-na">–</td>'; return; }
+        var pick = sub.picks ? sub.picks[c.mi] : null;
+        var picked = pick===c.team;
+        var winner = (round.winners||[])[c.mi];
+        if(picked) cls += graded ? (c.isWin ? ' pm-win' : ' pm-lose') : ' pm-picked';
+        var pts = graded ? (sub.matchPoints||[])[c.mi] : null;
+        var lines = [uname, 'Napoved: '+(pick ? teamNameOnly(pick) : '—'), 'Rešitev: '+(graded ? (winner ? teamNameOnly(winner) : '—') : 'še ni ocenjeno')];
+        if(graded){
+          var tot = c.isWin ? c.count : (matchups[c.mi] ? subs.filter(function(s){ return s.picks && s.picks[c.mi]===winner; }).length : 0);
+          var line = 'Točke: '+fmtPts(pts);
+          if(pts>0 && tot>0) line += '  ((' + (N-tot) + ' / ' + tot + ') + 1)';
+          lines.push(line);
+        }
+        html += '<td class="'+cls+'" data-tip="'+esc(lines.join('\n'))+'">'+(picked?1:0)+'</td>';
+      });
+      var totalVal = (graded && sub && sub.roundTotal!=null) ? fmtPts(sub.roundTotal) : '—';
+      html += '<td class="pm-total">'+(sub ? totalVal : '–')+'</td>';
+      questions.forEach(function(q, qi){
+        var cls = 'pm-cell pm-bonus'+(qi===0?' pm-sep':'');
+        if(!sub){ html += '<td class="'+cls+' pm-na">–</td>'; return; }
+        var ans = (sub.bonusAnswers||[])[qi];
+        var pts = graded ? (sub.bonusPoints||[])[qi] : null;
+        var opts = (q.options||[]).filter(function(o){ return typeof o==='number'; });
+        var max = opts.length ? Math.max.apply(null, opts) : 0;
+        if(graded && typeof pts==='number'){
+          if(pts>0 && pts>=max) cls += ' pm-win';
+          else if(pts>0) cls += ' pm-part';
+          else cls += ' pm-lose';
+        }
+        var tip = [uname, (q.text||''), 'Odgovor: '+(ans||'—'), (graded && typeof pts==='number') ? ('Točke: '+fmtPts(pts)+(max ? ' (največ '+max+')' : '')) : 'Točke: še ni ocenjeno'];
+        html += '<td class="'+cls+'" data-tip="'+esc(tip.join('\n'))+'">'+esc(ans||'—')+'</td>';
+      });
+      html += '</tr>';
+    });
+
+    // spodnje vrstice
+    var tail = 1 + (questions.length ? questions.length : 0);
+    function footRow(label, cellFn, cls){
+      var r = '<tr class="pm-foot '+(cls||'')+'"><td class="pm-name">'+label+'</td>';
+      cols.forEach(function(c){ r += '<td class="pm-cell'+(c.first?' pm-sep':'')+'">'+cellFn(c)+'</td>'; });
+      r += '<td class="pm-tail pm-sep" colspan="'+tail+'"></td></tr>';
+      return r;
+    }
+    html += footRow('NAP. ZMAG', function(c){ return c.count; });
+    html += footRow('NAP. PORAZOV', function(c){ return N - c.count; });
+    if(graded){
+      html += footRow('ZMAGOVALEC', function(c){ return c.isWin ? 1 : 0; }, 'pm-winrow');
+      html += footRow('UTEŽ ZADETKA', function(c){ return c.isWin ? fmtPts(c.weight) : '0'; });
+    }
+    html += '</tbody></table></div>';
+    html += '<p class="small muted" style="margin-top:8px;">Zeleno = zmagovalna ekipa, ki jo je igralec izbral; rdeče = poražena ekipa, ki jo je izbral; rumeno = delno točkovan bonus. Premakni miško (na telefonu tapni) čez celico za točke te napovedi. Uteža zadetka = (št. napovedanih porazov / št. napovedanih zmag) + 1.</p>';
+    html += '</div></details>';
     return html;
   }
 
