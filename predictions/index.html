@@ -425,6 +425,7 @@
   .round-item.editing{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);}
   .round-item .meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
   .round-item .rlabel{font-family:var(--font-display);font-weight:800;font-size:16px;}
+  .round-item .round-subs{flex-basis:100%;border-top:1px dashed var(--border);padding-top:10px;}
   .round-item .actions{display:flex;gap:6px;flex-wrap:wrap;}
 
   .roster-row{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);}
@@ -2058,6 +2059,39 @@
     allstar: {number:9003, label:'Allstar Special'}
   };
 
+  /* Oddane napovedi po krogih (admin > Krogi): za vsak krog v živo poslušamo
+     njegove oddaje in pod krogom prikažemo "Oddalo: X / N" ter značke tistih, ki
+     še manjkajo (isti videz kot na zavihku Oddaj napoved). Posodobi se samo ta
+     vrstica, zato urejanje kroga spodaj ostane nedotaknjeno. */
+  var adminRoundSubs = {}; // roundId -> {ids:{userId:true}, loaded:bool, unsub:fn}
+  function watchAdminRoundSubs(roundId){
+    var st = adminRoundSubs[roundId];
+    if(st){ fillRoundSubsEl(roundId); return; }
+    st = adminRoundSubs[roundId] = { ids:{}, loaded:false, unsub:null };
+    fillRoundSubsEl(roundId);
+    st.unsub = db.collection('rounds/'+roundId+'/submissions').onSnapshot(function(snap){
+      st.ids = {}; snap.docs.forEach(function(d){ st.ids[d.id] = true; });
+      st.loaded = true;
+      fillRoundSubsEl(roundId);
+    }, function(e){ console.warn('admin subs', e); });
+  }
+  function fillRoundSubsEl(roundId){
+    var el = document.querySelector('.round-subs[data-subs="'+roundId+'"]'); if(!el) return;
+    var st = adminRoundSubs[roundId];
+    if(!st || !st.loaded){ el.innerHTML = '<span class="small muted">Oddane napovedi: nalagam …</span>'; return; }
+    var total = roster.length;
+    var missing = roster.filter(function(u){ return !st.ids[u.id]; });
+    var done = total - missing.length;
+    var html = '<div class="small" style="font-weight:700;">Oddalo: '+done+' / '+total+'</div>';
+    if(missing.length){
+      html += '<div class="small muted" style="margin-top:4px;">Manjkajoči:</div><div class="submitted-list" style="margin-top:6px;">'+
+        missing.map(function(u){ return '<span class="chip missing">'+esc(u.nickname||u.name)+'</span>'; }).join('')+'</div>';
+    } else if(total>0){
+      html += '<div class="small" style="margin-top:4px;color:var(--good);">Vsi so oddali ✓</div>';
+    }
+    el.innerHTML = html;
+  }
+
   function renderAdminRounds(){
     var el = $('#adminSubContent'); if(!el) return;
     var editing = editingRoundId ? rounds.filter(function(r){ return r.id===editingRoundId; })[0] : null;
@@ -2083,7 +2117,9 @@
       html += '<button class="btn small danger" data-act="del" data-id="'+r.id+'">Izbriši</button>';
       html += '<button class="btn small ghost" data-act="seed" data-id="'+r.id+'" title="Ustvari izmišljene oddaje za vse igralce iz Admin > Igralci — za testiranje ocenjevanja, lestvice in zgodovine.">🧪 Testni podatki</button>';
       html += '<button class="btn small danger" data-act="clearsubs" data-id="'+r.id+'" title="Izbriše VSE oddane napovedi tega kroga (tudi prave, ne le testne).">🗑️ Izbriši oddaje</button>';
-      html += '</div></div>';
+      html += '</div>';
+      if(r.status!=='draft') html += '<div class="round-subs" data-subs="'+esc(r.id)+'"></div>';
+      html += '</div>';
     });
     html += '<p class="small muted" style="margin-top:8px;">🧪 Testni podatki ustvari/prepiše izmišljene oddaje za vse trenutne igralce iz Admin → Igralci (uporabno za preizkus ocenjevanja, lestvice in zgodovine) — če krog že ima prave oddaje, jih prepiše. 🗑️ Izbriši oddaje počisti čisto vse oddaje tega kroga.</p>';
     html += '</div>';
@@ -2151,6 +2187,7 @@
     html += '</div>';
 
     el.innerHTML = html;
+    sorted.forEach(function(r){ if(r.status!=='draft') watchAdminRoundSubs(r.id); });
     bindRoundActions();
     bindAiBox('newMatchups');
     bindDynamicQuestions('newBonusQs', 3, 5, {matchupSource:'newMatchups'});
