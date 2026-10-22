@@ -1,0 +1,14 @@
+{
+  "name": "NBA Fantasy Koroška - predictions 2026/27",
+  "short_name": "NBA Napovedi",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F0F3EF",
+  "theme_color": "#151E1A",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

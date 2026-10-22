@@ -1,0 +1,44 @@
+name: Predictions push obvestila
+
+# 1) Ponedeljek (UTC), vsakih 10 min med 05:00 in 21:59: če je admin odprl nov krog
+#    ("Odpri za oddajo"), vsem naročenim pošlje "Novi predictioni".
+# 2) Ponedeljek ob 17:00 in 18:00 UTC: skripta pošlje "Opomnik - predictions" samo,
+#    če je v Sloveniji ravno 19:xx (zaradi poletnega/zimskega časa), in to samo
+#    tistim, ki za odprt krog še niso oddali napovedi.
+# Ročni zagon: zavihek Actions -> ta workflow -> Run workflow (open / reminder / test).
+on:
+  schedule:
+    - cron: '*/10 5-21 * * 1'
+    - cron: '0 17 * * 1'
+    - cron: '0 18 * * 1'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Kaj poslati (ročni zagon ignorira uro in dan)'
+        type: choice
+        options: [open, reminder, test]
+        default: open
+
+concurrency:
+  group: predictions-push-${{ github.event.schedule || inputs.mode }}
+  cancel-in-progress: false
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Namesti odvisnosti
+        working-directory: scripts
+        run: npm install --no-audit --no-fund
+      - name: Pošlji obvestila
+        working-directory: scripts
+        run: node send-push.mjs
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || (github.event.schedule == '*/10 5-21 * * 1' && 'open' || 'reminder') }}
+          FORCE: ${{ github.event_name == 'workflow_dispatch' && 'true' || 'false' }}
