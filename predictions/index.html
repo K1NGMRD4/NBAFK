@@ -382,6 +382,7 @@
   table.pm td.pm-name,table.pm th.pm-corner{position:sticky;left:0;z-index:3;background:var(--surface-alt);font-weight:800;text-align:left;padding:6px 10px;min-width:86px;border-right:2px solid var(--border-strong,var(--border));}
   table.pm td.pm-name{z-index:2;}
   table.pm td.pm-cell{min-width:46px;font-weight:700;}
+  table.pm td.pm-name2,table.pm th.pm-corner2{background:var(--surface-alt);font-weight:800;text-align:left;padding:6px 10px;min-width:86px;}
   table.pm td.pm-total,table.pm th.pm-total-h{min-width:62px;font-weight:800;background:var(--surface-alt);}
   table.pm td.pm-win{background:#2e9e4f;color:#fff;}
   table.pm td.pm-lose{background:#e53935;color:#fff;}
@@ -1963,6 +1964,7 @@
     // vrstica 1: skupine
     html += '<tr><th class="pm-corner" rowspan="2">IGRALEC \\ ZA</th>';
     matchups.forEach(function(m, i){ html += '<th colspan="2" class="pm-grp pm-sep">Tekma '+(i+1)+'</th>'; });
+    html += '<th class="pm-corner2 pm-sep" rowspan="2">IGRALEC</th>';
     html += '<th class="pm-total-h" rowspan="2">VSOTA<br>TOČK</th>';
     if(questions.length) html += '<th class="pm-grp pm-sep" colspan="'+questions.length+'">Bonus vprašanja</th>';
     html += '</tr><tr>';
@@ -1996,6 +1998,7 @@
         html += '<td class="'+cls+'" data-tip="'+esc(lines.join('\n'))+'">'+(picked?1:0)+'</td>';
       });
       var totalVal = (graded && sub && sub.roundTotal!=null) ? fmtPts(sub.roundTotal) : '—';
+      html += '<td class="pm-name2 pm-sep">'+esc(uname)+'</td>';
       html += '<td class="pm-total">'+(sub ? totalVal : '–')+'</td>';
       questions.forEach(function(q, qi){
         var cls = 'pm-cell pm-bonus'+(qi===0?' pm-sep':'');
@@ -2016,7 +2019,7 @@
     });
 
     // spodnje vrstice
-    var tail = 1 + (questions.length ? questions.length : 0);
+    var tail = 2 + (questions.length ? questions.length : 0);
     function footRow(label, cellFn, cls){
       var r = '<tr class="pm-foot '+(cls||'')+'"><td class="pm-name">'+label+'</td>';
       cols.forEach(function(c){ r += '<td class="pm-cell'+(c.first?' pm-sep':'')+'">'+cellFn(c)+'</td>'; });
@@ -2087,9 +2090,9 @@
       html += '<p class="small muted" style="margin-top:8px;">Napoved ni bila oddana.</p></div></details>';
       return html;
     }
-    if(round.status!=='graded'){
-      html += '<p class="small muted" style="margin-top:8px;">Krog še ni ocenjen.</p></div></details>';
-      return html;
+    var isGraded = round.status==='graded';
+    if(!isGraded){
+      html += '<p class="small muted" style="margin-top:8px;">Krog je zaklenjen, a še ni ocenjen — tvoja napoved je spodaj, točke se pojavijo po ocenjevanju.</p>';
     }
 
     if(!isSpecial){
@@ -2103,12 +2106,12 @@
         var cc = (round.correctCounts||[])[i];
         html += '<div class="matchup" style="grid-template-columns:28px 1fr auto;">';
         html += '<span class="idx">'+(i+1)+'</span>';
-        html += '<span>'+esc(m.a)+' vs '+esc(m.b)+' <span class="muted small">(zmagal: '+esc(winner||'—')+')</span></span>';
+        html += '<span>'+esc(m.a)+' vs '+esc(m.b)+(isGraded ? ' <span class="muted small">(zmagal: '+esc(winner||'—')+')</span>' : '')+'</span>';
         html += '<span class="row" style="gap:8px;">';
-        html += '<span class="badge '+(correct?'open':'draft')+'">'+esc(pick||'—')+'</span>';
-        html += '<span class="mono" style="font-weight:700;">'+(pts!=null?'+'+pts:'—')+'</span>';
+        html += '<span class="badge '+(isGraded ? (correct?'open':'draft') : 'locked')+'">'+esc(pick||'—')+'</span>';
+        if(isGraded) html += '<span class="mono" style="font-weight:700;">'+(pts!=null?'+'+pts:'—')+'</span>';
         html += '</span></div>';
-        if(cc!=null && N!=null && winner && correct){
+        if(isGraded && cc!=null && N!=null && winner && correct){
           html += '<p class="small muted" style="margin:2px 0 8px;">'+cc+' od '+N+' je izbralo '+esc(winner)+' → ('+(N-cc)+' / '+cc+') + 1 = '+pts+' točk</p>';
         }
       });
@@ -2124,7 +2127,8 @@
         html += '<div class="bonusq"><div class="qtext">'+esc(q.text)+'</div>';
         html += questionImageHtml(round, q, i);
         html += '<div class="row" style="justify-content:space-between;"><span class="muted small">Odgovor: '+esc((answers||[])[i]||'—')+'</span>';
-        html += '<span class="mono" style="font-weight:700;">'+((points||[])[i]!=null?'+'+points[i]:'—')+'</span></div></div>';
+        if(isGraded) html += '<span class="mono" style="font-weight:700;">'+((points||[])[i]!=null?'+'+points[i]:'—')+'</span>';
+        html += '</div></div>';
       });
       html += '</div>';
     }
