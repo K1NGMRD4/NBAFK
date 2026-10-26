@@ -775,6 +775,11 @@
     if(typeof n !== 'number' || !isFinite(n)) return n;
     return Math.round((n + Number.EPSILON) * 100) / 100;
   }
+  /* Vedno natanko 2 decimalki (npr. 11 -> "11.00", 2.4699999 -> "2.47"). */
+  function fix2(n){
+    if(typeof n !== 'number' || !isFinite(n)) return '—';
+    return (Math.round((n + Number.EPSILON) * 100) / 100).toFixed(2);
+  }
   function pctRowTotal(data){
     var sum = 0;
     PCT_COLUMNS.forEach(function(c){ var v = data && data[c.key]; if(typeof v==='number') sum += v; });
@@ -3137,7 +3142,7 @@
       var scoredSp = gradingSubs.map(function(s){
         var points = (gradingBonusPts[s.userId]||[]).map(function(p){ return typeof p==='number' ? p : 0; });
         var total = points.reduce(function(a,b){ return a+b; }, 0);
-        return { sub:s, points:points, roundTotal: total };
+        return { sub:s, points:points, roundTotal: round2(total) };
       });
       btn.disabled = true; btn.textContent = 'Shranjujem …';
       var writesSp = scoredSp.map(function(sc){
@@ -3150,7 +3155,7 @@
         btn.disabled=false; btn.textContent='Izračunaj in shrani rezultate';
         var prevSp = '<table class="grade-table" style="margin-top:12px;"><thead><tr><th>Igralec</th><th>Skupaj</th></tr></thead><tbody>';
         scoredSp.sort(function(a,b){ return b.roundTotal-a.roundTotal; }).forEach(function(sc){
-          prevSp += '<tr><td>'+esc(rosterName(sc.sub.userId))+'</td><td class="mono" style="font-weight:700;">'+sc.roundTotal+'</td></tr>';
+          prevSp += '<tr><td>'+esc(rosterName(sc.sub.userId))+'</td><td class="mono" style="font-weight:700;">'+fix2(sc.roundTotal)+'</td></tr>';
         });
         prevSp += '</tbody></table>';
         $('#gradePreview').innerHTML = prevSp;
@@ -3181,7 +3186,7 @@
       var bonusPoints = (gradingBonusPts[s.userId]||[]).map(function(p){ return typeof p==='number' ? p : 0; });
       var matchSum = matchPoints.reduce(function(a,b){ return a+b; },0);
       var bonusSum = bonusPoints.reduce(function(a,b){ return a+b; },0);
-      return { sub:s, matchPoints:matchPoints, bonusPoints:bonusPoints, roundTotal: matchSum+bonusSum };
+      return { sub:s, matchPoints:matchPoints, bonusPoints:bonusPoints, roundTotal: round2(matchSum+bonusSum) };
     });
 
     btn.disabled = true; btn.textContent = 'Shranjujem …';
@@ -3197,7 +3202,7 @@
       btn.disabled=false; btn.textContent='Izračunaj in shrani rezultate';
       var prev = '<table class="grade-table" style="margin-top:12px;"><thead><tr><th>Igralec</th><th>Tekme</th><th>Bonus</th><th>Skupaj</th></tr></thead><tbody>';
       scored.sort(function(a,b){ return b.roundTotal-a.roundTotal; }).forEach(function(sc){
-        prev += '<tr><td>'+esc(rosterName(sc.sub.userId))+'</td><td class="mono">'+sc.matchPoints.reduce(function(a,b){return a+b;},0)+'</td><td class="mono">'+sc.bonusPoints.reduce(function(a,b){return a+b;},0)+'</td><td class="mono" style="font-weight:700;">'+sc.roundTotal+'</td></tr>';
+        prev += '<tr><td>'+esc(rosterName(sc.sub.userId))+'</td><td class="mono">'+fix2(sc.matchPoints.reduce(function(a,b){return a+b;},0))+'</td><td class="mono">'+fix2(sc.bonusPoints.reduce(function(a,b){return a+b;},0))+'</td><td class="mono" style="font-weight:700;">'+fix2(sc.roundTotal)+'</td></tr>';
       });
       prev += '</tbody></table>';
       $('#gradePreview').innerHTML = prev;
