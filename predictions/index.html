@@ -473,6 +473,12 @@
   .grade-table{width:100%;border-collapse:collapse;margin-top:8px;}
   .grade-table th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:0.03em;color:var(--ink-dim);padding:6px 8px;border-bottom:1px solid var(--border);}
   .grade-table td{padding:8px 8px;border-bottom:1px solid var(--border);vertical-align:top;font-size:13.5px;}
+  .grade-summary{border-collapse:separate;border-spacing:0 4px;}
+  .grade-summary td.gs-bonus{border-bottom:none;font-weight:800;color:#1f9d4b;white-space:nowrap;padding-left:12px;}
+  .grade-summary th.gs-bonus-h{border-bottom:none;}
+  .grade-summary tr.gs-top td:not(.gs-bonus){border-top:2px solid #1f9d4b;border-bottom:2px solid #1f9d4b;background:rgba(31,157,75,.09);}
+  .grade-summary tr.gs-top td:first-child{border-left:2px solid #1f9d4b;border-top-left-radius:8px;border-bottom-left-radius:8px;}
+  .grade-summary tr.gs-top td:nth-last-child(2){border-right:2px solid #1f9d4b;border-top-right-radius:8px;border-bottom-right-radius:8px;}
   .grade-table td.ans{color:var(--ink-dim);font-style:italic;max-width:220px;}
 
   .pct-row{display:grid;grid-template-columns:1fr 90px 70px;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);}
@@ -780,6 +786,24 @@
     if(typeof n !== 'number' || !isFinite(n)) return '—';
     return (Math.round((n + Number.EPSILON) * 100) / 100).toFixed(2);
   }
+  /* Pregled točk kroga (Igralec | Tekme | Bonus | Skupaj), razvrščen po skupnih točkah.
+     Prva dva (največ točk) sta obkrožena z zeleno, na desni pa piše zeleno "+1%".
+     rows: [{name, match, bonus, total}]; withParts=false -> samo Igralec | Skupaj. */
+  function gradePreviewHtml(rows, withParts){
+    rows = rows.slice().sort(function(a,b){ return (b.total||0)-(a.total||0) || String(a.name).localeCompare(String(b.name)); });
+    var html = '<table class="grade-table grade-summary" style="margin-top:12px;"><thead><tr><th>Igralec</th>';
+    if(withParts) html += '<th>Tekme</th><th>Bonus</th>';
+    html += '<th>Skupaj</th><th class="gs-bonus-h"></th></tr></thead><tbody>';
+    rows.forEach(function(r, i){
+      var top = i < 2;
+      html += '<tr'+(top?' class="gs-top"':'')+'><td>'+esc(r.name)+'</td>';
+      if(withParts) html += '<td class="mono">'+fix2(r.match)+'</td><td class="mono">'+fix2(r.bonus)+'</td>';
+      html += '<td class="mono" style="font-weight:700;">'+fix2(r.total)+'</td>';
+      html += '<td class="gs-bonus">'+(top ? '+1%' : '')+'</td></tr>';
+    });
+    return html + '</tbody></table>';
+  }
+  function sumNums(a){ return (a||[]).reduce(function(x,y){ return x + (typeof y==='number' ? y : 0); }, 0); }
   function pctRowTotal(data){
     var sum = 0;
     PCT_COLUMNS.forEach(function(c){ var v = data && data[c.key]; if(typeof v==='number') sum += v; });
@@ -3110,6 +3134,14 @@
 
     area.innerHTML = html;
 
+    if(round.status==='graded' && gradingSubs.length){
+      var gp = $('#gradePreview');
+      if(gp) gp.innerHTML = gradePreviewHtml(gradingSubs.map(function(sb){
+        return isSpecial ? { name: rosterName(sb.userId), total: sb.roundTotal }
+                         : { name: rosterName(sb.userId), match: sumNums(sb.matchPoints), bonus: sumNums(sb.bonusPoints), total: sb.roundTotal };
+      }), !isSpecial);
+    }
+
     if(!isSpecial){
       $all('.matchup[data-gi] .pickbtn').forEach(function(btn){
         btn.addEventListener('click', function(){
@@ -3153,11 +3185,7 @@
       }).then(function(){
         toast((round.label||specialTypeLabel(round.specialType))+' ocenjen!');
         btn.disabled=false; btn.textContent='Izračunaj in shrani rezultate';
-        var prevSp = '<table class="grade-table" style="margin-top:12px;"><thead><tr><th>Igralec</th><th>Skupaj</th></tr></thead><tbody>';
-        scoredSp.sort(function(a,b){ return b.roundTotal-a.roundTotal; }).forEach(function(sc){
-          prevSp += '<tr><td>'+esc(rosterName(sc.sub.userId))+'</td><td class="mono" style="font-weight:700;">'+fix2(sc.roundTotal)+'</td></tr>';
-        });
-        prevSp += '</tbody></table>';
+        var prevSp = gradePreviewHtml(scoredSp.map(function(sc){ return { name: rosterName(sc.sub.userId), total: sc.roundTotal }; }), false);
         $('#gradePreview').innerHTML = prevSp;
       }).catch(function(e){
         console.error(e); btn.disabled=false; btn.textContent='Izračunaj in shrani rezultate';
@@ -3200,11 +3228,7 @@
     }).then(function(){
       toast('Krog '+round.number+' ocenjen!');
       btn.disabled=false; btn.textContent='Izračunaj in shrani rezultate';
-      var prev = '<table class="grade-table" style="margin-top:12px;"><thead><tr><th>Igralec</th><th>Tekme</th><th>Bonus</th><th>Skupaj</th></tr></thead><tbody>';
-      scored.sort(function(a,b){ return b.roundTotal-a.roundTotal; }).forEach(function(sc){
-        prev += '<tr><td>'+esc(rosterName(sc.sub.userId))+'</td><td class="mono">'+fix2(sc.matchPoints.reduce(function(a,b){return a+b;},0))+'</td><td class="mono">'+fix2(sc.bonusPoints.reduce(function(a,b){return a+b;},0))+'</td><td class="mono" style="font-weight:700;">'+fix2(sc.roundTotal)+'</td></tr>';
-      });
-      prev += '</tbody></table>';
+      var prev = gradePreviewHtml(scored.map(function(sc){ return { name: rosterName(sc.sub.userId), match: sumNums(sc.matchPoints), bonus: sumNums(sc.bonusPoints), total: sc.roundTotal }; }), true);
       $('#gradePreview').innerHTML = prev;
     }).catch(function(e){
       console.error(e); btn.disabled=false; btn.textContent='Izračunaj in shrani rezultate';
