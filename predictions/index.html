@@ -985,6 +985,47 @@
     }});
   }
 
+  /* Maskote ekip (za kratek prikaz matchup odgovorov, npr. "Tigers 🐯 vs 🐂 Black Angusi"). */
+  var TEAM_MASCOTS = {
+    'Kuala Lumpur Koalas': {name:'Koalas', emoji:'🐨'},
+    'Caracas Alpacas': {name:'Alpacas', emoji:'🦙'},
+    'Taipei Tigers': {name:'Tigers', emoji:'🐯'},
+    'Carigrad Corgis': {name:'Corgis', emoji:'🐶'},
+    'Veseli Vesoljčki': {name:'Vesoljčki', emoji:'👽'},
+    'Waipo Kakapos': {name:'Kakapos', emoji:'🦜'},
+    'New Delhi Holy Cows': {name:'Holy Cows', emoji:'🐄'},
+    'Belgrade Ducks': {name:'Ducks', emoji:'🦆'},
+    'Prevalje Steam Jackals': {name:'Jackals', emoji:'🐺'},
+    'Vuzenica Dumpsters': {name:'Dumpsters', emoji:'🗑️'},
+    'Ankraran Shrimps': {name:'Shrimps', emoji:'🦐'},
+    'Koprivna Black Angus': {name:'Black Angusi', emoji:'🐂'},
+    'Trbonje Sloths': {name:'Sloths', emoji:'🦥'},
+    'Gorske Koze': {name:'Koze', emoji:'🐐'},
+    'Tokyo Tarantulas': {name:'Tarantulas', emoji:'🕷️'},
+    'Green Hill Lions': {name:'Lions', emoji:'🦁'}
+  };
+  function mascotOfTeamStr(str){
+    var t = normTeamStr(String(str||'').trim());
+    var nm = teamNameOnly(t).trim();
+    if(TEAM_MASCOTS[nm]) return TEAM_MASCOTS[nm];
+    // zaradi različnih zapisov (šumniki, "Koprivski Black Angusi" ipd.) poskusi še po normaliziranem imenu
+    var n = normName(nm);
+    for(var k in TEAM_MASCOTS){ if(normName(k)===n) return TEAM_MASCOTS[k]; }
+    return null;
+  }
+  /* Odgovor tipa matchup ("Ekipa A (manager) vs Ekipa B (manager)") -> "Tigers 🐯 vs 🐂 Black Angusi".
+     Več odgovorov (izbira več možnosti, ločeno z vejico) se pretvori vsak zase; kar ni matchup, ostane nespremenjeno. */
+  function formatMatchupAnswer(ans){
+    if(typeof ans!=='string' || ans.indexOf(' vs ')<0) return ans;
+    return ans.split(/,\s+(?=[^,]*\svs\s)/).map(function(part){
+      var m = /^(.*?)\s+vs\s+(.*)$/.exec(part.trim());
+      if(!m) return part;
+      var a = mascotOfTeamStr(m[1]), b = mascotOfTeamStr(m[2]);
+      if(!a || !b) return part;
+      return a.name+' '+a.emoji+' vs '+b.emoji+' '+b.name;
+    }).join(', ');
+  }
+
   function matchFuzzyTeam(raw){
     if(!raw) return null;
     raw = normTeamStr(raw);
@@ -2043,7 +2084,7 @@
           else cls += ' pm-lose';
         }
         var tip = [uname, (q.text||''), 'Odgovor: '+(ans||'—'), (graded && typeof pts==='number') ? ('Točke: '+fmtPts(pts)+(max ? ' (največ '+max+')' : '')) : 'Točke: še ni ocenjeno'];
-        html += '<td class="'+cls+'" data-tip="'+esc(tip.join('\n'))+'">'+esc(ans||'—')+'</td>';
+        html += '<td class="'+cls+'" data-tip="'+esc(tip.join('\n'))+'">'+esc(formatMatchupAnswer(ans)||'—')+'</td>';
       });
       html += '</tr>';
     });
