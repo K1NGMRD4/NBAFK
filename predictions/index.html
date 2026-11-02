@@ -2789,6 +2789,11 @@
       var status = $('#aiStatus');
       var raw = ($('#aiJsonInput').value || '').trim();
       if(!raw){ status.textContent = 'Najprej prilepi JSON odgovor.'; return; }
+      // počisti znake, ki jih kopiranje iz klepeta rado podtakne: ukrivljeni narekovaji, nevidni presledki, BOM, vejica pred ] ali }
+      raw = raw.replace(/[“”„‟″«»]/g, '"')
+               .replace(/[‘’‚‛]/g, "'")
+               .replace(/[  -​  　﻿]/g, ' ')
+               .replace(/,\s*([\]}])/g, '$1');
       var data;
       try{
         // tolerant parse: whole text, else a fenced code block, else first [ or { .. last ] or }
@@ -2805,9 +2810,21 @@
           }
         }
       } catch(e){
-        status.textContent = 'Ne morem razumeti JSON-a — preveri obliko in poskusi znova.';
-        console.warn('AI paste parse error:', e);
-        return;
+        // rezerva: če JSON ni veljaven, poišči imena ekip po vrstnem redu pojavitve in jih združi v pare (a, b)
+        var found = [], low = raw.toLowerCase();
+        TEAMS.forEach(function(t){
+          var nm = teamNameOnly(t).toLowerCase(), from = 0, idx;
+          while((idx = low.indexOf(nm, from)) >= 0){ found.push({i: idx, t: t}); from = idx + nm.length; }
+        });
+        found.sort(function(x,y){ return x.i - y.i; });
+        if(found.length >= 2 && found.length % 2 === 0){
+          data = [];
+          for(var q=0; q+1<found.length; q+=2){ data.push({a: found[q].t, b: found[q+1].t}); }
+        } else {
+          status.textContent = 'Ne morem razumeti JSON-a — preveri obliko in poskusi znova.';
+          console.warn('AI paste parse error:', e);
+          return;
+        }
       }
       var list = Array.isArray(data) ? data : null;
       if(!list && data && typeof data === 'object'){
