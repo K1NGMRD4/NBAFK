@@ -398,6 +398,57 @@
     table.pm th,table.pm td{padding:5px 3px;font-size:12px;}
     table.pm td.pm-name,table.pm th.pm-corner{min-width:70px;padding:5px 7px;}
   }
+  /* Tabele: Special krogi (Season Long ...) */
+  .sp-q{margin:0 0 22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+  .sp-q:last-child{border-bottom:none;margin-bottom:4px;padding-bottom:0;}
+  .sp-qh{font-weight:800;font-size:15px;margin:0 0 10px;display:flex;align-items:flex-start;gap:8px;color:var(--ink);}
+  .sp-qn{flex:none;min-width:22px;height:22px;border-radius:99px;background:var(--accent-soft);color:var(--accent-soft-ink);font-size:12px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;padding:0 6px;}
+  .sp-q .team-logo{width:18px;height:18px;object-fit:contain;border-radius:50%;flex:none;background:rgba(127,127,127,.08);}
+  .mp-wrap{display:flex;gap:18px;align-items:flex-start;}
+  .mp-chart{width:128px;height:128px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 1px var(--border);cursor:pointer;}
+  .mp-legend{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
+  .mp-row{padding:6px 8px;border-radius:9px;cursor:pointer;}
+  .mp-row:hover{background:var(--surface-alt);}
+  .mp-row.winner{background:var(--good-soft);}
+  .mp-line{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--ink);}
+  .mp-row.winner .mp-line{font-weight:800;color:var(--good);}
+  .mp-sw{width:11px;height:11px;border-radius:3px;flex:none;}
+  .mp-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .mp-pct{font-family:var(--font-mono);font-size:12.5px;color:var(--ink-dim);flex:none;}
+  .mp-voters{font-size:11.5px;color:var(--ink-dim);line-height:1.35;margin:2px 0 0 19px;}
+  .mp-zero{font-size:12px;color:var(--ink-faint);margin:8px 0 0 8px;line-height:1.4;}
+  .mp-bar{height:8px;border-radius:99px;background:var(--surface-alt);margin:5px 0 0 19px;overflow:hidden;}
+  .mp-bar > i{display:block;height:100%;border-radius:99px;background:var(--accent);}
+  .sp-seg{display:inline-flex;gap:6px;margin:0 0 10px;}
+  .sp-seg button{border:1px solid var(--border);background:var(--surface);color:var(--ink-dim);border-radius:99px;padding:5px 13px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .sp-seg button.on{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .sp-gview{display:none;}
+  .sp-gview.on{display:block;}
+  table.pm.gv td.gv-cell{white-space:normal;min-width:84px;max-width:150px;vertical-align:top;padding:6px 6px;}
+  table.pm.gv td.gv-cell .gv-n{font-size:15px;font-weight:800;line-height:1.1;}
+  table.pm.gv td.gv-cell .gv-names{font-size:10.5px;font-weight:500;line-height:1.3;margin-top:2px;color:var(--ink-dim);}
+  table.pm.gv td.gv-cell.gv-top .gv-n{color:var(--accent);}
+  table.pm.gv td.gv-cell.gv-zero{color:var(--ink-faint);font-weight:400;}
+  table.pm.gv td.pm-name{white-space:normal;min-width:130px;}
+  table.pm.gv td.pm-name .gv-sub{display:block;font-weight:500;font-size:10.5px;color:var(--ink-dim);}
+  table.pm.gv td.pm-name .gv-team{display:flex;align-items:center;gap:6px;}
+  table.pm th.pm-th .team-logo{display:block;margin:0 auto 2px;}
+  table.pm th.pm-th.gv-head{white-space:normal;line-height:1.15;min-width:70px;max-width:110px;}
+  table.pm td.gv-stage{font-weight:700;font-size:11.5px;white-space:normal;line-height:1.15;min-width:70px;}
+  .sp-legend{display:flex;flex-wrap:wrap;gap:6px 12px;margin:0 0 8px;font-size:11.5px;color:var(--ink-dim);}
+  .sp-legend span{display:inline-flex;align-items:center;gap:5px;}
+  .sp-legend i{width:11px;height:11px;border-radius:3px;display:inline-block;}
+  @media (max-width:640px){
+    .mp-wrap{flex-direction:column;align-items:center;}
+    .mp-legend{width:100%;}
+    .mp-chart{width:150px;height:150px;}
+  }
+  /* Po userjih: mreža (Stage of elimination) - vsaka napoved v svoji vrstici */
+  .ans-lines{display:flex;flex-direction:column;gap:4px;margin-top:8px;}
+  .ans-line{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 10px;border-radius:8px;background:var(--surface-alt);font-size:13px;}
+  .ans-line .al-k{display:flex;align-items:center;gap:7px;min-width:0;color:var(--ink);}
+  .ans-line .al-k .team-logo{width:18px;height:18px;object-fit:contain;border-radius:50%;flex:none;}
+  .ans-line .al-v{font-weight:800;flex:none;color:var(--ink);text-align:right;}
   .cl-group{border:1px solid var(--border);border-radius:var(--radius-l);margin-bottom:12px;background:var(--surface);overflow:hidden;}
   .cl-group > summary{cursor:pointer;padding:12px 14px;background:var(--surface-alt);list-style:revert;}
   .cl-entry{padding:12px 14px;border-top:1px solid var(--border);}
@@ -1923,9 +1974,37 @@
       var h = pieTipHtml(pie, seg);
       return h ? { html:h, key:'pie:'+seg, el:pie } : null;
     }
+    var mp = target.closest('[data-mpie]');
+    if(mp){
+      var mseg = null;
+      var mrow = target.closest('.mp-row[data-seg]');
+      if(mrow) mseg = mrow.getAttribute('data-seg');
+      else if(target.closest('.mp-chart')) mseg = mpieSegAt(mp, ev.clientX, ev.clientY);
+      if(mseg===null || mseg===undefined) return null;
+      var mh = mpieTipHtml(mp, mseg);
+      return mh ? { html:mh, key:'mp:'+mseg, el:mp } : null;
+    }
     var tipEl = target.closest('[data-tip]');
     if(tipEl) return { html: tipTextHtml(tipEl.getAttribute('data-tip')), key:'tip', el:tipEl };
     return null;
+  }
+  /* Večsegmentni tortni diagram (Special krogi): segmenti so v data-mpie kot odstotni razponi. */
+  function mpieSegAt(el, x, y){
+    var chart = el.querySelector('.mp-chart'); if(!chart) return null;
+    var r = chart.getBoundingClientRect();
+    var dx = x - (r.left + r.width/2), dy = y - (r.top + r.height/2);
+    if(Math.sqrt(dx*dx+dy*dy) > r.width/2) return null;
+    var d; try{ d = JSON.parse(el.getAttribute('data-mpie')); }catch(e){ return null; }
+    if(!d.total) return null;
+    var ang = Math.atan2(dx, -dy) * 180 / Math.PI; if(ang < 0) ang += 360;
+    var pct = ang / 3.6;
+    for(var i=0;i<d.segs.length;i++){ if(pct >= d.segs[i].s && pct < d.segs[i].e) return String(i); }
+    return d.segs.length ? String(d.segs.length-1) : null;
+  }
+  function mpieTipHtml(el, seg){
+    var d; try{ d = JSON.parse(el.getAttribute('data-mpie')); }catch(e){ return ''; }
+    var t = d.segs[+seg]; if(!t) return '';
+    return '<strong>'+esc(t.label)+'</strong> ('+t.voters.length+')<br>'+(t.voters.length ? esc(t.voters.join(', ')) : '<span style="opacity:.7">Nihče</span>');
   }
   function initTooltips(){
     document.addEventListener('pointerdown', function(e){ lastPointerType = e.pointerType || 'mouse'; }, true);
@@ -1982,8 +2061,12 @@
   function renderTablesTab(){
     var el = $('#historyViewBody'); if(!el) return;
     if(roster.length===0){ el.innerHTML = emptyState('🏀', 'Liga še ni nastavljena.'); return; }
-    var visible = rounds.filter(function(r){ return r.kind!=='special' && (r.status==='locked' || r.status==='graded'); })
+    var locked = rounds.filter(function(r){ return r.status==='locked' || r.status==='graded'; });
+    var specials = locked.filter(function(r){ return r.kind==='special'; })
+      .sort(function(a,b){ return (a.number||0)-(b.number||0); });
+    var matchRounds = locked.filter(function(r){ return r.kind!=='special'; })
       .sort(function(a,b){ return (b.number||0)-(a.number||0); });
+    var visible = specials.concat(matchRounds);
     if(visible.length===0){ el.innerHTML = emptyState('📋', 'Tabele bodo vidne, ko admin zaklene prvi krog za oddajanje.'); return; }
     if(!el.querySelector('details')) el.innerHTML = emptyState('⏳', 'Nalagam …');
     var token = ++tablesToken;
@@ -1993,11 +2076,243 @@
       });
     })).then(function(results){
       if(token !== tablesToken) return;
-      el.innerHTML = results.map(function(res, idx){ return predictionMatrixCardHtml(res.round, res.subs, idx===0); }).join('');
+      // privzeto je odprt najnovejši redni krog (ali prvi special, če rednih še ni); special krogi so sicer zaprti
+      var firstOpenId = matchRounds.length ? matchRounds[0].id : visible[0].id;
+      el.innerHTML = results.map(function(res){
+        var isFirst = res.round.id===firstOpenId;
+        return res.round.kind==='special' ? specialMatrixCardHtml(res.round, res.subs, isFirst) : predictionMatrixCardHtml(res.round, res.subs, isFirst);
+      }).join('');
       $all('details.pm-round', el).forEach(function(dt){
         dt.addEventListener('toggle', function(){ tablesOpenMap[dt.getAttribute('data-rid')] = dt.open; });
       });
+      // preklop pogleda pri mrežah (po ekipah / po igralcih)
+      $all('button[data-spgrid]', el).forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var key = btn.getAttribute('data-spgrid'), mode = btn.getAttribute('data-mode');
+          spGridMode[key] = mode;
+          var wrap = btn.closest('.sp-grid');
+          $all('button[data-spgrid]', wrap).forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-mode')===mode); });
+          $all('.sp-gview', wrap).forEach(function(v){ v.classList.toggle('on', v.getAttribute('data-mode')===mode); });
+        });
+      });
     }).catch(function(e){ console.error(e); el.innerHTML = emptyState('⚠️', 'Napaka pri nalaganju.'); });
+  }
+
+  /* ---------- Tabele > Special krogi (Season Long, XMAS, Allstar) ---------- */
+  var spGridMode = {};
+  var MP_COLORS = ['#2f6fe0','#e8590c','#2e9e4f','#d6336c','#7048e8','#f4b400','#0ca678','#e03131','#1098ad','#a9633a','#868e96','#5c940d','#c2255c','#3b5bdb','#e67700','#087f5b'];
+  var STAGE_COLORS = [['#aeb8c4','#1a1a1a'],['#86b6e8','#1a1a1a'],['#4f8fe0','#fff'],['#3b6fd4','#fff'],['#5a55d6','#fff'],['#7a4fd0','#fff'],['#a04bc4','#fff'],['#c74b9e','#fff']];
+  function stageColor(idx, n){
+    var k = n<=1 ? 0 : Math.round(idx*(STAGE_COLORS.length-1)/(n-1));
+    return STAGE_COLORS[Math.max(0, Math.min(STAGE_COLORS.length-1, k))];
+  }
+  function sortedNames(arr){ return arr.slice().sort(function(a,b){ return a.localeCompare(b); }); }
+  function spAnswer(sub, qi){ var a = sub && sub.answers ? sub.answers[qi] : ''; return a==null ? '' : String(a).trim(); }
+  function spOptLabelHtml(opt){
+    var logo = teamLogoImg(opt);
+    return logo + '<span class="mp-name">'+esc(teamNameOnly(opt))+'</span>';
+  }
+
+  // Ena izbira -> tortni diagram z glasovalci
+  function spChoiceHtml(q, qi, subs, graded){
+    var tally = Object.create(null), order = (q.choices||[]).slice();
+    var answered = 0;
+    subs.forEach(function(s){
+      var a = spAnswer(s, qi); if(!a) return;
+      if(!tally[a]){ tally[a] = { v:[], ok:false }; if(order.indexOf(a)<0) order.push(a); }
+      tally[a].v.push(rosterName(s.userId)); answered++;
+      var pts = (s.points||[])[qi];
+      if(graded && typeof pts==='number' && pts>0) tally[a].ok = true;
+    });
+    if(!answered) return '<p class="small muted">Nihče še ni odgovoril.</p>';
+    var withVotes = order.filter(function(o){ return tally[o]; });
+    withVotes.sort(function(a,b){ return tally[b].v.length - tally[a].v.length || order.indexOf(a)-order.indexOf(b); });
+    var zero = order.filter(function(o){ return !tally[o]; });
+    var segs = [], grad = [], cum = 0;
+    withVotes.forEach(function(o, i){
+      var share = tally[o].v.length / answered * 100;
+      var color = MP_COLORS[i % MP_COLORS.length];
+      segs.push({ label: teamNameOnly(o), voters: sortedNames(tally[o].v), s: cum, e: cum+share });
+      grad.push(color+' '+cum.toFixed(3)+'% '+(cum+share).toFixed(3)+'%');
+      cum += share;
+    });
+    var html = '<div class="mp-wrap" data-mpie="'+esc(JSON.stringify({ total: answered, segs: segs }))+'">';
+    html += '<div class="mp-chart" style="background:conic-gradient('+grad.join(',')+');"></div><div class="mp-legend">';
+    withVotes.forEach(function(o, i){
+      var cnt = tally[o].v.length, pct = Math.round(cnt/answered*100);
+      html += '<div class="mp-row'+(tally[o].ok?' winner':'')+'" data-seg="'+i+'"><div class="mp-line">';
+      html += '<span class="mp-sw" style="background:'+MP_COLORS[i % MP_COLORS.length]+';"></span>'+spOptLabelHtml(o);
+      html += '<span class="mp-pct">'+pct+'% ('+cnt+')</span>'+(tally[o].ok?'<span style="flex:none;">✓</span>':'')+'</div>';
+      html += '<div class="mp-voters">'+esc(sortedNames(tally[o].v).join(', '))+'</div></div>';
+    });
+    if(zero.length) html += '<div class="mp-zero">Brez glasov: '+esc(zero.map(teamNameOnly).join(', '))+'</div>';
+    html += '</div></div>';
+    return html;
+  }
+
+  // Več izbir -> vodoravni stolpci z glasovalci
+  function spMultiHtml(q, qi, subs){
+    var tally = Object.create(null), order = (q.choices||[]).slice(), answered = 0;
+    subs.forEach(function(s){
+      var a = spAnswer(s, qi); if(!a) return;
+      answered++;
+      a.split(',').map(function(x){ return x.trim(); }).filter(Boolean).forEach(function(o){
+        if(!tally[o]){ tally[o] = []; if(order.indexOf(o)<0) order.push(o); }
+        tally[o].push(rosterName(s.userId));
+      });
+    });
+    if(!answered) return '<p class="small muted">Nihče še ni odgovoril.</p>';
+    var withVotes = order.filter(function(o){ return tally[o]; });
+    withVotes.sort(function(a,b){ return tally[b].length - tally[a].length || order.indexOf(a)-order.indexOf(b); });
+    var zero = order.filter(function(o){ return !tally[o]; });
+    var html = '<div class="mp-legend">';
+    withVotes.forEach(function(o){
+      var cnt = tally[o].length, pct = Math.round(cnt/answered*100);
+      html += '<div class="mp-row" style="cursor:default;"><div class="mp-line">'+spOptLabelHtml(o)+'<span class="mp-pct">'+pct+'% ('+cnt+')</span></div>';
+      html += '<div class="mp-bar"><i style="width:'+pct+'%;"></i></div>';
+      html += '<div class="mp-voters">'+esc(sortedNames(tally[o]).join(', '))+'</div></div>';
+    });
+    if(zero.length) html += '<div class="mp-zero">Brez glasov: '+esc(zero.map(teamNameOnly).join(', '))+'</div>';
+    return html + '</div>';
+  }
+
+  // Mreža (Stage of elimination): pogled "po ekipah" (kdo je kam uvrstil ekipo) in "po igralcih" (matrika igralec x ekipa)
+  function spGridHtml(round, q, qi, subs, graded){
+    var rowsT = q.gridRows || [], cols = q.gridCols || [];
+    var key = round.id+':'+qi;
+    var mode = spGridMode[key] || 'teams';
+    var parsed = {}; subs.forEach(function(s){ parsed[s.userId] = parseGridVal(spAnswer(s, qi)); });
+    var N = subs.length;
+
+    var html = '<div class="sp-grid"><div class="sp-seg">';
+    html += '<button type="button" data-spgrid="'+esc(key)+'" data-mode="teams" class="'+(mode==='teams'?'on':'')+'">Po ekipah</button>';
+    html += '<button type="button" data-spgrid="'+esc(key)+'" data-mode="players" class="'+(mode==='players'?'on':'')+'">Po igralcih</button></div>';
+
+    // --- pogled 1: ekipe (vrstice) x faze (stolpci), v celici število in imena glasovalcev
+    html += '<div class="sp-gview'+(mode==='teams'?' on':'')+'" data-mode="teams">';
+    html += '<div class="table-scroll"><table class="pm gv"><thead><tr><th class="pm-corner">EKIPA \\ FAZA</th>';
+    cols.forEach(function(c, ci){
+      var sc = stageColor(ci, cols.length);
+      html += '<th class="pm-th gv-head'+(ci===0?' pm-sep':'')+'" style="border-bottom:3px solid '+sc[0]+';">'+esc(c)+'</th>';
+    });
+    html += '</tr></thead><tbody>';
+    rowsT.forEach(function(r){
+      var cells = cols.map(function(c){
+        return sortedNames(subs.filter(function(s){ return parsed[s.userId][r]===c; }).map(function(s){ return rosterName(s.userId); }));
+      });
+      var max = 0; cells.forEach(function(v){ if(v.length>max) max = v.length; });
+      var mgr = teamColLabel(r);
+      html += '<tr><td class="pm-name"><span class="gv-team">'+teamLogoImg(r)+'<span>'+esc(teamNameOnly(r))+(mgr && mgr!==teamNameOnly(r) ? '<span class="gv-sub">'+esc(mgr)+'</span>' : '')+'</span></span></td>';
+      cells.forEach(function(v, ci){
+        var cls = 'pm-cell gv-cell'+(ci===0?' pm-sep':'');
+        if(!v.length){ html += '<td class="'+cls+' gv-zero">·</td>'; return; }
+        var alpha = (0.10 + 0.55*(v.length/Math.max(1,N))).toFixed(2);
+        var sc = stageColor(ci, cols.length);
+        var top = v.length===max && max>0;
+        var tip = [teamNameOnly(r)+' → '+cols[ci], v.length+' / '+N, v.join(', ')].join('\n');
+        html += '<td class="'+cls+(top?' gv-top':'')+'" style="background:'+hexA(sc[0], alpha)+';" data-tip="'+esc(tip)+'"><div class="gv-n">'+v.length+'</div><div class="gv-names">'+esc(v.join(', '))+'</div></td>';
+      });
+      html += '</tr>';
+    });
+    html += '</tbody></table></div></div>';
+
+    // --- pogled 2: igralci (vrstice) x ekipe (stolpci), v celici izbrana faza
+    html += '<div class="sp-gview'+(mode==='players'?' on':'')+'" data-mode="players">';
+    html += '<div class="sp-legend">'+cols.map(function(c, ci){ var sc = stageColor(ci, cols.length); return '<span><i style="background:'+sc[0]+';"></i>'+esc(c)+'</span>'; }).join('')+'</div>';
+    html += '<div class="table-scroll"><table class="pm"><thead><tr><th class="pm-corner">IGRALEC \\ EKIPA</th>';
+    rowsT.forEach(function(r, ri){
+      html += '<th class="pm-th gv-head'+(ri===0?' pm-sep':'')+'" title="'+esc(r)+'">'+teamLogoImg(r)+esc(teamColLabel(r))+'</th>';
+    });
+    html += '<th class="pm-corner2 pm-sep">IGRALEC</th></tr></thead><tbody>';
+    roster.forEach(function(u){
+      var uname = u.nickname || u.name;
+      var sub = subs.filter(function(s){ return s.userId===u.id; })[0];
+      html += '<tr><td class="pm-name">'+esc(uname)+'</td>';
+      rowsT.forEach(function(r, ri){
+        var sep = ri===0 ? ' pm-sep' : '';
+        if(!sub){ html += '<td class="pm-cell gv-stage pm-na'+sep+'">–</td>'; return; }
+        var v = parsed[u.id][r];
+        if(!v){ html += '<td class="pm-cell gv-stage pm-na'+sep+'">—</td>'; return; }
+        var ci = cols.indexOf(v), sc = ci>=0 ? stageColor(ci, cols.length) : ['#8d99ae','#fff'];
+        html += '<td class="pm-cell gv-stage'+sep+'" style="background:'+sc[0]+';color:'+sc[1]+';" data-tip="'+esc(uname+'\n'+teamNameOnly(r)+' → '+v)+'">'+esc(v)+'</td>';
+      });
+      html += '<td class="pm-name2 pm-sep">'+esc(uname)+'</td></tr>';
+    });
+    html += '</tbody></table></div></div></div>';
+    return html;
+  }
+
+  function hexA(hex, a){
+    var h = hex.replace('#',''); var n = parseInt(h, 16);
+    return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')';
+  }
+
+  // Kratki odgovori (npr. igralci) -> matrika igralec x vprašanje, kot pri bonusih
+  function spTextTableHtml(round, textIdx, subs, graded){
+    var questions = round.questions || [];
+    var subBy = {}; subs.forEach(function(s){ subBy[s.userId] = s; });
+    var html = '<div class="table-scroll"><table class="pm"><thead><tr><th class="pm-corner">IGRALEC</th>';
+    textIdx.forEach(function(qi, k){
+      var q = questions[qi];
+      html += '<th class="pm-th pm-bonus'+(k===0?' pm-sep':'')+'" title="'+esc(q.text||'')+'">'+esc((qi+1)+'. '+(q.text||('Vprašanje '+(qi+1))))+'</th>';
+    });
+    if(graded) html += '<th class="pm-total-h pm-sep">TOČKE<br>(vse)</th>';
+    html += '<th class="pm-corner2 pm-sep">IGRALEC</th></tr></thead><tbody>';
+    roster.forEach(function(u){
+      var sub = subBy[u.id], uname = u.nickname || u.name;
+      html += '<tr><td class="pm-name">'+esc(uname)+'</td>';
+      textIdx.forEach(function(qi, k){
+        var q = questions[qi], cls = 'pm-cell pm-bonus'+(k===0?' pm-sep':'');
+        if(!sub){ html += '<td class="'+cls+' pm-na">–</td>'; return; }
+        var ans = spAnswer(sub, qi);
+        var pts = graded ? (sub.points||[])[qi] : null;
+        var opts = (q.options||[]).filter(function(o){ return typeof o==='number'; });
+        var max = opts.length ? Math.max.apply(null, opts) : 0;
+        if(graded && typeof pts==='number'){
+          if(pts>0 && pts>=max) cls += ' pm-win';
+          else if(pts>0) cls += ' pm-part';
+          else cls += ' pm-lose';
+        }
+        var tip = [uname, q.text||'', 'Odgovor: '+(ans||'—'), (graded && typeof pts==='number') ? ('Točke: '+fmtPts(pts)+(max ? ' (največ '+max+')' : '')) : 'Točke: še ni ocenjeno'];
+        html += '<td class="'+cls+'" data-tip="'+esc(tip.join('\n'))+'">'+esc(ans||'—')+'</td>';
+      });
+      if(graded) html += '<td class="pm-total pm-sep">'+(sub && sub.roundTotal!=null ? fmtPts(sub.roundTotal) : '–')+'</td>';
+      html += '<td class="pm-name2 pm-sep">'+esc(uname)+'</td></tr>';
+    });
+    return html + '</tbody></table></div>';
+  }
+
+  function specialMatrixCardHtml(round, subs, isFirst){
+    var titleLabel = round.label || specialTypeLabel(round.specialType);
+    var graded = round.status==='graded';
+    var open = (tablesOpenMap[round.id]!==undefined) ? tablesOpenMap[round.id] : isFirst;
+    var questions = round.questions || [];
+    var N = subs.length;
+    var html = '<details class="card history-round pm-round" data-rid="'+esc(round.id)+'"'+(open?' open':'')+'><summary>';
+    html += '<span class="hrs-title">'+esc(titleLabel)+'</span><span class="hrs-meta">';
+    html += '<span class="mono hrs-total">'+N+' odd.</span>';
+    html += '<span class="badge '+round.status+'">'+statusLabel(round.status)+'</span><span class="chev">▸</span></span></summary>';
+    html += '<div class="history-round-body">';
+    if(N===0){ html += '<p class="small muted" style="margin-top:8px;">Še nihče ni oddal napovedi.</p></div></details>'; return html; }
+    if(!graded) html += '<p class="small muted" style="margin:8px 0 14px;">Krog še ni ocenjen — obarvanje in točke se pojavijo po ocenjevanju.</p>';
+    var textIdx = [];
+    questions.forEach(function(q, qi){
+      var type = q.type || 'text';
+      if(type==='text'){ textIdx.push(qi); return; }
+      html += '<div class="sp-q"><div class="sp-qh"><span class="sp-qn">'+(qi+1)+'</span><span>'+esc(q.text||('Vprašanje '+(qi+1)))+'</span></div>';
+      html += questionImageHtml(round, q, qi);
+      if(type==='choice') html += spChoiceHtml(q, qi, subs, graded);
+      else if(type==='multichoice') html += spMultiHtml(q, qi, subs);
+      else if(type==='grid') html += spGridHtml(round, q, qi, subs, graded);
+      html += '</div>';
+    });
+    if(textIdx.length){
+      html += '<div class="sp-q"><div class="sp-qh"><span>Napovedi igralcev</span></div>';
+      html += spTextTableHtml(round, textIdx, subs, graded);
+      html += '<p class="small muted" style="margin-top:8px;">Zeleno = polno točkovan odgovor, rumeno = delno, rdeče = brez točk. Premakni miško (na telefonu tapni) čez celico za točke.</p></div>';
+    }
+    html += '</div></details>';
+    return html;
   }
 
   function fmtPts(n){ return (typeof n==='number' && isFinite(n)) ? String(round2(n)) : '—'; }
@@ -2197,9 +2512,24 @@
       questions.forEach(function(q, i){
         html += '<div class="bonusq"><div class="qtext">'+esc(q.text)+'</div>';
         html += questionImageHtml(round, q, i);
-        html += '<div class="row" style="justify-content:space-between;"><span class="muted small">Odgovor: '+esc((answers||[])[i]||'—')+'</span>';
-        if(isGraded) html += '<span class="mono" style="font-weight:700;">'+((points||[])[i]!=null?'+'+points[i]:'—')+'</span>';
-        html += '</div></div>';
+        var ansRaw = (answers||[])[i];
+        var gridLines = (q.type==='grid') ? String(ansRaw||'').split(';').map(function(p){ return p.trim(); }).filter(Boolean) : null;
+        if(gridLines && gridLines.length){
+          // mreža (Stage of elimination): vsaka napoved ekipe v svoji vrstici
+          html += '<div class="row" style="justify-content:space-between;"><span class="muted small">Odgovor:</span>';
+          if(isGraded) html += '<span class="mono" style="font-weight:700;">'+((points||[])[i]!=null?'+'+points[i]:'—')+'</span>';
+          html += '</div><div class="ans-lines">';
+          gridLines.forEach(function(p){
+            var idx = p.indexOf(':');
+            var team = idx>0 ? p.slice(0, idx).trim() : p, stage = idx>0 ? p.slice(idx+1).trim() : '';
+            html += '<div class="ans-line"><span class="al-k">'+teamLogoImg(team)+'<span>'+esc(teamNameOnly(team))+'</span></span><span class="al-v">'+esc(stage||'—')+'</span></div>';
+          });
+          html += '</div></div>';
+        } else {
+          html += '<div class="row" style="justify-content:space-between;"><span class="muted small">Odgovor: '+esc(ansRaw||'—')+'</span>';
+          if(isGraded) html += '<span class="mono" style="font-weight:700;">'+((points||[])[i]!=null?'+'+points[i]:'—')+'</span>';
+          html += '</div></div>';
+        }
       });
       html += '</div>';
     }
