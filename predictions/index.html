@@ -856,13 +856,13 @@
   /* Pregled točk kroga (Igralec | Tekme | Bonus | Skupaj), razvrščen po skupnih točkah.
      Prva dva (največ točk) sta obkrožena z zeleno, na desni pa piše zeleno "+1%".
      rows: [{name, match, bonus, total}]; withParts=false -> samo Igralec | Skupaj. */
-  function gradePreviewHtml(rows, withParts){
+  function gradePreviewHtml(rows, withParts, provisional){
     rows = rows.slice().sort(function(a,b){ return (b.total||0)-(a.total||0) || String(a.name).localeCompare(String(b.name)); });
     var html = '<table class="grade-table grade-summary" style="margin-top:12px;"><thead><tr><th>Igralec</th>';
     if(withParts) html += '<th>Tekme</th><th>Bonus</th>';
     html += '<th>Skupaj</th><th class="gs-bonus-h"></th></tr></thead><tbody>';
     rows.forEach(function(r, i){
-      var top = i < 2;
+      var top = !provisional && i < 2;
       html += '<tr'+(top?' class="gs-top"':'')+'><td>'+esc(r.name)+'</td>';
       if(withParts) html += '<td class="mono">'+fix2(r.match)+'</td><td class="mono">'+fix2(r.bonus)+'</td>';
       html += '<td class="mono" style="font-weight:700;">'+fix2(r.total)+'</td>';
@@ -2881,7 +2881,7 @@
       if(r.status==='draft') html += '<button class="btn small" data-act="open" data-id="'+r.id+'">Odpri za oddajo</button>';
       if(r.status==='open') html += '<button class="btn small" data-act="lock" data-id="'+r.id+'">Zakleni oddajo</button>';
       if(r.status==='locked') html += '<button class="btn small" data-act="reopen" data-id="'+r.id+'">Ponovno odpri</button>';
-      if(r.status==='graded') html += '<button class="btn small" data-act="unrate" data-id="'+r.id+'" title="Krog se vrne v status &quot;zaklenjen&quot;, vse izračunane točke za ta krog se počistijo (napovedi ostanejo).">Razveljavi oceno</button>';
+      if(r.status==='graded' || r.gradingPartial) html += '<button class="btn small" data-act="unrate" data-id="'+r.id+'" title="Krog se vrne v status &quot;zaklenjen&quot;, vse izračunane točke za ta krog se počistijo (napovedi ostanejo).">Razveljavi oceno</button>';
       if(r.status!=='draft') html += '<button class="btn small" data-act="grade" data-id="'+r.id+'">Ocenjevanje</button>';
       html += '<button class="btn small danger" data-act="del" data-id="'+r.id+'">Izbriši</button>';
       html += '<button class="btn small ghost" data-act="seed" data-id="'+r.id+'" title="Ustvari izmišljene oddaje za vse igralce iz Admin > Igralci — za testiranje ocenjevanja, lestvice in zgodovine.">🧪 Testni podatki</button>';
@@ -3419,8 +3419,8 @@
       return Promise.all(resets);
     }).then(function(){
       var roundReset = isSpecial
-        ? { status: 'locked', gradedAt: null }
-        : { status: 'locked', winners: [], correctCounts: [], submissionCount: null, gradedAt: null };
+        ? { status: 'locked', gradedAt: null, gradingPartial: false }
+        : { status: 'locked', winners: [], correctCounts: [], submissionCount: null, gradedAt: null, gradingPartial: false };
       return db.doc('rounds/'+roundId).update(roundReset);
     });
   }
@@ -3549,24 +3549,34 @@
       html += '</div>';
     }
 
-    html += '<div class="card"><button class="btn primary" id="saveGradingBtn">Izračunaj in shrani rezultate</button> <span class="small muted" id="gradeMsg"></span>';
+    var isGradedRound = round.status==='graded';
+    html += '<div class="card">';
+    if(!isGradedRound){
+      html += '<p class="small muted" style="margin:0 0 10px;">Ocenjuješ lahko po delih: označi samo tiste tekme in bonuse, ki jih že lahko oceniš, in klikni "Shrani oceno". Neocenjeno ostane prazno (se ne točkuje) in dobiš začasno lestvico kroga. Ponovni klik na izbrano možnost jo odstrani. Krog postane javno ocenjen šele z gumbom "Zaključi ocenjevanje".</p>';
+    }
+    html += '<div class="row" style="gap:8px;flex-wrap:wrap;align-items:center;">';
+    html += '<button class="btn primary" id="saveGradingBtn">'+(isGradedRound ? 'Izračunaj in shrani rezultate' : 'Shrani oceno (začasna lestvica)')+'</button>';
+    if(!isGradedRound) html += '<button class="btn" id="finalizeGradingBtn">Zaključi ocenjevanje (objavi)</button>';
+    html += '<span class="small muted" id="gradeMsg"></span></div>';
     html += '<div id="gradePreview"></div></div>';
 
     area.innerHTML = html;
 
-    if(round.status==='graded' && gradingSubs.length){
+    if((isGradedRound || round.gradingPartial) && gradingSubs.length){
       var gp = $('#gradePreview');
-      if(gp) gp.innerHTML = gradePreviewHtml(gradingSubs.map(function(sb){
+      if(gp) gp.innerHTML = gradingPreviewBlock(round, gradingSubs.map(function(sb){
         return isSpecial ? { name: rosterName(sb.userId), total: sb.roundTotal }
                          : { name: rosterName(sb.userId), match: sumNums(sb.matchPoints), bonus: sumNums(sb.bonusPoints), total: sb.roundTotal };
-      }), !isSpecial);
+      }), !isGradedRound);
     }
 
     if(!isSpecial){
       $all('.matchup[data-gi] .pickbtn').forEach(function(btn){
         btn.addEventListener('click', function(){
           var row = btn.closest('.matchup'); var gi = row.getAttribute('data-gi');
+          var wasSel = btn.classList.contains('winner-marker');
           $all('.pickbtn', row).forEach(function(b){ b.classList.remove('winner-marker'); });
+          if(wasSel){ delete gradingWinners[gi]; return; } // ponovni klik = odstrani izbiro
           btn.classList.add('winner-marker');
           gradingWinners[gi] = btn.getAttribute('data-team');
         });
@@ -3575,84 +3585,136 @@
     $all('[data-bonus-grade]').forEach(function(wrap){
       $all('.ptbtn', wrap).forEach(function(btn){
         btn.addEventListener('click', function(){
+          var wasSel = btn.classList.contains('selected');
           $all('.ptbtn', wrap).forEach(function(b){ b.classList.remove('selected'); });
-          btn.classList.add('selected');
           var u = wrap.getAttribute('data-user'), q = +wrap.getAttribute('data-q');
           if(!gradingBonusPts[u]) gradingBonusPts[u] = [];
+          if(wasSel){ gradingBonusPts[u][q] = null; return; } // ponovni klik = odstrani oceno
+          btn.classList.add('selected');
           gradingBonusPts[u][q] = parseFloat(btn.getAttribute('data-pt'));
         });
       });
     });
-    $('#saveGradingBtn').addEventListener('click', function(){ saveGrading(round); });
+    $('#saveGradingBtn').addEventListener('click', function(){ saveGrading(round, false); });
+    var finBtn = $('#finalizeGradingBtn');
+    if(finBtn) finBtn.addEventListener('click', function(){ saveGrading(round, true); });
   }
 
-  function saveGrading(round){
+  /* Pregled točk kroga z naslovom: "Začasna lestvica" (delno ocenjeno) ali končni rezultat. */
+  function gradingPreviewBlock(round, rows, provisional){
     var isSpecial = round.kind==='special';
-    var btn = $('#saveGradingBtn');
+    var html = '';
+    if(provisional){
+      var info = gradingProgressText(round);
+      html += '<p class="small" style="margin:14px 0 0;font-weight:700;">Začasna lestvica kroga (še ni objavljen)'+(info ? ' <span class="muted" style="font-weight:500;">— '+esc(info)+'</span>' : '')+'</p>';
+    }
+    return html + gradePreviewHtml(rows, !isSpecial, provisional);
+  }
+  function gradingProgressText(round){
+    var isSpecial = round.kind==='special';
+    var qs = isSpecial ? (round.questions||[]) : (round.bonusQuestions||[]);
+    var parts = [];
+    if(!isSpecial){
+      var m = (round.matchups||[]).length, md = 0;
+      for(var i=0;i<m;i++){ if(gradingWinners[i]) md++; }
+      parts.push('tekem: '+md+'/'+m);
+    }
+    if(qs.length){
+      var done = 0;
+      qs.forEach(function(q, qi){
+        var any = gradingSubs.some(function(s){ var a = gradingBonusPts[s.userId]; return a && typeof a[qi]==='number'; });
+        if(any) done++;
+      });
+      parts.push((isSpecial?'vprašanj: ':'bonusov: ')+done+'/'+qs.length);
+    }
+    return 'ocenjeno '+parts.join(', ');
+  }
+
+  /* Ocenjevanje po delih.
+     finalize=false: shrani samo tisto, kar je izbrano (neizbrano ostane null = ni točkovano), krog ostane v svojem statusu
+                     in admin dobi začasno lestvico. Če je krog že "ocenjen", mora biti izbrano vse (kot doslej).
+     finalize=true : zahteva vse zmagovalce, neocenjeni bonusi štejejo 0, krog postane "ocenjen" (javno viden). */
+  function saveGrading(round, finalize){
+    var isSpecial = round.kind==='special';
+    var wasGraded = round.status==='graded';
+    var btn = $('#saveGradingBtn'), finBtn = $('#finalizeGradingBtn');
+    var msg = $('#gradeMsg'); msg.textContent = '';
+    var questions = isSpecial ? (round.questions||[]) : (round.bonusQuestions||[]);
+    var strict = finalize || wasGraded; // pri končni objavi vse manjkajoče bonuse štejemo kot 0
+    function ptsFor(s){
+      return questions.map(function(q, qi){
+        var p = (gradingBonusPts[s.userId]||[])[qi];
+        if(typeof p==='number') return p;
+        return strict ? 0 : null;
+      });
+    }
+    function resetBtns(){
+      btn.disabled = false; btn.textContent = wasGraded ? 'Izračunaj in shrani rezultate' : 'Shrani oceno (začasna lestvica)';
+      if(finBtn){ finBtn.disabled = false; finBtn.textContent = 'Zaključi ocenjevanje (objavi)'; }
+    }
+    function lock(txt){ btn.disabled = true; if(finBtn) finBtn.disabled = true; (finalize && finBtn ? finBtn : btn).textContent = txt; }
+    var willBeGraded = finalize || wasGraded;
 
     if(isSpecial){
       var scoredSp = gradingSubs.map(function(s){
-        var points = (gradingBonusPts[s.userId]||[]).map(function(p){ return typeof p==='number' ? p : 0; });
-        var total = points.reduce(function(a,b){ return a+b; }, 0);
-        return { sub:s, points:points, roundTotal: round2(total) };
+        var points = ptsFor(s);
+        return { sub:s, points:points, roundTotal: round2(sumNums(points)) };
       });
-      btn.disabled = true; btn.textContent = 'Shranjujem …';
-      var writesSp = scoredSp.map(function(sc){
+      lock('Shranjujem …');
+      Promise.all(scoredSp.map(function(sc){
         return db.doc('rounds/'+round.id+'/submissions/'+sc.sub.userId).update({ points: sc.points, roundTotal: sc.roundTotal });
-      });
-      Promise.all(writesSp).then(function(){
-        return db.doc('rounds/'+round.id).update({ status: 'graded', gradedAt: new Date().toISOString() });
+      })).then(function(){
+        var upd = willBeGraded ? { status: 'graded', gradedAt: new Date().toISOString(), gradingPartial: false } : { gradingPartial: true };
+        return db.doc('rounds/'+round.id).update(upd);
       }).then(function(){
-        toast((round.label||specialTypeLabel(round.specialType))+' ocenjen!');
-        btn.disabled=false; btn.textContent='Izračunaj in shrani rezultate';
-        var prevSp = gradePreviewHtml(scoredSp.map(function(sc){ return { name: rosterName(sc.sub.userId), total: sc.roundTotal }; }), false);
-        $('#gradePreview').innerHTML = prevSp;
+        toast(willBeGraded ? ((round.label||specialTypeLabel(round.specialType))+' ocenjen!') : 'Začasna ocena shranjena.');
+        resetBtns();
+        gradingSubs.forEach(function(s){ var sc = scoredSp.filter(function(x){ return x.sub.userId===s.userId; })[0]; if(sc){ s.points = sc.points; s.roundTotal = sc.roundTotal; } });
+        $('#gradePreview').innerHTML = gradingPreviewBlock(round, scoredSp.map(function(sc){ return { name: rosterName(sc.sub.userId), total: sc.roundTotal }; }), !willBeGraded);
       }).catch(function(e){
-        console.error(e); btn.disabled=false; btn.textContent='Izračunaj in shrani rezultate';
-        $('#gradeMsg').textContent = 'Napaka pri shranjevanju.';
+        console.error(e); resetBtns();
+        msg.textContent = 'Napaka pri shranjevanju.';
       });
       return;
     }
 
-    var winners = [];
-    for(var i=0;i<(round.matchups||[]).length;i++){
-      if(!gradingWinners[i]){ $('#gradeMsg').textContent = 'Izberi zmagovalca za vse tekme.'; return; }
-      winners.push(gradingWinners[i]);
-    }
+    var matchups = round.matchups || [];
+    var winners = matchups.map(function(m, i){ return gradingWinners[i] || null; });
+    if(strict && winners.some(function(w){ return !w; })){ msg.textContent = 'Za objavo izberi zmagovalca za vse tekme.'; return; }
     var N = gradingSubs.length;
-    var correctCounts = winners.map(function(w,i){
-      return gradingSubs.filter(function(s){ return s.picks && s.picks[i]===w; }).length;
+    var correctCounts = winners.map(function(w, i){
+      return w ? gradingSubs.filter(function(s){ return s.picks && s.picks[i]===w; }).length : null;
     });
     var scored = gradingSubs.map(function(s){
-      // Protiutež: (št. napovedanih porazov / št. napovedanih zmag) + 1, zaokroženo na 2 decimalki.
-      var matchPoints = winners.map(function(w,i){
+      // Protiutež: (št. napovedanih porazov / št. napovedanih zmag) + 1, zaokroženo na 2 decimalki. Neodločena tekma = null (ni točkovana).
+      var matchPoints = winners.map(function(w, i){
+        if(!w) return null;
         if(!(s.picks && s.picks[i]===w)) return 0;
-        var wins = correctCounts[i];
-        var losses = N - wins;
+        var wins = correctCounts[i], losses = N - wins;
         return wins>0 ? Math.round(((losses/wins)+1)*100)/100 : 0;
       });
-      var bonusPoints = (gradingBonusPts[s.userId]||[]).map(function(p){ return typeof p==='number' ? p : 0; });
-      var matchSum = matchPoints.reduce(function(a,b){ return a+b; },0);
-      var bonusSum = bonusPoints.reduce(function(a,b){ return a+b; },0);
-      return { sub:s, matchPoints:matchPoints, bonusPoints:bonusPoints, roundTotal: round2(matchSum+bonusSum) };
+      var bonusPoints = ptsFor(s);
+      return { sub:s, matchPoints:matchPoints, bonusPoints:bonusPoints, roundTotal: round2(sumNums(matchPoints)+sumNums(bonusPoints)) };
     });
 
-    btn.disabled = true; btn.textContent = 'Shranjujem …';
-    var writes = scored.map(function(sc){
+    lock('Shranjujem …');
+    Promise.all(scored.map(function(sc){
       return db.doc('rounds/'+round.id+'/submissions/'+sc.sub.userId).update({
         matchPoints: sc.matchPoints, bonusPoints: sc.bonusPoints, roundTotal: sc.roundTotal
       });
-    });
-    Promise.all(writes).then(function(){
-      return db.doc('rounds/'+round.id).update({ winners: winners, status: 'graded', gradedAt: new Date().toISOString(), correctCounts: correctCounts, submissionCount: N });
+    })).then(function(){
+      var upd = { winners: winners, correctCounts: correctCounts, submissionCount: N };
+      if(willBeGraded){ upd.status = 'graded'; upd.gradedAt = new Date().toISOString(); upd.gradingPartial = false; }
+      else upd.gradingPartial = true;
+      return db.doc('rounds/'+round.id).update(upd);
     }).then(function(){
-      toast('Krog '+round.number+' ocenjen!');
-      btn.disabled=false; btn.textContent='Izračunaj in shrani rezultate';
-      var prev = gradePreviewHtml(scored.map(function(sc){ return { name: rosterName(sc.sub.userId), match: sumNums(sc.matchPoints), bonus: sumNums(sc.bonusPoints), total: sc.roundTotal }; }), true);
-      $('#gradePreview').innerHTML = prev;
+      toast(willBeGraded ? ('Krog '+round.number+' ocenjen!') : 'Začasna ocena shranjena.');
+      resetBtns();
+      gradingSubs.forEach(function(s){ var sc = scored.filter(function(x){ return x.sub.userId===s.userId; })[0]; if(sc){ s.matchPoints = sc.matchPoints; s.bonusPoints = sc.bonusPoints; s.roundTotal = sc.roundTotal; } });
+      $('#gradePreview').innerHTML = gradingPreviewBlock(round, scored.map(function(sc){ return { name: rosterName(sc.sub.userId), match: sumNums(sc.matchPoints), bonus: sumNums(sc.bonusPoints), total: sc.roundTotal }; }), !willBeGraded);
     }).catch(function(e){
-      console.error(e); btn.disabled=false; btn.textContent='Izračunaj in shrani rezultate';
-      $('#gradeMsg').textContent = 'Napaka pri shranjevanju.';
+      console.error(e); resetBtns();
+      msg.textContent = 'Napaka pri shranjevanju.';
     });
   }
 
