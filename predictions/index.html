@@ -264,6 +264,8 @@
      - glej krogiCellInfo/computeAutoKrogi. Ležeče + rahlo bolj bledo besedilo, da se loči
      od ročno vnesenih/popravljenih vrednosti. */
   table.board td.pts.auto-val{color:var(--ink-faint);font-style:italic;}
+  table.board td.pts.prov-val,#board-content table.board td.pts.auto-val.prov-val{color:#d9480f;font-style:italic;font-weight:700;background:rgba(240,138,60,.12);}
+  .prov-note{margin:0 0 8px;color:var(--ink-dim);}
   table.board td.pts.auto-val input.krogi-cell{color:var(--ink-faint);font-style:italic;}
   table.board td.total{font-family:var(--font-mono);font-weight:700;font-size:15px;background:var(--accent-soft);color:var(--accent-soft-ink);}
   table.board td.pct{font-family:var(--font-mono);font-weight:700;font-size:13.5px;}
@@ -815,6 +817,7 @@
   var krogiSortDir = 'desc'; // 'asc' | 'desc'
   var autoKrogiMap = {}; // userId -> {w1..w15, xmasasslp} — SAMODEJNO izračunano iz že ocenjenih krogov (glej computeAutoKrogi)
   var autoKrogiFetchToken = 0;
+  var provKrogiMap = {}; // userId -> {w1..w15, xmasasslp} — ZAČASNE točke še ne objavljenih (delno ocenjenih) krogov; vidne samo v Lestvica > Po krogih
   var PCT_COLUMNS = [
     {key:'start', label:'START'},
     {key:'w1', label:'W1'}, {key:'w2', label:'W2'}, {key:'w3', label:'W3'}, {key:'w4', label:'W4'},
@@ -895,6 +898,29 @@
       if(typeof a === 'number') return { value: a, auto: true };
     }
     return { value: null, auto: false };
+  }
+  /* Javni pogled Lestvica > Po krogih: kot krogiCellInfo, a če za W-stolpec (ali XMAS+AS+SLP) obstaja
+     ZAČASNA vrednost iz delno ocenjenega kroga in ni ročnega vnosa, se pokaže ta (prov:true).
+     Glavna lestvica (Skupno) in Admin > Krogi Tabela začasnih vrednosti ne uporabljata. */
+  function krogiCellInfoPub(uid, data, colKey){
+    var manual = data && data[colKey];
+    if(typeof manual === 'number') return { value: manual, auto: false, prov: false };
+    var pv = provKrogiMap[uid] && provKrogiMap[uid][colKey];
+    if(AUTO_KROGI_KEYS[colKey] && typeof pv === 'number'){
+      var base = 0;
+      if(colKey==='xmasasslp'){ var a0 = autoKrogiMap[uid] && autoKrogiMap[uid][colKey]; if(typeof a0==='number') base = a0; }
+      return { value: round2(base + pv), auto: true, prov: true };
+    }
+    var inf = krogiCellInfo(uid, data, colKey);
+    return { value: inf.value, auto: inf.auto, prov: false };
+  }
+  function krogiRowTotalPub(data, uid){
+    var sum = 0;
+    KROGI_COLUMNS.forEach(function(c){
+      var info = krogiCellInfoPub(uid, data, c.key);
+      if(typeof info.value === 'number') sum += info.value;
+    });
+    return sum;
   }
   function krogiRowTotal(data, uid){
     var sum = 0;
@@ -1264,27 +1290,32 @@
      "rounds" (nova ocena, razveljavitev ocene, ...) - glej subscribeRounds. */
   function computeAutoKrogi(){
     var graded = rounds.filter(function(r){ return r.status==='graded'; });
+    // delno ocenjeni (še neobjavljeni) krogi -> začasne vrednosti samo za Lestvica > Po krogih
+    var partial = rounds.filter(function(r){ return r.status!=='graded' && r.status!=='draft' && r.gradingPartial; });
     var token = ++autoKrogiFetchToken;
-    if(graded.length===0){
-      autoKrogiMap = {};
+    var all = graded.concat(partial);
+    if(all.length===0){
+      autoKrogiMap = {}; provKrogiMap = {};
       afterAutoKrogiUpdate();
       return;
     }
-    Promise.all(graded.map(function(r){
+    Promise.all(all.map(function(r){
       return db.collection('rounds/'+r.id+'/submissions').get().then(function(snap){
         return { round:r, subs: snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); }) };
       });
     })).then(function(results){
       if(token !== autoKrogiFetchToken) return;
-      var map = {};
+      var map = {}, prov = {};
       results.forEach(function(res){
         var r = res.round;
         var isSpecial = r.kind==='special';
+        var isProv = r.status!=='graded';
+        var target = isProv ? prov : map;
         res.subs.forEach(function(s){
           var pts = typeof s.roundTotal==='number' ? s.roundTotal : null;
           if(pts===null) return;
-          if(!map[s.userId]) map[s.userId] = {};
-          var row = map[s.userId];
+          if(!target[s.userId]) target[s.userId] = {};
+          var row = target[s.userId];
           if(isSpecial){
             if(r.specialType==='seasonlong' || r.specialType==='xmas' || r.specialType==='allstar'){
               row.xmasasslp = (typeof row.xmasasslp==='number' ? row.xmasasslp : 0) + pts;
@@ -1294,7 +1325,7 @@
           }
         });
       });
-      autoKrogiMap = map;
+      autoKrogiMap = map; provKrogiMap = prov;
       afterAutoKrogiUpdate();
     }).catch(function(e){ console.warn('auto krogi calc error', e); });
   }
@@ -1330,7 +1361,7 @@
   function krogiSortValue(row, key){
     if(key==='name') return (row.name||'').toLowerCase();
     if(key==='total') return row.total;
-    var info = krogiCellInfo(row.id, row.data, key);
+    var info = krogiCellInfoPub(row.id, row.data, key);
     return typeof info.value==='number' ? info.value : -1;
   }
   function krogiSortIndicator(key){
@@ -1468,7 +1499,7 @@
   function krogiBoardTableHtml(){
     var rows = roster.map(function(u){
       var data = krogiTableMap[u.id] || {};
-      return { id:u.id, name:(u.nickname||u.name), data:data, total: krogiRowTotal(data, u.id) };
+      return { id:u.id, name:(u.nickname||u.name), data:data, total: krogiRowTotalPub(data, u.id) };
     });
     rows.sort(function(a,b){
       var va = krogiSortValue(a, krogiSortKey), vb = krogiSortValue(b, krogiSortKey);
@@ -1480,9 +1511,13 @@
     var grandTotal = 0;
     rows.forEach(function(r){
       grandTotal += r.total;
-      KROGI_COLUMNS.forEach(function(c){ var info=krogiCellInfo(r.id, r.data, c.key); if(typeof info.value==='number') colTotals[c.key]+=info.value; });
+      KROGI_COLUMNS.forEach(function(c){ var info=krogiCellInfoPub(r.id, r.data, c.key); if(typeof info.value==='number') colTotals[c.key]+=info.value; });
     });
-    var html = '<div class="table-scroll"><table class="board"><thead><tr>';
+    var anyProv = false;
+    rows.forEach(function(r){ KROGI_COLUMNS.forEach(function(c){ if(krogiCellInfoPub(r.id, r.data, c.key).prov) anyProv = true; }); });
+    var html = '';
+    if(anyProv) html += '<p class="small prov-note">Obarvane poševne vrednosti so <strong>začasne</strong> (krog je še v ocenjevanju) in se bodo ob končni objavi kroga posodobile. V glavni lestvici (Skupno) še niso všteti.</p>';
+    html += '<div class="table-scroll"><table class="board"><thead><tr>';
     html += '<th class="name-h sortable" data-krogisort="name">Igralec'+krogiSortIndicator('name')+'</th>';
     html += '<th class="sortable" data-krogisort="total">SKUPAJ'+krogiSortIndicator('total')+'</th>';
     KROGI_COLUMNS.forEach(function(c){
@@ -1501,8 +1536,8 @@
          Steal, #1 daily/weekly, Streak, Gajbarja) ostanejo čisto ročni, kot doslej. */
       html += '<tr><td class="name">'+esc(r.name)+'</td><td class="total">'+round2(r.total)+'</td>';
       KROGI_COLUMNS.forEach(function(c){
-        var info = krogiCellInfo(r.id, r.data, c.key);
-        html += '<td class="pts'+(info.auto?' auto-val':'')+'">'+(typeof info.value==='number' ? round2(info.value) : '<span class="muted">-</span>')+'</td>';
+        var info = krogiCellInfoPub(r.id, r.data, c.key);
+        html += '<td class="pts'+(info.auto?' auto-val':'')+(info.prov?' prov-val':'')+'"'+(info.prov?' title="Začasna vrednost — krog še ni dokončno ocenjen"':'')+'>'+(typeof info.value==='number' ? round2(info.value) : '<span class="muted">-</span>')+'</td>';
       });
       html += '</tr>';
     });
@@ -3664,7 +3699,7 @@
       Promise.all(scoredSp.map(function(sc){
         return db.doc('rounds/'+round.id+'/submissions/'+sc.sub.userId).update({ points: sc.points, roundTotal: sc.roundTotal });
       })).then(function(){
-        var upd = willBeGraded ? { status: 'graded', gradedAt: new Date().toISOString(), gradingPartial: false } : { gradingPartial: true };
+        var upd = willBeGraded ? { status: 'graded', gradedAt: new Date().toISOString(), gradingPartial: false } : { gradingPartial: true, partialAt: new Date().toISOString() };
         return db.doc('rounds/'+round.id).update(upd);
       }).then(function(){
         toast(willBeGraded ? ((round.label||specialTypeLabel(round.specialType))+' ocenjen!') : 'Začasna ocena shranjena.');
@@ -3705,7 +3740,7 @@
     })).then(function(){
       var upd = { winners: winners, correctCounts: correctCounts, submissionCount: N };
       if(willBeGraded){ upd.status = 'graded'; upd.gradedAt = new Date().toISOString(); upd.gradingPartial = false; }
-      else upd.gradingPartial = true;
+      else { upd.gradingPartial = true; upd.partialAt = new Date().toISOString(); }
       return db.doc('rounds/'+round.id).update(upd);
     }).then(function(){
       toast(willBeGraded ? ('Krog '+round.number+' ocenjen!') : 'Začasna ocena shranjena.');
