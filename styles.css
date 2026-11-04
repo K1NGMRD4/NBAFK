@@ -1821,3 +1821,17 @@ li.dropdown:hover .dropdown-columns {
     }
 }
 
+/* EKIPE - lovorike prvakov ob imenu ekipe (glej ekipe/*.html, ".team-crowns").
+   Slika je sredinsko poravnana na višino velikih črk naslova. */
+.team-crowns {
+    white-space: nowrap;
+}
+
+.team-crowns img {
+    height: 36px;
+    width: auto;
+    vertical-align: middle;
+    position: relative;
+    top: -3px;
+    margin-left: 8px;
+}
