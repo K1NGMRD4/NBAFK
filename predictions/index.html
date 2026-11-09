@@ -767,34 +767,39 @@
   // Začasna W-L-T evidenca po ekipah (namesto v Firestore, ker gre za sezonski rezultat, ne podatek o napovedih).
   // Uredi ročno spodaj ali pošlji posodobljen screenshot lestvice, da jih posodobim.
   var TEAM_RECORDS = {
-    "Kuala Lumpur Koalas (Rok Verčko)": {w:0,l:0,t:0},
-    "Caracas Alpacas (Gašper Herkovic)": {w:0,l:0,t:0},
-    "Taipei Tigers (Jošt Mrdavšič)": {w:0,l:0,t:0},
-    "Carigrad Corgis (Alex Jurhar)": {w:0,l:0,t:0},
-    "Veseli Vesoljčki (Dusan Spalir)": {w:0,l:0,t:0},
-    "Waipo Kakapos (Damjan Ilievski)": {w:0,l:0,t:0},
-    "New Delhi Holy Cows (Gasper Potocnik)": {w:0,l:0,t:0},
-    "Belgrade Ducks (Tine Kavticnik)": {w:0,l:0,t:0},
-    "Prevalje Steam Jackals (Matevž Kavtičnik)": {w:0,l:0,t:0},
-    "Vuzenica Dumpsters (Matic Maher)": {w:0,l:0,t:0},
-    "Ankraran Shrimps (Nejc Podlesnik)": {w:0,l:0,t:0},
-    "Koprivna Black Angus (Rok Lačen)": {w:0,l:0,t:0},
-    "Trbonje Sloths (Jan Kupljen)": {w:0,l:0,t:0},
-    "Gorske Koze (Vid Urnaut)": {w:0,l:0,t:0},
-    "Tokyo Tarantulas (Vito Torej)": {w:0,l:0,t:0},
-    "Green Hill Lions (Vid Ranc)": {w:0,l:0,t:0}
+    "Kuala Lumpur Koalas (Rok Verčko)": {w:1,l:2,t:0},
+    "Caracas Alpacas (Gašper Herkovic)": {w:1,l:2,t:0},
+    "Taipei Tigers (Jošt Mrdavšič)": {w:3,l:0,t:0},
+    "Carigrad Corgis (Alex Jurhar)": {w:2,l:1,t:0},
+    "Veseli Vesoljčki (Dusan Spalir)": {w:1,l:2,t:0},
+    "Waipo Kakapos (Damjan Ilievski)": {w:1,l:2,t:0},
+    "New Delhi Holy Cows (Gasper Potocnik)": {w:1,l:2,t:0},
+    "Belgrade Ducks (Tine Kavticnik)": {w:2,l:1,t:0},
+    "Prevalje Steam Jackals (Matevž Kavtičnik)": {w:2,l:2,t:0},
+    "Vuzenica Dumpsters (Matic Maher)": {w:2,l:1,t:0},
+    "Ankraran Shrimps (Nejc Podlesnik)": {w:0,l:3,t:0},
+    "Koprivna Black Angus (Rok Lačen)": {w:0,l:3,t:0},
+    "Trbonje Sloths (Jan Kupljen)": {w:3,l:0,t:0},
+    "Gorske Koze (Vid Urnaut)": {w:1,l:2,t:0},
+    "Tokyo Tarantulas (Vito Torej)": {w:2,l:1,t:0},
+    "Green Hill Lions (Vid Ranc)": {w:2,l:1,t:0}
   };
-  function teamRecordHtml(team){
-    var r = TEAM_RECORDS[team] || {w:0,l:0,t:0};
+  // Zapis "W-L-T" (npr. "2-0-0") iz podatkov tekme ima prednost pred TEAM_RECORDS (rezerva).
+  function parseRecordStr(s){
+    var m = /^\s*(\d+)\s*[-–]\s*(\d+)(?:\s*[-–]\s*(\d+))?\s*$/.exec(s==null ? '' : String(s));
+    return m ? {w:+m[1], l:+m[2], t:+(m[3]||0)} : null;
+  }
+  function teamRecordHtml(team, rec){
+    var r = parseRecordStr(rec) || TEAM_RECORDS[team] || {w:0,l:0,t:0};
     var cls = r.w>r.l ? 'rec-good' : (r.l>r.w ? 'rec-bad' : 'rec-tie');
     return '<span class="pickbtn-score '+cls+'">('+r.w+'-'+r.l+')</span>';
   }
-  function pickbtnContent(team){
+  function pickbtnContent(team, rec){
     return teamLogoImg(team)
       +'<span class="pickbtn-info">'
       +'<span class="pickbtn-team">'+esc(teamNameOnly(team))+'</span>'
       +'<span class="pickbtn-manager">'+esc(teamManagerFullName(team))+'</span>'
-      +teamRecordHtml(team)
+      +teamRecordHtml(team, rec)
       +'</span>';
   }
 
@@ -1794,8 +1799,8 @@
       (round.matchups||[]).forEach(function(m, i){
         html += '<div class="matchup" data-idx="'+i+'">';
         html += '<span class="idx">'+(i+1)+'</span>';
-        html += '<button type="button" class="pickbtn'+(picks[i]===m.a?' selected':'')+'" data-team="'+esc(m.a)+'">'+pickbtnContent(m.a)+'</button>';
-        html += '<button type="button" class="pickbtn'+(picks[i]===m.b?' selected':'')+'" data-team="'+esc(m.b)+'">'+pickbtnContent(m.b)+'</button>';
+        html += '<button type="button" class="pickbtn'+(picks[i]===m.a?' selected':'')+'" data-team="'+esc(m.a)+'">'+pickbtnContent(m.a, m.ra)+'</button>';
+        html += '<button type="button" class="pickbtn'+(picks[i]===m.b?' selected':'')+'" data-team="'+esc(m.b)+'">'+pickbtnContent(m.b, m.rb)+'</button>';
         html += '</div>';
       });
       html += '</div>';
@@ -2954,7 +2959,7 @@
     html += '<label style="margin-top:6px;">8 tekem</label>';
     html += '<div id="newMatchups">';
     if(editing && editKind==='matchup'){
-      (editing.matchups||[]).forEach(function(m,i){ html += matchupEditorRow(i, m.a, m.b); });
+      (editing.matchups||[]).forEach(function(m,i){ html += matchupEditorRow(i, m.a, m.b, m.ra, m.rb); });
     } else {
       for(var i=0;i<8;i++){ html += matchupEditorRow(i, '', ''); }
     }
@@ -3017,9 +3022,9 @@
 
   function statusLabel(s){ return {draft:'Osnutek', open:'Odprto', locked:'Zaklenjeno', graded:'Ocenjeno'}[s] || s; }
 
-  function matchupEditorRow(i, teamA, teamB){
+  function matchupEditorRow(i, teamA, teamB, recA, recB){
     var opts = function(sel){ return TEAMS.map(function(t){ return '<option value="'+esc(t)+'"'+(t===sel?' selected':'')+'>'+esc(t)+'</option>'; }).join(''); };
-    return '<div class="matchup" data-mi="'+i+'"><span class="idx">'+(i+1)+'</span>' +
+    return '<div class="matchup" data-mi="'+i+'" data-ra="'+esc(recA||'')+'" data-rb="'+esc(recB||'')+'"><span class="idx">'+(i+1)+'</span>' +
       '<select class="home-sel">'+'<option value="">— izberi ekipo —</option>'+opts(teamA)+'</select>' +
       '<select class="away-sel">'+'<option value="">— izberi ekipo —</option>'+opts(teamB)+'</select></div>';
   }
@@ -3151,7 +3156,9 @@
     "Ekipe v tej ligi so IZKLJUČNO naslednje (uporabi dobesedno te nize, brez sprememb):\n" +
     "TEAMS_PLACEHOLDER\n\n" +
     "Na sliki prepoznaj natanko 8 parov ekip (tekem), v vrstnem redu kot so prikazani. "+
-    "Odgovori SAMO z JSON seznamom natanko 8 objektov oblike {\"a\": string, \"b\": string}, kjer sta a in b nizi IZ ZGORNJEGA SEZNAMA, brez dodatnega besedila.";
+    "Odgovori SAMO z JSON seznamom natanko 8 objektov oblike {\"a\": string, \"b\": string}, kjer sta a in b nizi IZ ZGORNJEGA SEZNAMA. "+
+    "Poleg tega za vsako ekipo preberi njen trenutni record (W-L-T), ki je na sliki v oklepaju poleg imena ekipe (npr. (2-0-0)), in ga dodaj kot niz \"ra\" (record ekipe a) in \"rb\" (record ekipe b), npr. {\"a\": \"...\", \"b\": \"...\", \"ra\": \"2-0-0\", \"rb\": \"1-1-0\"}. "+
+    "Če recorda ni na sliki, ga izpusti. Brez dodatnega besedila.";
 
   function aiPromptText(){
     return AI_PROMPT_TEMPLATE.replace('TEAMS_PLACEHOLDER', TEAMS.map(function(t){ return "- " + t; }).join("\n"));
@@ -3229,7 +3236,7 @@
       if(!list){ status.textContent = 'Nepričakovana oblika JSON-a (pričakujem seznam parov).'; return; }
       var wrap = $('#'+targetWrapId);
       var rows = $all('.matchup', wrap);
-      var filled = 0;
+      var filled = 0, recFilled = 0;
       list.slice(0,8).forEach(function(m, i){
         if(!rows[i] || !m) return;
         var aRaw = Array.isArray(m) ? m[0] : (m.a!=null?m.a:(m.home!=null?m.home:(m.team_a!=null?m.team_a:m.teamA)));
@@ -3239,15 +3246,23 @@
         var hs = $('.home-sel', rows[i]), as = $('.away-sel', rows[i]);
         if(hs && a){ hs.value = a; filled++; }
         if(as && b){ as.value = b; filled++; }
+        var ra = parseRecordStr(Array.isArray(m) ? null : (m.ra!=null ? m.ra : m.recordA)), rb = parseRecordStr(Array.isArray(m) ? null : (m.rb!=null ? m.rb : m.recordB));
+        rows[i].setAttribute('data-ra', ra ? ra.w+'-'+ra.l+'-'+ra.t : '');
+        rows[i].setAttribute('data-rb', rb ? rb.w+'-'+rb.l+'-'+rb.t : '');
+        if(ra || rb) recFilled++;
       });
       if(filled===0){ status.textContent = 'Nič se ni ujemalo z znanimi ekipami — preveri JSON.'; return; }
-      status.textContent = 'Predlagane tekme so vnesene — preveri jih spodaj.';
+      status.textContent = 'Predlagane tekme so vnesene' + (recFilled ? ' skupaj z recordi ('+recFilled+'/8 tekem)' : ' (recordov ni v odgovoru — prikazani bodo privzeti)') + ' — preveri jih spodaj.';
     });
   }
 
   function readMatchupsFromWrap(wrapId){
     return $all('.matchup', $('#'+wrapId)).map(function(row){
-      return { a: $('.home-sel', row).value, b: $('.away-sel', row).value };
+      var mu = { a: $('.home-sel', row).value, b: $('.away-sel', row).value };
+      var ra = parseRecordStr(row.getAttribute('data-ra')), rb = parseRecordStr(row.getAttribute('data-rb'));
+      if(ra) mu.ra = ra.w+'-'+ra.l+'-'+ra.t;
+      if(rb) mu.rb = rb.w+'-'+rb.l+'-'+rb.t;
+      return mu;
     });
   }
   function readBonusFromWrap(wrapId){
